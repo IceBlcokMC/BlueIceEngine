@@ -1,6 +1,7 @@
 #include "api/PlayerAPI.h"
 #include "APIHelper.h"
 #include "api/APIHelper.h"
+#include "api/util/UUIDAPI.h"
 #include "utils/Convert.h"
 #include "utils/Using.h"
 
@@ -55,7 +56,7 @@ ClassDefine<PlayerAPI> PlayerAPI::builder =
         .instanceFunction("closeForm", &PlayerAPI::closeForm)
         .instanceFunction("sendPacket", &PlayerAPI::sendPacket)
 
-        // parent class
+        // Player extends Actor
         .instanceFunction("getType", &ActorAPI::getType)
         .instanceFunction("getRuntimeId", &ActorAPI::getRuntimeId)
         .instanceFunction("getLocation", &ActorAPI::getLocation)
@@ -83,6 +84,7 @@ ClassDefine<PlayerAPI> PlayerAPI::builder =
         .instanceFunction("getScoreTag", &ActorAPI::getScoreTag)
         .instanceFunction("setScoreTag", &ActorAPI::setScoreTag)
 
+        // Actor extends CommandSender
         .instanceFunction("asCommandSender", &CommandSenderAPI::asCommandSender)
         .instanceFunction("asConsole", &CommandSenderAPI::asConsole)
         .instanceFunction("asActor", &CommandSenderAPI::asActor)
@@ -92,6 +94,7 @@ ClassDefine<PlayerAPI> PlayerAPI::builder =
         .instanceFunction("getServer", &CommandSenderAPI::getServer)
         .instanceFunction("getName", &CommandSenderAPI::getName)
 
+        // CommandSender extends Permissible
         .instanceFunction("isOp", &PermissibleAPI::isOP)
         .instanceFunction("setOp", &PermissibleAPI::setOp)
         .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
@@ -106,7 +109,7 @@ ClassDefine<PlayerAPI> PlayerAPI::builder =
 
 Local<Value> PlayerAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Player>"); }
 
-Local<Value> PlayerAPI::getUniqueId(Arguments const& /* args */) { return ConvertToScriptX(get()->getUniqueId().str()); }
+Local<Value> PlayerAPI::getUniqueId(Arguments const& /* args */) { return UUIDAPI::newUUIDAPI(get()->getUniqueId()); }
 
 Local<Value> PlayerAPI::getXuid(Arguments const& /* args */) { return ConvertToScriptX(get()->getXuid()); }
 
@@ -161,7 +164,9 @@ Local<Value> PlayerAPI::giveExpLevels(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> PlayerAPI::getExpProgress(Arguments const& /* args */) { return ConvertToScriptX(get()->getExpProgress()); }
+Local<Value> PlayerAPI::getExpProgress(Arguments const& /* args */) {
+    return ConvertToScriptX(get()->getExpProgress());
+}
 
 Local<Value> PlayerAPI::setExpProgress(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -181,7 +186,9 @@ Local<Value> PlayerAPI::setExpLevel(Arguments const& args) {
 
 Local<Value> PlayerAPI::getTotalExp(Arguments const& /* args */) { return ConvertToScriptX(get()->getTotalExp()); }
 
-Local<Value> PlayerAPI::getAllowFlight(Arguments const& /* args */) { return ConvertToScriptX(get()->getAllowFlight()); }
+Local<Value> PlayerAPI::getAllowFlight(Arguments const& /* args */) {
+    return ConvertToScriptX(get()->getAllowFlight());
+}
 
 Local<Value> PlayerAPI::setAllowFlight(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -282,7 +289,9 @@ Local<Value> PlayerAPI::getDeviceOS(Arguments const& /* args */) { return Conver
 
 Local<Value> PlayerAPI::getDeviceId(Arguments const& /* args */) { return ConvertToScriptX(get()->getDeviceId()); }
 
-Local<Value> PlayerAPI::getGameVersion(Arguments const& /* args */) { return ConvertToScriptX(get()->getGameVersion()); }
+Local<Value> PlayerAPI::getGameVersion(Arguments const& /* args */) {
+    return ConvertToScriptX(get()->getGameVersion());
+}
 
 Local<Value> PlayerAPI::getSkin(Arguments const& /* args */) { return Local<Value>(); }
 

@@ -11,6 +11,7 @@ ClassDefine<MobAPI> MobAPI::builder =
         .instanceFunction("toString", &MobAPI::toString)
         .instanceFunction("isGliding", &MobAPI::isGliding)
 
+        // Mob extends Actor
         .instanceFunction("getType", &ActorAPI::getType)
         .instanceFunction("getRuntimeId", &ActorAPI::getRuntimeId)
         .instanceFunction("getLocation", &ActorAPI::getLocation)
@@ -38,7 +39,7 @@ ClassDefine<MobAPI> MobAPI::builder =
         .instanceFunction("getScoreTag", &ActorAPI::getScoreTag)
         .instanceFunction("setScoreTag", &ActorAPI::setScoreTag)
 
-        // parent class
+        // Actor extends CommandSender
         .instanceFunction("asCommandSender", &CommandSenderAPI::asCommandSender)
         .instanceFunction("asConsole", &CommandSenderAPI::asConsole)
         .instanceFunction("asActor", &CommandSenderAPI::asActor)
@@ -48,6 +49,7 @@ ClassDefine<MobAPI> MobAPI::builder =
         .instanceFunction("getServer", &CommandSenderAPI::getServer)
         .instanceFunction("getName", &CommandSenderAPI::getName)
 
+        // CommandSender extends Permissible
         .instanceFunction("isOp", &PermissibleAPI::isOP)
         .instanceFunction("setOp", &PermissibleAPI::setOp)
         .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)

@@ -1,4 +1,4 @@
 {
     "main": "test_js_plugin.js",
-    "type": "module"
+    "type": "commonjs"
 }

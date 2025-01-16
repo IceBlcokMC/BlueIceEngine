@@ -10,8 +10,8 @@ class ServerAPI : public ScriptClass {
 
 public:
     explicit ServerAPI(endstone::Server* server)
-    : mServer(server),
-      ScriptClass(ScriptClass::ConstructFromCpp<ServerAPI>{}) {}
+    : ScriptClass(ScriptClass::ConstructFromCpp<ServerAPI>{}),
+      mServer(server) {}
 
     static Local<Object> newServerAPI(endstone::Server* server) { return (new ServerAPI(server))->getScriptObject(); }
 

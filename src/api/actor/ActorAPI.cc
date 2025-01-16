@@ -40,7 +40,7 @@ ClassDefine<ActorAPI> ActorAPI::builder =
         .instanceFunction("getScoreTag", &ActorAPI::getScoreTag)
         .instanceFunction("setScoreTag", &ActorAPI::setScoreTag)
 
-        // parent class
+        // Actor extends CommandSender
         .instanceFunction("asCommandSender", &CommandSenderAPI::asCommandSender)
         .instanceFunction("asConsole", &CommandSenderAPI::asConsole)
         .instanceFunction("asActor", &CommandSenderAPI::asActor)
@@ -50,6 +50,7 @@ ClassDefine<ActorAPI> ActorAPI::builder =
         .instanceFunction("getServer", &CommandSenderAPI::getServer)
         .instanceFunction("getName", &CommandSenderAPI::getName)
 
+        // Actor extends Permissible
         .instanceFunction("isOp", &PermissibleAPI::isOP)
         .instanceFunction("setOp", &PermissibleAPI::setOp)
         .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)

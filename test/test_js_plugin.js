@@ -1,9 +1,6 @@
-/// <reference path="../js_engine/dts/index.d.ts"/>
+// /// <reference path="../js_engine/dts/index.d.ts"/>
 
 // const { JsonFileConfig } = require("../js_engine/shortcutApi/JsonFileConfig.js");
-
-import { b } from "./b.js";
-b();
 
 JSE.registerPlugin({
 	name: "test_js_plugin",
@@ -38,7 +35,7 @@ JSE.registerPlugin({
 
 	onEnable: () => {
 		JSE.debug("onEnable called");
-		const plugin = JSE.getPlugin(),
+		const plugin = JSE.getSelf(),
 			logger = plugin.getLogger(),
 			description = plugin.getDescription();
 
@@ -87,6 +84,12 @@ JSE.registerPlugin({
 			JSE.debug("getSoftDepend: ", description.getSoftDepend());
 			JSE.debug("getLoadBefore: ", description.getLoadBefore());
 			JSE.debug("getDefaultPermission: ", description.getDefaultPermission());
+		})();
+
+		(() => {
+			JSE.debug("==== UUID Test ====");
+
+
 		})();
 
 		(() => {

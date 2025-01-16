@@ -5,7 +5,7 @@ declare class Player extends Mob {
     toString(): "<Player>" | string;
 
     /** 获取玩家的UUID */
-    getUniqueId(): string;
+    getUniqueId(): UUID;
 
     /** 获取玩家的XUID */
     getXuid(): string;

@@ -12,6 +12,7 @@
 #include "api/permissions/PermissionAPI.h"
 #include "api/plugin/PluginAPI.h"
 #include "api/plugin/PluginDescriptionAPI.h"
+#include "api/util/UUIDAPI.h"
 #include "utils/Using.h"
 
 
@@ -27,20 +28,26 @@ inline void BindAPI(ScriptEngine* engine) {
     engine->registerNativeClass(FileAPI::builder);
 
     // instance class
-    engine->registerNativeClass<PluginAPI>(PluginAPI::builder);
-    engine->registerNativeClass<PluginDescriptionAPI>(PluginDescriptionAPI::builder);
+#define REGISTER_CLASS(CLASS) engine->registerNativeClass<CLASS>(CLASS::builder);
 
-    engine->registerNativeClass<PermissibleAPI>(PermissibleAPI::builder);
-    engine->registerNativeClass<PermissionAPI>(PermissionAPI::builder);
+    REGISTER_CLASS(PluginAPI);
+    REGISTER_CLASS(PluginDescriptionAPI);
 
-    engine->registerNativeClass<CommandAPI>(CommandAPI::builder);
-    engine->registerNativeClass<CommandSenderAPI>(CommandSenderAPI::builder);
+    REGISTER_CLASS(PermissibleAPI);
+    REGISTER_CLASS(PermissionAPI);
 
-    engine->registerNativeClass<ActorAPI>(ActorAPI::builder);
-    engine->registerNativeClass<MobAPI>(MobAPI::builder);
+    REGISTER_CLASS(CommandAPI);
+    REGISTER_CLASS(CommandSenderAPI);
 
-    engine->registerNativeClass<LoggerAPI>(LoggerAPI::builder);
-    engine->registerNativeClass<PlayerAPI>(PlayerAPI::builder);
+    REGISTER_CLASS(ActorAPI);
+    REGISTER_CLASS(MobAPI);
+
+    REGISTER_CLASS(LoggerAPI);
+    REGISTER_CLASS(PlayerAPI);
+
+    REGISTER_CLASS(UUIDAPI);
+
+#undef REGISTER_CLASS
 }
 
 

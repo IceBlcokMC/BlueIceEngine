@@ -4,7 +4,10 @@
 #include "api/LoggerAPI.h"
 #include "api/PlayerAPI.h"
 #include "api/command/CommandSenderAPI.h"
+#include "api/util/UUIDAPI.h"
+#include "endstone/player.h"
 #include "endstone/server.h"
+#include "utils/Defines.h"
 
 
 namespace jse {
@@ -106,9 +109,18 @@ Local<Value> ServerAPI::setMaxPlayers(Arguments const& args) {
 
 Local<Value> ServerAPI::getPlayer(Arguments const& args) {
     CheckArgsCount(args, 1);
-    CheckArgType(args[0], ValueKind::kString);
-    auto* player = get()->getPlayer(ConvertFromScriptX<std::string>(args[0]));
-    return player ? PlayerAPI::newPlayerAPI(player) : Local<Value>();
+    try {
+        endstone::Player* player{nullptr};
+        if (args[0].isString()) {
+            player = get()->getPlayer(ConvertFromScriptX<std::string>(args[0]));
+        } else if (args[0].isObject() && IsInstanceOf<UUIDAPI>(args[0])) {
+            player = get()->getPlayer(GetScriptClass(UUIDAPI, args[0])->get());
+        } else {
+            throw script::Exception("Invalid argument type");
+        }
+        return player ? PlayerAPI::newPlayerAPI(player) : Local<Value>();
+    }
+    Catch;
 }
 
 Local<Value> ServerAPI::getOnlineMode(Arguments const& /* args */) { return ConvertToScriptX(get()->getOnlineMode()); }
@@ -143,7 +155,9 @@ Local<Value> ServerAPI::broadcastMessage(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> ServerAPI::isPrimaryThread(Arguments const& /* args */) { return ConvertToScriptX(get()->isPrimaryThread()); }
+Local<Value> ServerAPI::isPrimaryThread(Arguments const& /* args */) {
+    return ConvertToScriptX(get()->isPrimaryThread());
+}
 
 Local<Value> ServerAPI::getScoreboard(Arguments const& /* args */) { return Local<Value>(); }
 

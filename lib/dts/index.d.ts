@@ -12,5 +12,6 @@
 /// <reference path="./api/plugin/PluginDescription.d.ts"/>
 /// <reference path="./api/permissions/Permissible.d.ts"/>
 /// <reference path="./api/permissions/Permission.d.ts"/>
+/// <reference path="./api/util/UUID.d.ts"/>
 /// <reference path="./api/Logger.d.ts"/>
 /// <reference path="./api/Player.d.ts"/>
