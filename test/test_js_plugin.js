@@ -39,6 +39,9 @@ JSE.registerPlugin({
 			logger = plugin.getLogger(),
 			description = plugin.getDescription();
 
+		JSE.debug("Enums: ", Enums);
+		JSE.debug("Enums.PluginLoadOrder.PostWorld：", Enums.PluginLoadOrder.PostWorld);
+
 		(() => {
 			JSE.debug("==== Test Plugin ====");
 			JSE.debug(`isEnabled: `, plugin.isEnabled());

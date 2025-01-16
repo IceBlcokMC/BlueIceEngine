@@ -10,7 +10,7 @@
 
 #define REGISTER_ENUM_MACRO(ENUM, NAME)                                                                                \
     for (auto [value, key] : magic_enum::enum_entries<ENUM>()) {                                                       \
-        enumMap[NAME][key] = static_cast<int>(value);                                                                  \
+        map[NAME][key] = static_cast<int>(value);                                                                  \
     }
 
 namespace jse::EnumAPI {
