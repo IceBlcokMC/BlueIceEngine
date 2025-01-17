@@ -72,4 +72,7 @@ declare class Server {
     // getBanList(): any;
 
     // getIpBanList(): any;
+
+    static get BroadcastChannelAdmin(): string;
+    static get BroadcastChannelUser(): string;
 }

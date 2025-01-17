@@ -1,4 +1,5 @@
 #pragma once
+#include "api/ColorFormatAPI.h"
 #include "api/LoggerAPI.h"
 #include "api/PlayerAPI.h"
 #include "api/ServerAPI.h"
@@ -28,6 +29,7 @@ inline void BindAPI(ScriptEngine* engine) {
     // static class
     engine->registerNativeClass(JSEAPI::builder);
     engine->registerNativeClass(FileAPI::builder);
+    engine->registerNativeClass(ColorFormatAPI::builder);
 
     // instance class
 #define REGISTER_CLASS(CLASS) engine->registerNativeClass<CLASS>(CLASS::builder)
