@@ -8,28 +8,28 @@
 
 namespace jse {
 
-ClassDefine<CommandAPI> CommandAPI::builder =
-    defineClass<CommandAPI>("Command")
-        .constructor(nullptr)
-        .instanceFunction("toString", &CommandAPI::toString)
-        .instanceFunction("execute", &CommandAPI::execute)
-        .instanceFunction("getName", &CommandAPI::getName)
-        .instanceFunction("setName", &CommandAPI::setName)
-        .instanceFunction("getDescription", &CommandAPI::getDescription)
-        .instanceFunction("setDescription", &CommandAPI::setDescription)
-        .instanceFunction("getAliases", &CommandAPI::getAliases)
-        .instanceFunction("setAliases", &CommandAPI::setAliases)
-        .instanceFunction("getUsages", &CommandAPI::getUsages)
-        .instanceFunction("setUsages", &CommandAPI::setUsages)
-        .instanceFunction("getPermissions", &CommandAPI::getPermissions)
-        .instanceFunction("setPermissions", &CommandAPI::setPermissions)
-        .instanceFunction("testPermission", &CommandAPI::testPermission)
-        .instanceFunction("testPermissionSilently", &CommandAPI::testPermissionSilently)
-        .instanceFunction("registerTo", &CommandAPI::registerTo)
-        .instanceFunction("unregisterFrom", &CommandAPI::unregisterFrom)
-        .instanceFunction("isRegistered", &CommandAPI::isRegistered)
-        .instanceFunction("asPluginCommand", &CommandAPI::asPluginCommand)
-        .build();
+ClassDefine<CommandAPI> CommandAPI::builder = 
+	defineClass<CommandAPI>("Command")
+		.constructor(nullptr)
+		.instanceFunction("toString", &CommandAPI::toString)
+		.instanceFunction("execute", &CommandAPI::execute)
+		.instanceFunction("getName", &CommandAPI::getName)
+		.instanceFunction("setName", &CommandAPI::setName)
+		.instanceFunction("getDescription", &CommandAPI::getDescription)
+		.instanceFunction("setDescription", &CommandAPI::setDescription)
+		.instanceFunction("getAliases", &CommandAPI::getAliases)
+		.instanceFunction("setAliases", &CommandAPI::setAliases)
+		.instanceFunction("getUsages", &CommandAPI::getUsages)
+		.instanceFunction("setUsages", &CommandAPI::setUsages)
+		.instanceFunction("getPermissions", &CommandAPI::getPermissions)
+		.instanceFunction("setPermissions", &CommandAPI::setPermissions)
+		.instanceFunction("testPermission", &CommandAPI::testPermission)
+		.instanceFunction("testPermissionSilently", &CommandAPI::testPermissionSilently)
+		.instanceFunction("registerTo", &CommandAPI::registerTo)
+		.instanceFunction("unregisterFrom", &CommandAPI::unregisterFrom)
+		.instanceFunction("isRegistered", &CommandAPI::isRegistered)
+		.instanceFunction("asPluginCommand", &CommandAPI::asPluginCommand)
+		.build();
 
 
 Local<Value> CommandAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Command>"); }

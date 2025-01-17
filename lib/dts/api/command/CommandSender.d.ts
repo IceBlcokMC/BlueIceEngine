@@ -2,7 +2,7 @@
 
 /** 命令来源 */
 declare class CommandSender extends Permissible {
-    toString(): string | "<CommandSender>";
+	toString(): "<CommandSender>" | string;
 
     /** 转成命令发送者 */
     asCommandSender(): CommandSender | undefined;

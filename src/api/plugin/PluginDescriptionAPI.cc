@@ -9,28 +9,28 @@
 
 namespace jse {
 
-ClassDefine<PluginDescriptionAPI> PluginDescriptionAPI::builder =
-    defineClass<PluginDescriptionAPI>("PluginDescription")
-        .constructor(nullptr)
-        .instanceFunction("toString", &PluginDescriptionAPI::toString)
-        .instanceFunction("getName", &PluginDescriptionAPI::getName)
-        .instanceFunction("getVersion", &PluginDescriptionAPI::getVersion)
-        .instanceFunction("getFullName", &PluginDescriptionAPI::getFullName)
-        .instanceFunction("getAPIVersion", &PluginDescriptionAPI::getAPIVersion)
-        .instanceFunction("getDescription", &PluginDescriptionAPI::getDescription)
-        .instanceFunction("getLoad", &PluginDescriptionAPI::getLoad)
-        .instanceFunction("getAuthors", &PluginDescriptionAPI::getAuthors)
-        .instanceFunction("getContributors", &PluginDescriptionAPI::getContributors)
-        .instanceFunction("getWebsite", &PluginDescriptionAPI::getWebsite)
-        .instanceFunction("getPrefix", &PluginDescriptionAPI::getPrefix)
-        .instanceFunction("getProvides", &PluginDescriptionAPI::getProvides)
-        .instanceFunction("getDepend", &PluginDescriptionAPI::getDepend)
-        .instanceFunction("getSoftDepend", &PluginDescriptionAPI::getSoftDepend)
-        .instanceFunction("getLoadBefore", &PluginDescriptionAPI::getLoadBefore)
-        .instanceFunction("getDefaultPermission", &PluginDescriptionAPI::getDefaultPermission)
-        .instanceFunction("getCommands", &PluginDescriptionAPI::getCommands)
-        .instanceFunction("getPermissions", &PluginDescriptionAPI::getPermissions)
-        .build();
+ClassDefine<PluginDescriptionAPI> PluginDescriptionAPI::builder = 
+	defineClass<PluginDescriptionAPI>("PluginDescription")
+		.constructor(nullptr)
+		.instanceFunction("toString", &PluginDescriptionAPI::toString)
+		.instanceFunction("getName", &PluginDescriptionAPI::getName)
+		.instanceFunction("getVersion", &PluginDescriptionAPI::getVersion)
+		.instanceFunction("getFullName", &PluginDescriptionAPI::getFullName)
+		.instanceFunction("getAPIVersion", &PluginDescriptionAPI::getAPIVersion)
+		.instanceFunction("getDescription", &PluginDescriptionAPI::getDescription)
+		.instanceFunction("getLoad", &PluginDescriptionAPI::getLoad)
+		.instanceFunction("getAuthors", &PluginDescriptionAPI::getAuthors)
+		.instanceFunction("getContributors", &PluginDescriptionAPI::getContributors)
+		.instanceFunction("getWebsite", &PluginDescriptionAPI::getWebsite)
+		.instanceFunction("getPrefix", &PluginDescriptionAPI::getPrefix)
+		.instanceFunction("getProvides", &PluginDescriptionAPI::getProvides)
+		.instanceFunction("getDepend", &PluginDescriptionAPI::getDepend)
+		.instanceFunction("getSoftDepend", &PluginDescriptionAPI::getSoftDepend)
+		.instanceFunction("getLoadBefore", &PluginDescriptionAPI::getLoadBefore)
+		.instanceFunction("getDefaultPermission", &PluginDescriptionAPI::getDefaultPermission)
+		.instanceFunction("getCommands", &PluginDescriptionAPI::getCommands)
+		.instanceFunction("getPermissions", &PluginDescriptionAPI::getPermissions)
+		.build();
 
 #define PLUGINDESCRIPTIONAPI_MACRO(FUNC_NAME, ...)                                                                     \
     Local<Value> PluginDescriptionAPI::FUNC_NAME(Arguments const& /* args */) {                                        \

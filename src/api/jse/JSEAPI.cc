@@ -8,11 +8,14 @@
 
 namespace jse {
 
-ClassDefine<void> JSEAPI::builder = defineClass("JSE")
-                                        .function("registerPlugin", &JSEAPI::registerPlugin)
-                                        .function("getSelf", &JSEAPI::getSelf)
-                                        .function("debug", &JSEAPI::debug)
-                                        .build();
+ClassDefine<void> JSEAPI::builder = 
+	defineClass<void>("JSE")
+		.function("registerPlugin", &JSEAPI::registerPlugin)
+		.function("getSelf", &JSEAPI::getSelf)
+		.function("debug", &JSEAPI::debug)
+		.function("isLinux", &JSEAPI::isLinux)
+		.function("isWindows", &JSEAPI::isWindows)
+		.build();
 
 Local<Value> JSEAPI::registerPlugin(Arguments const& args) {
     CheckArgsCount(args, 1);

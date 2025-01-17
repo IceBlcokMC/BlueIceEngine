@@ -1,7 +1,7 @@
 /// <reference path="../../index.d.ts"/>
 
 declare class Command {
-    toString(): "<Command>";
+	toString(): "<Command>" | string;
 
     execute(sender: CommandSender, args: string[]): boolean;
 

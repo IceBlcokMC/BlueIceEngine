@@ -5,19 +5,20 @@
 
 namespace jse {
 
-ClassDefine<void> FileAPI::builder = defineClass("FileAPI")
-                                         .function("readFile", &FileAPI::readFile)
-                                         .function("writeFile", &FileAPI::writeFile)
-                                         .function("createDirectory", &FileAPI::createDirectory)
-                                         .function("copyFile", &FileAPI::copyFile)
-                                         .function("moveFile", &FileAPI::moveFile)
-                                         .function("delete", &FileAPI::del)
-                                         .function("exists", &FileAPI::exists)
-                                         .function("isDirectory", &FileAPI::isDirectory)
-                                         .function("isFile", &FileAPI::isFile)
-                                         .function("getFileSize", &FileAPI::getFileSize)
-                                         .function("listDirectory", &FileAPI::listDirectory)
-                                         .build();
+ClassDefine<void> FileAPI::builder = 
+	defineClass<void>("File")
+		.function("readFile", &FileAPI::readFile)
+		.function("writeFile", &FileAPI::writeFile)
+		.function("createDirectory", &FileAPI::createDirectory)
+		.function("copyFile", &FileAPI::copyFile)
+		.function("moveFile", &FileAPI::moveFile)
+		.function("del", &FileAPI::del)
+		.function("exists", &FileAPI::exists)
+		.function("isDirectory", &FileAPI::isDirectory)
+		.function("isFile", &FileAPI::isFile)
+		.function("getFileSize", &FileAPI::getFileSize)
+		.function("listDirectory", &FileAPI::listDirectory)
+		.build();
 
 
 Local<Value> FileAPI::readFile(Arguments const& args) {

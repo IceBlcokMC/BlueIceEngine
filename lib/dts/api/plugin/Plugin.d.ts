@@ -2,7 +2,6 @@
 
 /** 插件实例 */
 interface Plugin {
-    // 保证正常补全
     toString(): "<Plugin>";
 
     /** 获取插件相关信息 */

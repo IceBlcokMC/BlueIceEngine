@@ -3,7 +3,7 @@
 declare class UUID {
     constructor(uuid: string | UUID);
 
-    toString(): "<UUID>" | string;
+	toString(): "<UUID>" | string;
 
     forEach(callback: (u8: number) => void): void;
 

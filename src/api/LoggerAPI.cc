@@ -7,20 +7,21 @@
 
 namespace jse {
 
-ClassDefine<LoggerAPI> LoggerAPI::builder = defineClass<LoggerAPI>("Logger")
-                                                .constructor(nullptr)
-                                                .instanceFunction("toString", &LoggerAPI::toString)
-                                                .instanceFunction("log", &LoggerAPI::log)
-                                                .instanceFunction("info", &LoggerAPI::info)
-                                                .instanceFunction("warning", &LoggerAPI::warning)
-                                                .instanceFunction("error", &LoggerAPI::error)
-                                                .instanceFunction("debug", &LoggerAPI::debug)
-                                                .instanceFunction("trace", &LoggerAPI::trace)
-                                                .instanceFunction("critical", &LoggerAPI::critical)
-                                                .instanceFunction("setLevel", &LoggerAPI::setLevel)
-                                                .instanceFunction("isEnabledFor", &LoggerAPI::isEnabledFor)
-                                                .instanceFunction("getName", &LoggerAPI::getName)
-                                                .build();
+ClassDefine<LoggerAPI> LoggerAPI::builder = 
+	defineClass<LoggerAPI>("Logger")
+		.constructor(nullptr)
+		.instanceFunction("toString", &LoggerAPI::toString)
+		.instanceFunction("log", &LoggerAPI::log)
+		.instanceFunction("info", &LoggerAPI::info)
+		.instanceFunction("warning", &LoggerAPI::warning)
+		.instanceFunction("error", &LoggerAPI::error)
+		.instanceFunction("debug", &LoggerAPI::debug)
+		.instanceFunction("critical", &LoggerAPI::critical)
+		.instanceFunction("trace", &LoggerAPI::trace)
+		.instanceFunction("setLevel", &LoggerAPI::setLevel)
+		.instanceFunction("isEnabledFor", &LoggerAPI::isEnabledFor)
+		.instanceFunction("getName", &LoggerAPI::getName)
+		.build();
 
 void LoggerAPIHelper(endstone::Logger* logger, endstone::Logger::Level level, string const& message) {
     try {

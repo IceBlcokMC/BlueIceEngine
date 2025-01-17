@@ -1,8 +1,6 @@
 /// <reference path="../../index.d.ts"/>
 
 declare class FileAPI {
-    private constructor();
-
     /** 读取文件 */
     static readFile(
         /** 文件路径 */
@@ -55,12 +53,6 @@ declare class FileAPI {
         path: string
     ): boolean;
 
-    /** 获取文件大小 */
-    static getFileSize(
-        /** 文件路径 */
-        path: string
-    ): number;
-
     /** 路径是否为文件夹 */
     static isDirectory(
         /** 文件/文件夹路径 */
@@ -72,6 +64,12 @@ declare class FileAPI {
         /** 文件/文件夹路径 */
         path: string
     ): boolean;
+
+    /** 获取文件大小 */
+    static getFileSize(
+        /** 文件路径 */
+        path: string
+    ): number;
 
     /** 获取文件/文件夹列表 */
     static listDirectory(

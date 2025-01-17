@@ -1,7 +1,7 @@
 /// <reference path="../../index.d.ts"/>
 
 declare class Permission {
-    toString(): "<Permission>";
+	toString(): "<Permission>" | string;
 
     getName(): string;
 

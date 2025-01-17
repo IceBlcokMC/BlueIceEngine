@@ -2,7 +2,7 @@
 
 /** 实体 */
 declare class Actor extends CommandSender {
-    toString(): "<Actor>" | string;
+	toString(): "<Actor>" | string;
 
     /** 获取实体命名空间ID */
     getType(): string;

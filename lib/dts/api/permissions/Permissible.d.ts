@@ -1,7 +1,7 @@
 /// <reference path="../../index.d.ts"/>
 
 declare class Permissible {
-    toString(): "<Permissible>" | string;
+	toString(): "<Permissible>" | string;
 
     isOp(): boolean;
 
@@ -15,10 +15,8 @@ declare class Permissible {
 
     hasPermission(perm: Permission): boolean;
 
-    /** 此接口执行失败会抛出异常 */
     // addAttachment(plugin: Plugin): any; // TODO: PermissionAttachment
 
-    /** 此接口执行失败会抛出异常 */
     // addAttachment(plugin: Plugin, name: string, value: boolean): any; // TODO: PermissionAttachment
 
     // removeAttachment(attachment: PermissionAttachment): any; // TODO: PermissionAttachment

@@ -2,7 +2,7 @@
 
 /** 插件相关信息 */
 declare class PluginDescription {
-    toString(): "<PluginDescription>";
+	toString(): "<PluginDescription>" | string;
 
     /** 获取插件名字 */
     getName(): string;

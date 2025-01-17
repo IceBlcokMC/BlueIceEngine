@@ -7,16 +7,17 @@
 namespace jse {
 
 
-ClassDefine<UUIDAPI> UUIDAPI::builder = defineClass<UUIDAPI>("UUID")
-                                            .constructor(&UUIDAPI::make)
-                                            .instanceFunction("toString", &UUIDAPI::toString)
-                                            .instanceFunction("forEach", &UUIDAPI::forEach) // c++ iterator
-                                            .instanceFunction("size", &UUIDAPI::size)
-                                            .instanceFunction("isNil", &UUIDAPI::isNil)
-                                            .instanceFunction("version", &UUIDAPI::version)
-                                            .instanceFunction("swap", &UUIDAPI::swap)
-                                            .instanceFunction("str", &UUIDAPI::str)
-                                            .build();
+ClassDefine<UUIDAPI> UUIDAPI::builder = 
+	defineClass<UUIDAPI>("UUID")
+		.constructor(&UUIDAPI::make)
+		.instanceFunction("toString", &UUIDAPI::toString)
+		.instanceFunction("forEach", &UUIDAPI::forEach)
+		.instanceFunction("size", &UUIDAPI::size)
+		.instanceFunction("isNil", &UUIDAPI::isNil)
+		.instanceFunction("version", &UUIDAPI::version)
+		.instanceFunction("swap", &UUIDAPI::swap)
+		.instanceFunction("str", &UUIDAPI::str)
+		.build();
 
 
 UUIDAPI* UUIDAPI::make(const Arguments& args) {

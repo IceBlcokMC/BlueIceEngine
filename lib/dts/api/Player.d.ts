@@ -2,7 +2,7 @@
 
 /** 玩家 */
 declare class Player extends Mob {
-    toString(): "<Player>" | string;
+	toString(): "<Player>" | string;
 
     /** 获取玩家的UUID */
     getUniqueId(): UUID;
@@ -162,7 +162,7 @@ declare class Player extends Mob {
     /** 获取玩家游戏版本 */
     getGameVersion(): string;
 
-    //getSkin():Skin; //TODO Skin
+   //getSkin():Skin; //TODO Skin
 
     /** 将玩家转移到另一个服务器 */
     transfer(
