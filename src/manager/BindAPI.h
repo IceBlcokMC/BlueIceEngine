@@ -1,6 +1,7 @@
 #pragma once
 #include "api/LoggerAPI.h"
 #include "api/PlayerAPI.h"
+#include "api/ServerAPI.h"
 #include "api/actor/ActorAPI.h"
 #include "api/actor/MobAPI.h"
 #include "api/command/CommandAPI.h"
@@ -28,7 +29,7 @@ inline void BindAPI(ScriptEngine* engine) {
     engine->registerNativeClass(FileAPI::builder);
 
     // instance class
-#define REGISTER_CLASS(CLASS) engine->registerNativeClass<CLASS>(CLASS::builder);
+#define REGISTER_CLASS(CLASS) engine->registerNativeClass<CLASS>(CLASS::builder)
 
     REGISTER_CLASS(PluginAPI);
     REGISTER_CLASS(PluginDescriptionAPI);
@@ -46,6 +47,7 @@ inline void BindAPI(ScriptEngine* engine) {
     REGISTER_CLASS(PlayerAPI);
 
     REGISTER_CLASS(UUIDAPI);
+    REGISTER_CLASS(ServerAPI);
 
 #undef REGISTER_CLASS
 }
