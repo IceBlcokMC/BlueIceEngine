@@ -9,6 +9,7 @@
 #include "api/jse/EnumAPI.h"
 #include "api/jse/FileAPI.h"
 #include "api/jse/JSEAPI.h"
+#include "api/lang/TranslatableAPI.h"
 #include "api/permissions/PermissibleAPI.h"
 #include "api/permissions/PermissionAPI.h"
 #include "api/plugin/PluginAPI.h"
@@ -33,6 +34,8 @@ inline void BindAPI(ScriptEngine* engine) {
 
     REGISTER_CLASS(PluginAPI);
     REGISTER_CLASS(PluginDescriptionAPI);
+
+    REGISTER_CLASS(TranslatableAPI);
 
     REGISTER_CLASS(PermissibleAPI);
     REGISTER_CLASS(PermissionAPI);

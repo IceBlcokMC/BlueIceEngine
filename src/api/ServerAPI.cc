@@ -4,6 +4,7 @@
 #include "api/LoggerAPI.h"
 #include "api/PlayerAPI.h"
 #include "api/command/CommandSenderAPI.h"
+#include "api/lang/TranslatableAPI.h"
 #include "api/util/UUIDAPI.h"
 #include "endstone/player.h"
 #include "endstone/server.h"
@@ -12,48 +13,48 @@
 
 namespace jse {
 
-ClassDefine<ServerAPI> ServerAPI::builder = 
-	defineClass<ServerAPI>("Server")
-		.constructor(nullptr)
-		.instanceFunction("toString", &ServerAPI::toString)
-		.instanceFunction("getName", &ServerAPI::getName)
-		.instanceFunction("getVersion", &ServerAPI::getVersion)
-		.instanceFunction("getMinecraftVersion", &ServerAPI::getMinecraftVersion)
-		.instanceFunction("getLogger", &ServerAPI::getLogger)
-		.instanceFunction("getLanguage", &ServerAPI::getLanguage)
-		.instanceFunction("getPluginManager", &ServerAPI::getPluginManager)
-		.instanceFunction("getPluginCommand", &ServerAPI::getPluginCommand)
-		.instanceFunction("getCommandSender", &ServerAPI::getCommandSender)
-		.instanceFunction("dispatchCommand", &ServerAPI::dispatchCommand)
-		.instanceFunction("getScheduler", &ServerAPI::getScheduler)
-		.instanceFunction("getLevel", &ServerAPI::getLevel)
-		.instanceFunction("getOnlinePlayers", &ServerAPI::getOnlinePlayers)
-		.instanceFunction("getMaxPlayers", &ServerAPI::getMaxPlayers)
-		.instanceFunction("setMaxPlayers", &ServerAPI::setMaxPlayers)
-		.instanceFunction("getPlayer", &ServerAPI::getPlayer)
-		.instanceFunction("getOnlineMode", &ServerAPI::getOnlineMode)
-		.instanceFunction("shutdown", &ServerAPI::shutdown)
-		.instanceFunction("reload", &ServerAPI::reload)
-		.instanceFunction("reloadData", &ServerAPI::reloadData)
-		.instanceFunction("broadcast", &ServerAPI::broadcast)
-		.instanceFunction("broadcastMessage", &ServerAPI::broadcastMessage)
-		.instanceFunction("isPrimaryThread", &ServerAPI::isPrimaryThread)
-		.instanceFunction("getScoreboard", &ServerAPI::getScoreboard)
-		.instanceFunction("createScoreboard", &ServerAPI::createScoreboard)
-		.instanceFunction("getCurrentMillisecondsPerTick", &ServerAPI::getCurrentMillisecondsPerTick)
-		.instanceFunction("getAverageMillisecondsPerTick", &ServerAPI::getAverageMillisecondsPerTick)
-		.instanceFunction("getCurrentTicksPerSecond", &ServerAPI::getCurrentTicksPerSecond)
-		.instanceFunction("getAverageTicksPerSecond", &ServerAPI::getAverageTicksPerSecond)
-		.instanceFunction("getCurrentTickUsage", &ServerAPI::getCurrentTickUsage)
-		.instanceFunction("getAverageTickUsage", &ServerAPI::getAverageTickUsage)
-		.instanceFunction("getStartTime", &ServerAPI::getStartTime)
-		.instanceFunction("createBossBar", &ServerAPI::createBossBar)
-		.instanceFunction("createBlockData", &ServerAPI::createBlockData)
-		.instanceFunction("getBanList", &ServerAPI::getBanList)
-		.instanceFunction("getIpBanList", &ServerAPI::getIpBanList)
+ClassDefine<ServerAPI> ServerAPI::builder =
+    defineClass<ServerAPI>("Server")
+        .constructor(nullptr)
+        .instanceFunction("toString", &ServerAPI::toString)
+        .instanceFunction("getName", &ServerAPI::getName)
+        .instanceFunction("getVersion", &ServerAPI::getVersion)
+        .instanceFunction("getMinecraftVersion", &ServerAPI::getMinecraftVersion)
+        .instanceFunction("getLogger", &ServerAPI::getLogger)
+        .instanceFunction("getLanguage", &ServerAPI::getLanguage)
+        .instanceFunction("getPluginManager", &ServerAPI::getPluginManager)
+        .instanceFunction("getPluginCommand", &ServerAPI::getPluginCommand)
+        .instanceFunction("getCommandSender", &ServerAPI::getCommandSender)
+        .instanceFunction("dispatchCommand", &ServerAPI::dispatchCommand)
+        .instanceFunction("getScheduler", &ServerAPI::getScheduler)
+        .instanceFunction("getLevel", &ServerAPI::getLevel)
+        .instanceFunction("getOnlinePlayers", &ServerAPI::getOnlinePlayers)
+        .instanceFunction("getMaxPlayers", &ServerAPI::getMaxPlayers)
+        .instanceFunction("setMaxPlayers", &ServerAPI::setMaxPlayers)
+        .instanceFunction("getPlayer", &ServerAPI::getPlayer)
+        .instanceFunction("getOnlineMode", &ServerAPI::getOnlineMode)
+        .instanceFunction("shutdown", &ServerAPI::shutdown)
+        .instanceFunction("reload", &ServerAPI::reload)
+        .instanceFunction("reloadData", &ServerAPI::reloadData)
+        .instanceFunction("broadcast", &ServerAPI::broadcast)
+        .instanceFunction("broadcastMessage", &ServerAPI::broadcastMessage)
+        .instanceFunction("isPrimaryThread", &ServerAPI::isPrimaryThread)
+        .instanceFunction("getScoreboard", &ServerAPI::getScoreboard)
+        .instanceFunction("createScoreboard", &ServerAPI::createScoreboard)
+        .instanceFunction("getCurrentMillisecondsPerTick", &ServerAPI::getCurrentMillisecondsPerTick)
+        .instanceFunction("getAverageMillisecondsPerTick", &ServerAPI::getAverageMillisecondsPerTick)
+        .instanceFunction("getCurrentTicksPerSecond", &ServerAPI::getCurrentTicksPerSecond)
+        .instanceFunction("getAverageTicksPerSecond", &ServerAPI::getAverageTicksPerSecond)
+        .instanceFunction("getCurrentTickUsage", &ServerAPI::getCurrentTickUsage)
+        .instanceFunction("getAverageTickUsage", &ServerAPI::getAverageTickUsage)
+        .instanceFunction("getStartTime", &ServerAPI::getStartTime)
+        .instanceFunction("createBossBar", &ServerAPI::createBossBar)
+        .instanceFunction("createBlockData", &ServerAPI::createBlockData)
+        .instanceFunction("getBanList", &ServerAPI::getBanList)
+        .instanceFunction("getIpBanList", &ServerAPI::getIpBanList)
         .property("BroadcastChannelAdmin", []() { return ConvertToScriptX(endstone::Server::BroadcastChannelAdmin); })
         .property("BroadcastChannelUser", []() { return ConvertToScriptX(endstone::Server::BroadcastChannelUser); })
-		.build();
+        .build();
 
 Local<Value> ServerAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Server>"); }
 
@@ -141,11 +142,20 @@ Local<Value> ServerAPI::reloadData(Arguments const& /* args */) {
 }
 
 Local<Value> ServerAPI::broadcast(Arguments const& args) {
-    CheckArgsCount(args, 2);
-    CheckArgType(args[0], ValueKind::kString);
-    CheckArgType(args[1], ValueKind::kString);
-    get()->broadcast(ConvertFromScriptX<std::string>(args[0]), ConvertFromScriptX<std::string>(args[1]));
-    return Local<Value>();
+    try {
+        CheckArgsCount(args, 2);
+        // CheckArgType(args[0], ValueKind::kString);
+        CheckArgType(args[1], ValueKind::kString);
+        if (args[0].isString()) {
+            get()->broadcast(ConvertFromScriptX<std::string>(args[0]), ConvertFromScriptX<std::string>(args[1]));
+        } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
+            get()->broadcast(GetScriptClass(TranslatableAPI, args[0])->get(), ConvertFromScriptX<std::string>(args[1]));
+        } else {
+            throw script::Exception("Invalid argument type");
+        }
+        return Local<Value>();
+    }
+    Catch;
 }
 
 Local<Value> ServerAPI::broadcastMessage(Arguments const& args) {

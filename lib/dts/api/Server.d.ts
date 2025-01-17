@@ -41,7 +41,7 @@ declare class Server {
 
     reloadData(): void;
 
-    broadcast(message: string, permission: string): void; // TODO: replace message type to pair<Message, Translatable>
+    broadcast(message: string | Translatable, permission: string): void; // TODO: replace message type to pair<Message, Translatable>
 
     broadcastMessage(message: string): void;
 
