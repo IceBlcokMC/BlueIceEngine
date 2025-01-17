@@ -16,7 +16,7 @@ public:
     : ScriptClass(ConstructFromCpp<TranslatableAPI>{}),
       mTranslatable(std::move(translatable)) {}
 
-    static Local<Object> newUUIDAPI(endstone::Translatable translatable) {
+    static Local<Object> newTranslatableAPI(endstone::Translatable translatable) {
         return (new TranslatableAPI(std::move(translatable)))->getScriptObject();
     }
 
