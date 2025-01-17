@@ -23,7 +23,7 @@ public:
     METHODS(getName);
     METHODS(getType);
     METHODS(getLevel);
-    METHODS(getBlockAt);
+    METHODS(getBlockAt); // todo 实现Block
     static ClassDefine<DimensionAPI> builder;
 };
 } // namespace jse
