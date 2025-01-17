@@ -51,7 +51,7 @@ ClassDefine<ActorAPI> ActorAPI::builder =
         .instanceFunction("getName", &CommandSenderAPI::getName)
 
         // Actor extends Permissible
-        .instanceFunction("isOp", &PermissibleAPI::isOP)
+        .instanceFunction("isOp", &PermissibleAPI::isOp)
         .instanceFunction("setOp", &PermissibleAPI::setOp)
         .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
         .instanceFunction("hasPermission", &PermissibleAPI::hasPermission)

@@ -123,6 +123,9 @@ JSE.registerPlugin({
 		sender.sendMessage("Hello: ", sender.getName());
 		sender.sendMessage("cmd: ", cmd.getName());
 		console.warn("args: ", args);
+		JSE.debug("parent class isOp: ", sender.isOp);
+		JSE.debug("parent class isOp call: ", sender.isOp());
 		return true;
 	},
 });
+

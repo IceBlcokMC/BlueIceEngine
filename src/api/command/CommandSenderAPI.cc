@@ -24,7 +24,7 @@ ClassDefine<CommandSenderAPI> CommandSenderAPI::builder =
 
         // parent class
         // .instanceFunction("toString", &PermissibleAPI::toString)
-        .instanceFunction("isOp", &PermissibleAPI::isOP)
+        .instanceFunction("isOp", &PermissibleAPI::isOp)
         .instanceFunction("setOp", &PermissibleAPI::setOp)
         .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
         .instanceFunction("hasPermission", &PermissibleAPI::hasPermission)

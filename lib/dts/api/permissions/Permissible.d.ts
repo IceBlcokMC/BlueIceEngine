@@ -1,9 +1,9 @@
 /// <reference path="../../index.d.ts"/>
 
 declare class Permissible {
-    toString(): "<Permissible>";
+    toString(): "<Permissible>" | string;
 
-    isOP(): boolean;
+    isOp(): boolean;
 
     setOp(value: boolean): void;
 

@@ -18,7 +18,7 @@ ClassDefine<PermissibleAPI> PermissibleAPI::builder =
     defineClass<PermissibleAPI>("Permissible")
         .constructor(nullptr)
         .instanceFunction("toString", &PermissibleAPI::toString)
-        .instanceFunction("isOp", &PermissibleAPI::isOP)
+        .instanceFunction("isOp", &PermissibleAPI::isOp)
         .instanceFunction("setOp", &PermissibleAPI::setOp)
         .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
         .instanceFunction("hasPermission", &PermissibleAPI::hasPermission)
@@ -32,7 +32,7 @@ ClassDefine<PermissibleAPI> PermissibleAPI::builder =
 
 Local<Value> PermissibleAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Permissible>"); };
 
-Local<Value> PermissibleAPI::isOP(Arguments const& /* args */) {
+Local<Value> PermissibleAPI::isOp(Arguments const& /* args */) {
     try {
         return ConvertToScriptX(this->mPermissible->isOp());
     }

@@ -50,7 +50,7 @@ ClassDefine<MobAPI> MobAPI::builder =
         .instanceFunction("getName", &CommandSenderAPI::getName)
 
         // CommandSender extends Permissible
-        .instanceFunction("isOp", &PermissibleAPI::isOP)
+        .instanceFunction("isOp", &PermissibleAPI::isOp)
         .instanceFunction("setOp", &PermissibleAPI::setOp)
         .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
         .instanceFunction("hasPermission", &PermissibleAPI::hasPermission)

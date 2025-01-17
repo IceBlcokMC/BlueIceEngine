@@ -23,7 +23,7 @@ public:
     }
 
     METHODS(toString);
-    METHODS(isOP);
+    METHODS(isOp);
     METHODS(setOp);
     METHODS(isPermissionSet);
     METHODS(hasPermission);
@@ -33,7 +33,7 @@ public:
     METHODS(getEffectivePermissions);
     METHODS(asCommandSender);
 
-
+public:
     static ClassDefine<PermissibleAPI> builder;
 };
 

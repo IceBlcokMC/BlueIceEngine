@@ -36,6 +36,7 @@ public:
     METHODS(getName);
 
 
+public:
     static ClassDefine<CommandSenderAPI> builder;
 };
 

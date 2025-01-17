@@ -1,7 +1,7 @@
 /// <reference path="../../index.d.ts"/>
 
 /** 命令来源 */
-declare class CommandSender {
+declare class CommandSender extends Permissible {
     toString(): string | "<CommandSender>";
 
     /** 转成命令发送者 */
