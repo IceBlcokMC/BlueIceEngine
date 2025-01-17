@@ -116,10 +116,12 @@ Local<Value> DoScriptTypeConvert(const T& value) {
         return VariantConvert(value);
     }
 }
+template <typename T>
+Local<Value> ConvertToScriptImpl(const T& value);
 template <typename T, std::size_t I>
 Local<Value> VariantConvert(const T& value) {
     if (auto res = std::get_if<I>(&value)) {
-        return DoScriptTypeConvert(*res);
+        return ConvertToScriptImpl(*res);
     } else {
         if constexpr (I + 1 < std::variant_size_v<T>) return VariantConvert<T, I + 1>(value);
         else {
@@ -142,7 +144,7 @@ void DoReflectConvert(const T& value, Local<Object>& res) {
     });
 }
 // 实现
-#pragma warning(disable : 4702)
+// #pragma warning(disable : 4702)
 template <typename T>
 Local<Value> ConvertToScriptImpl(const T& value) {
     if constexpr (IsScriptTypeConvertible<T>) {
@@ -151,10 +153,9 @@ Local<Value> ConvertToScriptImpl(const T& value) {
         Local<Object> res = Object::newObject();
         DoReflectConvert(value, res);
         return res;
-    }
-    return Local<Value>();
+    } else return Local<Value>();
 }
-#pragma warning(default : 4702)
+// #pragma warning(default : 4702)
 
 } // namespace IConvertCppToScriptX
 
@@ -231,18 +232,16 @@ struct FromScriptType<std::unordered_map<std::string, V>> {
 };
 
 // enum
-#pragma warning(disable : 4244)
 template <typename T>
 struct FromScriptType<T, std::enable_if_t<std::is_enum_v<T>>> {
     static T Convert(const Local<Value>& value) {
-        auto enumValue = magic_enum::enum_cast<T>(value.asNumber().toInt64());
+        auto enumValue = magic_enum::enum_cast<T>(static_cast<std::underlying_type_t<T>>(value.asNumber().toInt64()));
         if (!enumValue.has_value()) {
             throw std::runtime_error("Invalid enum value: " + std::to_string(value.asNumber().toInt64()));
         }
         return enumValue.value();
     }
 };
-#pragma warning(default : 4244)
 
 template <typename T>
 struct FromScriptType<T, std::enable_if_t<IsReflectable<T>>> {
