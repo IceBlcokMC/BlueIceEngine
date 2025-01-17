@@ -62,7 +62,6 @@ Local<Value> PermissibleAPI::isPermissionSet(Arguments const& args) {
         } else {
             throw script::Exception("Parameter 0 must be a string or Permission");
         }
-        return ConvertToScriptX(false);
     }
     Catch;
 }
@@ -79,7 +78,6 @@ Local<Value> PermissibleAPI::hasPermission(Arguments const& args) {
         } else {
             throw script::Exception("Parameter 0 must be a string or Permission");
         }
-        return ConvertToScriptX(false);
     }
     Catch;
 }
