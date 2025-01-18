@@ -16,6 +16,7 @@
 #include "api/plugin/PluginAPI.h"
 #include "api/plugin/PluginDescriptionAPI.h"
 #include "api/util/UUIDAPI.h"
+#include "api/util/VectorAPI.h"
 #include "utils/Using.h"
 
 
@@ -52,6 +53,7 @@ inline void BindAPI(ScriptEngine* engine) {
     REGISTER_CLASS(PlayerAPI);
 
     REGISTER_CLASS(UUIDAPI);
+    REGISTER_CLASS(VectorAPI);
     REGISTER_CLASS(ServerAPI);
 
 #undef REGISTER_CLASS
