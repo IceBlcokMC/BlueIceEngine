@@ -4,11 +4,11 @@
         "typedoc-vitepress-theme"
     ],
     "entryPoints": [
-        "../lib/**/*"
+        "../types/**/*"
     ],
     "exclude": [
-        "../lib/dts/index.d.ts",
-        "../lib/dts/api/_/**",
+        "../types/index.d.ts",
+        "../types/api/_/**",
         "node_modules/**/*",
     ],
     "out": "./reference", // 输出目录

@@ -1,10 +1,10 @@
 {
     "include": [
-        "../lib/**/*.d.ts",
+        "../types/**/*.d.ts",
     ],
     "exclude": [
-        "../lib/dts/api/_/**/*",
         "node_modules/**/*",
+        "../types/api/_/**"
     ],
     "compilerOptions": {
         "experimentalDecorators": true, // 启用装饰器
