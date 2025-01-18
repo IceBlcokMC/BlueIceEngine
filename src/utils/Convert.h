@@ -1,5 +1,5 @@
 #pragma once
-#include "boost/pfr.hpp"
+#include "boost/pfr.hpp" // IWYU pragma: keep
 #include "fmt/format.h"
 #include "magic_enum/magic_enum.hpp"
 #include "utils/Using.h"
@@ -92,14 +92,14 @@ Local<Value> DoScriptTypeConvert(const T& value) {
     using ScriptType = typename ToScriptType<T>::Type;
 
     if constexpr (std::is_enum_v<T>) {
-        return Number::newNumber((int)value); // enum -> number
+        return DoScriptTypeConvert(std::underlying_type_t<T>(value)); // enum -> number
     } else if constexpr (std::is_same_v<ScriptType, String>) {
         return String::newString(value); // string -> string
     } else if constexpr (std::is_array_v<T> && std::is_same_v<std::remove_extent_t<T>, char>) {
-        return String::newString(value); // char array -> string
-    } else if constexpr (std::is_same_v<ScriptType, Number>) {
-        if constexpr (std::is_signed_v<T>) return Number::newNumber(value); // int、double、float -> number
-        else return Number::newNumber(static_cast<std::make_signed_t<T>>(value));
+        return String::newString(value);                       // char array -> string
+    } else if constexpr (std::is_same_v<ScriptType, Number>) { // int、double、float -> number
+        if constexpr (std::is_floating_point_v<T>) return Number::newNumber((double)value);
+        else return Number::newNumber((int64_t)value);
     } else if constexpr (std::is_same_v<ScriptType, Boolean>) {
         return Boolean::newBoolean(value); // bool -> boolean
     } else if constexpr (std::is_same_v<ScriptType, Array>) {
