@@ -24,6 +24,7 @@ jobs:
               run: |
                   cd docs
                   npm install
+                  npm run predocs:dev
                   npm run docs:build
 
             - name: Deploy
@@ -31,4 +32,4 @@ jobs:
               with:
                   ACCESS_TOKEN: ${{ secrets.DEPLOY_DOCS }}
                   BRANCH: gh-pages
-                  FOLDER: docs
+                  FOLDER: docs/.vitepress/dist

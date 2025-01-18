@@ -14,3 +14,4 @@ tmp
 node_modules
 docs/reference
 docs/.vitepress/cache
+docs/.vitepress/dist
