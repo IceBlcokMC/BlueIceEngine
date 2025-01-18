@@ -3,6 +3,7 @@
 #include "api/LoggerAPI.h"
 #include "api/PlayerAPI.h"
 #include "api/ServerAPI.h"
+#include "api/SkinAPI.h"
 #include "api/actor/ActorAPI.h"
 #include "api/actor/MobAPI.h"
 #include "api/command/CommandAPI.h"
@@ -65,6 +66,8 @@ inline void BindAPI(ScriptEngine* engine) {
     INSTANCE_CLASS(LoggerAPI);
     INSTANCE_CLASS(PlayerAPI);
     INSTANCE_CLASS(ServerAPI);
+    INSTANCE_CLASS(SkinAPI);
+    INSTANCE_CLASS(SkinImageDataAPI);
     STATIC_CLASS(ColorFormatAPI);
 
 #undef STATIC_CLASS
