@@ -22,14 +22,14 @@ public:
     METHODS(getName);
     METHODS(getVersion);
     METHODS(getMinecraftVersion);
-    METHODS(getLogger);        // todo
+    METHODS(getLogger);
     METHODS(getLanguage);      // todo
     METHODS(getPluginManager); // todo
     METHODS(getPluginCommand); // todo
     METHODS(getCommandSender); // todo
     METHODS(dispatchCommand);
     METHODS(getScheduler); // todo
-    METHODS(getLevel);     // todo
+    METHODS(getLevel);
     METHODS(getOnlinePlayers);
     METHODS(getMaxPlayers);
     METHODS(setMaxPlayers);

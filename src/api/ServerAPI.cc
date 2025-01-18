@@ -8,6 +8,7 @@
 #include "api/util/UUIDAPI.h"
 #include "endstone/player.h"
 #include "endstone/server.h"
+#include "level/LevelAPI.h"
 #include "utils/Defines.h"
 
 
@@ -66,7 +67,7 @@ Local<Value> ServerAPI::getMinecraftVersion(Arguments const& /* args */) {
     return ConvertToScriptX(get()->getMinecraftVersion());
 }
 
-Local<Value> ServerAPI::getLogger(Arguments const& /* args */) { return Local<Value>(); }
+Local<Value> ServerAPI::getLogger(Arguments const& /* args */) { return LoggerAPI::newLoggerAPI(&get()->getLogger()); }
 
 Local<Value> ServerAPI::getLanguage(Arguments const& /* args */) { return Local<Value>(); }
 
@@ -89,7 +90,7 @@ Catch;
 
 Local<Value> ServerAPI::getScheduler(Arguments const& /* args */) { return Local<Value>(); }
 
-Local<Value> ServerAPI::getLevel(Arguments const& /* args */) { return Local<Value>(); }
+Local<Value> ServerAPI::getLevel(Arguments const& /* args */) { return LevelAPI::newLevelAPI(get()->getLevel()); }
 
 Local<Value> ServerAPI::getOnlinePlayers(Arguments const& /* args */) {
     auto result = Array::newArray();
