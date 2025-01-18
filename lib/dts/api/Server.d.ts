@@ -9,7 +9,7 @@ declare class Server {
 
     getMinecraftVersion(): string;
 
-    // getLogger(): any;
+    getLogger(): Logger;
 
     // getLanguage(): any;
 
@@ -23,7 +23,7 @@ declare class Server {
 
     // getScheduler(): any;
 
-    // getLevel(): any;
+    getLevel(): Level;
 
     getOnlinePlayers(): Player[];
 
@@ -41,7 +41,7 @@ declare class Server {
 
     reloadData(): void;
 
-    broadcast(message: string | Translatable, permission: string): void; // TODO: replace message type to pair<Message, Translatable>
+    broadcast(message: string | Translatable, permission: string): void;
 
     broadcastMessage(message: string): void;
 
