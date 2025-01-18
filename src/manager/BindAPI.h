@@ -11,6 +11,7 @@
 #include "api/jse/FileAPI.h"
 #include "api/jse/JSEAPI.h"
 #include "api/lang/TranslatableAPI.h"
+#include "api/level/DimensionAPI.h"
 #include "api/level/LevelAPI.h"
 #include "api/permissions/PermissibleAPI.h"
 #include "api/permissions/PermissionAPI.h"
@@ -42,6 +43,7 @@ inline void BindAPI(ScriptEngine* engine) {
     REGISTER_CLASS(TranslatableAPI);
 
     REGISTER_CLASS(LevelAPI);
+    REGISTER_CLASS(DimensionAPI);
 
     REGISTER_CLASS(PermissibleAPI);
     REGISTER_CLASS(PermissionAPI);

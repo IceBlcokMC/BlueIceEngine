@@ -5,6 +5,8 @@
 
 
 namespace jse {
+
+
 class DimensionAPI : public ScriptClass {
     endstone::Dimension* mDimension;
 
@@ -16,6 +18,7 @@ public:
     static Local<Object> newDimensionAPI(endstone::Dimension* dimension) {
         return (new DimensionAPI(dimension))->getScriptObject();
     }
+
     endstone::Dimension* get() { return mDimension; }
 
 public:
@@ -23,7 +26,11 @@ public:
     METHODS(getName);
     METHODS(getType);
     METHODS(getLevel);
-    METHODS(getBlockAt); // todo 实现Block
+    METHODS(getBlockAt); // TODO: BlockAPI
+
+public:
     static ClassDefine<DimensionAPI> builder;
 };
+
+
 } // namespace jse

@@ -1,4 +1,5 @@
 #include "api/jse/EnumAPI.h"
+#include "endstone/level/dimension.h"
 #include "utils/Convert.h"
 #include "utils/Using.h"
 #include <endstone/game_mode.h>
@@ -10,7 +11,7 @@
 
 #define REGISTER_ENUM_MACRO(ENUM, NAME)                                                                                \
     for (auto [value, key] : magic_enum::enum_entries<ENUM>()) {                                                       \
-        map[NAME][key] = static_cast<int>(value);                                                                  \
+        map[NAME][key] = static_cast<int>(value);                                                                      \
     }
 
 namespace jse::EnumAPI {
@@ -21,9 +22,13 @@ void RegisterEnum(ScriptEngine* engine) {
         REGISTER_ENUM_MACRO(endstone::PermissionDefault, "PermissionDefault");
         REGISTER_ENUM_MACRO(endstone::PluginLoadOrder, "PluginLoadOrder");
         REGISTER_ENUM_MACRO(endstone::Logger::Level, "LoggerLevel");
+        REGISTER_ENUM_MACRO(endstone::Dimension::Type, "DimensionType");
         REGISTER_ENUM_MACRO(endstone::GameMode, "GameMode");
         return map;
     }();
+
+    // Fix magic_enum serach scope -128 ~ 128
+    enumMap["DimensionType"]["Custom"] = static_cast<int>(endstone::Dimension::Type::Custom);
 
     engine->set("Enums", ConvertToScriptX(enumMap));
 }
