@@ -14,7 +14,7 @@ public:
 
 class Entry : public endstone::Plugin {
 public:
-    static Entry* getInstance();
+    static Entry*& getInstance();
 
     void onLoad() override;
 

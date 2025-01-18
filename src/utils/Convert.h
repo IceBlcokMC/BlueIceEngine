@@ -45,13 +45,13 @@ struct ToScriptType<char[N]> {
     using Type = String;
 };
 
-template <>
-struct ToScriptType<int> {
+template <std::integral T>
+struct ToScriptType<T> {
     using Type = Number;
 };
 
-template <>
-struct ToScriptType<double> {
+template <std::floating_point T>
+struct ToScriptType<T> {
     using Type = Number;
 };
 
@@ -83,7 +83,8 @@ template <typename... Ts>
 struct ToScriptType<std::variant<Ts...>> {
     using Type = Value;
 };
-
+template <typename T>
+Local<Value> ConvertToScriptImpl(const T& value);
 template <typename T, std::size_t I = 0>
 Local<Value> VariantConvert(const T& value);
 template <typename T>
@@ -97,27 +98,27 @@ Local<Value> DoScriptTypeConvert(const T& value) {
     } else if constexpr (std::is_array_v<T> && std::is_same_v<std::remove_extent_t<T>, char>) {
         return String::newString(value); // char array -> string
     } else if constexpr (std::is_same_v<ScriptType, Number>) {
-        return Number::newNumber(value); // int、double、float -> number
+        if constexpr (std::is_signed_v<T>) return Number::newNumber(value); // int、double、float -> number
+        else return Number::newNumber(static_cast<std::make_signed_t<T>>(value));
     } else if constexpr (std::is_same_v<ScriptType, Boolean>) {
         return Boolean::newBoolean(value); // bool -> boolean
     } else if constexpr (std::is_same_v<ScriptType, Array>) {
         auto arr = Array::newArray(); // vector<T> -> array
         for (const auto& item : value) {
-            arr.add(DoScriptTypeConvert(item));
+            arr.add(ConvertToScriptImpl(item));
         }
         return arr;
     } else if constexpr (std::is_same_v<ScriptType, Object>) {
         auto obj = Object::newObject(); // unordered_map<K, V> -> object
         for (const auto& [key, val] : value) {
-            obj.set(fmt::to_string(key), DoScriptTypeConvert(val));
+            obj.set(fmt::to_string(key), ConvertToScriptImpl(val));
         }
         return obj;
     } else if constexpr (std::is_same_v<ScriptType, Value>) {
         return VariantConvert(value);
     }
 }
-template <typename T>
-Local<Value> ConvertToScriptImpl(const T& value);
+
 template <typename T, std::size_t I>
 Local<Value> VariantConvert(const T& value) {
     if (auto res = std::get_if<I>(&value)) {
@@ -144,7 +145,6 @@ void DoReflectConvert(const T& value, Local<Object>& res) {
     });
 }
 // 实现
-// #pragma warning(disable : 4702)
 template <typename T>
 Local<Value> ConvertToScriptImpl(const T& value) {
     if constexpr (IsScriptTypeConvertible<T>) {
@@ -153,9 +153,10 @@ Local<Value> ConvertToScriptImpl(const T& value) {
         Local<Object> res = Object::newObject();
         DoReflectConvert(value, res);
         return res;
+    } else if constexpr (requires(const T& value) { value.getScriptObject(); }) {
+        return value.getScriptObject();
     } else return Local<Value>();
 }
-// #pragma warning(default : 4702)
 
 } // namespace IConvertCppToScriptX
 
@@ -186,15 +187,18 @@ struct FromScriptType<std::string> {
 };
 
 // int
-template <>
-struct FromScriptType<int> {
-    static int Convert(const Local<Value>& value) { return static_cast<int>(value.asNumber().toDouble()); }
+template <std::integral T>
+struct FromScriptType<T> {
+    static T Convert(const Local<Value>& value) { return static_cast<T>(value.asNumber().toInt64()); }
 };
 
 // double
-template <>
-struct FromScriptType<double> {
-    static double Convert(const Local<Value>& value) { return value.asNumber().toDouble(); }
+template <std::floating_point T>
+struct FromScriptType<T> {
+    static T Convert(const Local<Value>& value) {
+        if constexpr (sizeof(T) < sizeof(double)) return value.asNumber().toFloat();
+        else return value.asNumber().toDouble();
+    }
 };
 
 // bool

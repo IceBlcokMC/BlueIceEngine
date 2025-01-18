@@ -1,8 +1,8 @@
 #include "Entry.h"
+#include "endstone/plugin/plugin_manager.h"
 #include "loader/JavaScriptPluginLoader.h"
 #include "manager/NodeManager.h"
 #include "utils/Using.h"
-#include "endstone/plugin/plugin_manager.h"
 
 
 #include <filesystem>
@@ -16,8 +16,8 @@
 
 namespace jse {
 
-Entry* Entry::getInstance() {
-    static Entry* instance = new Entry();
+Entry*& Entry::getInstance() {
+    static Entry* instance = nullptr;
     return instance;
 }
 
@@ -55,5 +55,6 @@ endstone::PluginDescription const& Entry::getDescription() const { return descri
 #define EXPORT_ENTRY_POINT __attribute__((visibility("default")))
 #endif
 extern "C" [[maybe_unused]] EXPORT_ENTRY_POINT endstone::Plugin* init_endstone_plugin() {
+    jse::Entry::getInstance() = new jse::Entry{};
     return jse::Entry::getInstance();
 }
