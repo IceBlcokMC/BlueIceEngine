@@ -29,7 +29,7 @@ interface Plugin {
     /** 获取插件名字 */
     getName(): string;
 
-    getCommand(): PluginCommand;
+    // getCommand(): PluginCommand;
 
     /** 获取插件的数据存储目录 */
     getDataFolder(): string;

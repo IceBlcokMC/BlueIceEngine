@@ -1,9 +1,0 @@
-{
-    "include": [
-        "tools/defineClass.ts"
-    ],
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "ES2022"
-    }
-}

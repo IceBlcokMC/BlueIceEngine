@@ -10,3 +10,7 @@ EndStone-SDK
 !.vscode/settings.json
 /.cache
 tmp
+
+node_modules
+docs/reference
+docs/.vitepress/cache
