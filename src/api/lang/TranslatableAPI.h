@@ -27,7 +27,7 @@ public:
 
     static TranslatableAPI* make(Arguments const& args);
 
-    endstone::Translatable get() { return mTranslatable; }
+    endstone::Translatable& get() { return mTranslatable; }
 
 public:
     METHODS(toString);

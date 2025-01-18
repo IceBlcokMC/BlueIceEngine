@@ -25,7 +25,7 @@ public:
 
     static VectorAPI* make(Arguments const& args);
 
-    endstone::Vector<float> get() { return mVector; }
+    endstone::Vector<float>& get() { return mVector; }
 
 public: /* instanceProperty */
     Local<Value> GetterX();

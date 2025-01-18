@@ -56,7 +56,7 @@ public:
 
     static UUIDAPI* make(Arguments const& args);
 
-    endstone::UUID get() { return mUUID; }
+    endstone::UUID& get() { return mUUID; }
 
 public:
     METHODS(toString);
