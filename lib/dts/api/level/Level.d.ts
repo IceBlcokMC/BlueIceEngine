@@ -1,5 +1,7 @@
 /// <reference path="../../index.d.ts"/>
-
+/**
+ * @hideconstructor
+ */
 declare class Level {
     toString(): "<Level>" | string;
 

@@ -1,6 +1,9 @@
 /// <reference path="../../index.d.ts"/>
 
-/** 插件相关信息 */
+/**
+ * 插件描述
+ * @hideconstructor
+ */
 declare class PluginDescription {
 	toString(): "<PluginDescription>" | string;
 

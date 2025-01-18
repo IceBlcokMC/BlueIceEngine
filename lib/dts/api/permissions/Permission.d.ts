@@ -1,5 +1,7 @@
 /// <reference path="../../index.d.ts"/>
-
+/**
+ * @hideconstructor
+ */
 declare class Permission {
 	toString(): "<Permission>" | string;
 

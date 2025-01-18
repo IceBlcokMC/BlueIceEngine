@@ -1,6 +1,9 @@
 /// <reference path="../../index.d.ts"/>
 
-/** 插件实例 */
+/**
+ * 插件实例
+ * @hideconstructor
+ */
 interface Plugin {
     toString(): "<Plugin>";
 

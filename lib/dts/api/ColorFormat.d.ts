@@ -1,5 +1,7 @@
 /// <reference path="../index.d.ts"/>
-
+/**
+ * @hideconstructor
+ */
 declare class ColorFormat {
     static get Escape(): string;
     static get Black(): string;

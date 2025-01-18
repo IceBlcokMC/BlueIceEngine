@@ -1,5 +1,6 @@
 /// <reference path="../../index.d.ts"/>
 
+
 declare class Translatable {
     constructor(text: string, params: string[]);
 

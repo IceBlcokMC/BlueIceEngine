@@ -1,5 +1,9 @@
 /// <reference path="../../index.d.ts"/>
 
+/**
+ * 文件操作API
+ * @hideconstructor
+ */
 declare class FileAPI {
     /** 读取文件 */
     static readFile(

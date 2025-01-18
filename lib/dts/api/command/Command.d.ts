@@ -1,7 +1,11 @@
 /// <reference path="../../index.d.ts"/>
 
+/**
+ * 命令接口
+ * @hideconstructor
+ */
 declare class Command {
-	toString(): "<Command>" | string;
+    toString(): "<Command>" | string;
 
     execute(sender: CommandSender, args: string[]): boolean;
 

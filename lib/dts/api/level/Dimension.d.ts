@@ -1,5 +1,8 @@
 /// <reference path="../../index.d.ts"/>
 
+/**
+ * @hideconstructor
+ */
 declare class Dimension {
     toString(): "<Dimension>" | string;
 

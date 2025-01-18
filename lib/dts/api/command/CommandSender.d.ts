@@ -1,8 +1,11 @@
 /// <reference path="../../index.d.ts"/>
 
-/** 命令来源 */
+/**
+ * 命令发送者
+ * @hideconstructor
+ */
 declare class CommandSender extends Permissible {
-	toString(): "<CommandSender>" | string;
+    toString(): "<CommandSender>" | string;
 
     /** 转成命令发送者 */
     asCommandSender(): CommandSender | undefined;

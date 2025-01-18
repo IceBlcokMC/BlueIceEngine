@@ -21,7 +21,10 @@ declare type CommandBuilder<P extends PermissionBuilder> = {
     };
 };
 
-/** JSE提供接口 */
+/**
+ * 引擎接口
+ * @hideconstructor
+ */
 declare class JSE {
     /**  向引擎注册插件(由引擎向EndStone注册实例) */
     static registerPlugin<P extends PermissionBuilder>(

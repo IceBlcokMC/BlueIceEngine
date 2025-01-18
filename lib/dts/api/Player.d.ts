@@ -1,6 +1,9 @@
 /// <reference path="../index.d.ts"/>
 
-/** 玩家 */
+/**
+ * 玩家类
+ * @hideconstructor
+ */
 declare class Player extends Mob {
     toString(): "<Player>" | string;
 

@@ -1,6 +1,9 @@
 /// <reference path="../index.d.ts"/>
 
-/** 日志输出 */
+/**
+ * 日志类
+ * @hideconstructor
+ */
 declare class Logger {
     toString(): "<Logger>";
 
