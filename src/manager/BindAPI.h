@@ -25,43 +25,50 @@
 namespace jse {
 
 inline void BindAPI(ScriptEngine* engine) {
-
-    // enum class
     EnumAPI::RegisterEnum(engine);
 
-    // static class
-    engine->registerNativeClass(JSEAPI::builder);
-    engine->registerNativeClass(FileAPI::builder);
-    engine->registerNativeClass(ColorFormatAPI::builder);
+#define STATIC_CLASS(CLASS)   engine->registerNativeClass(CLASS::builder)
+#define INSTANCE_CLASS(CLASS) engine->registerNativeClass<CLASS>(CLASS::builder)
 
-    // instance class
-#define REGISTER_CLASS(CLASS) engine->registerNativeClass<CLASS>(CLASS::builder)
+    /* actor */
+    INSTANCE_CLASS(ActorAPI);
+    INSTANCE_CLASS(MobAPI);
 
-    REGISTER_CLASS(PluginAPI);
-    REGISTER_CLASS(PluginDescriptionAPI);
+    /* command */
+    INSTANCE_CLASS(CommandAPI);
+    INSTANCE_CLASS(CommandSenderAPI);
 
-    REGISTER_CLASS(TranslatableAPI);
+    /* jse */
+    STATIC_CLASS(JSEAPI);
+    STATIC_CLASS(FileAPI);
 
-    REGISTER_CLASS(LevelAPI);
-    REGISTER_CLASS(DimensionAPI);
+    /* lang */
+    INSTANCE_CLASS(TranslatableAPI);
 
-    REGISTER_CLASS(PermissibleAPI);
-    REGISTER_CLASS(PermissionAPI);
+    /* level */
+    INSTANCE_CLASS(LevelAPI);
+    INSTANCE_CLASS(DimensionAPI);
 
-    REGISTER_CLASS(CommandAPI);
-    REGISTER_CLASS(CommandSenderAPI);
+    /* permissions */
+    INSTANCE_CLASS(PermissibleAPI);
+    INSTANCE_CLASS(PermissionAPI);
 
-    REGISTER_CLASS(ActorAPI);
-    REGISTER_CLASS(MobAPI);
+    /* plugin */
+    INSTANCE_CLASS(PluginAPI);
+    INSTANCE_CLASS(PluginDescriptionAPI);
 
-    REGISTER_CLASS(LoggerAPI);
-    REGISTER_CLASS(PlayerAPI);
+    /* util */
+    INSTANCE_CLASS(UUIDAPI);
+    INSTANCE_CLASS(VectorAPI);
 
-    REGISTER_CLASS(UUIDAPI);
-    REGISTER_CLASS(VectorAPI);
-    REGISTER_CLASS(ServerAPI);
+    /* other */
+    INSTANCE_CLASS(LoggerAPI);
+    INSTANCE_CLASS(PlayerAPI);
+    INSTANCE_CLASS(ServerAPI);
+    STATIC_CLASS(ColorFormatAPI);
 
-#undef REGISTER_CLASS
+#undef STATIC_CLASS
+#undef INSTANCE_CLASS
 }
 
 
