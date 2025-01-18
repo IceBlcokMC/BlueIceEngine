@@ -1,0 +1,34 @@
+name: Build docs
+
+on:
+    push:
+        paths:
+            - types/**
+            - docs/**
+            - .github/workflows/docs.yml
+    pull_request:
+        paths:
+            - types/**
+            - docs/**
+            - .github/workflows/docs.yml
+    workflow_dispatch:
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@main
+
+            - name: Install and Build
+              run: |
+                  cd docs
+                  npm install
+                  npm run docs:build
+
+            - name: Deploy
+              uses: JamesIves/github-pages-deploy-action@releases/v3
+              with:
+                  ACCESS_TOKEN: ${{ secrets.DEPLOY_DOCS }}
+                  BRANCH: gh-pages
+                  FOLDER: docs
