@@ -33,11 +33,14 @@ ClassDefine<VectorAPI> VectorAPI::builder = defineClass<VectorAPI>("Vector")
 
 VectorAPI* VectorAPI::make(Arguments const& args) {
     if (args.size() == 3 && args[0].isNumber() && args[1].isNumber() && args[2].isNumber()) {
-        return (new VectorAPI(endstone::Vector<float>{
-            ConvertFromScriptX<float>(args[0]),
-            ConvertFromScriptX<float>(args[1]),
-            ConvertFromScriptX<float>(args[2])
-        }));
+        return (new VectorAPI(
+            args.thiz(),
+            endstone::Vector<float>{
+                ConvertFromScriptX<float>(args[0]),
+                ConvertFromScriptX<float>(args[1]),
+                ConvertFromScriptX<float>(args[2])
+            }
+        ));
     }
     return nullptr;
 }
