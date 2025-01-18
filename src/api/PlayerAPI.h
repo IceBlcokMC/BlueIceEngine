@@ -61,7 +61,7 @@ public:
     METHODS(getDeviceOS);
     METHODS(getDeviceId);
     METHODS(getGameVersion);
-    METHODS(getSkin); // todo
+    METHODS(getSkin);
     METHODS(transfer);
     METHODS(sendForm);   // todo
     METHODS(closeForm);  // todo
