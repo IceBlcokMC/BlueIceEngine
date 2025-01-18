@@ -5,7 +5,7 @@
 
 
 namespace jse {
-    
+
 
 class LevelAPI : public ScriptClass {
     endstone::Level* mLevel;
@@ -15,7 +15,7 @@ public:
 
     static Local<Object> newLevelAPI(endstone::Level* Level) { return (new LevelAPI(Level))->getScriptObject(); }
 
-    endstone::Level*     get() { return mLevel; }
+    endstone::Level* get() { return mLevel; }
 
 public:
     METHODS(toString);
