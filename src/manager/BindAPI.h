@@ -16,6 +16,7 @@
 #include "api/level/LevelAPI.h"
 #include "api/permissions/PermissibleAPI.h"
 #include "api/permissions/PermissionAPI.h"
+#include "api/permissions/PermissionAttachmentAPI.h"
 #include "api/plugin/PluginAPI.h"
 #include "api/plugin/PluginDescriptionAPI.h"
 #include "api/util/SocketAddressAPI.h"
@@ -54,6 +55,7 @@ inline void BindAPI(ScriptEngine* engine) {
     /* permissions */
     INSTANCE_CLASS(PermissibleAPI);
     INSTANCE_CLASS(PermissionAPI);
+    INSTANCE_CLASS(PermissionAttachmentAPI);
 
     /* plugin */
     INSTANCE_CLASS(PluginAPI);

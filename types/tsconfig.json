@@ -1,0 +1,13 @@
+{
+    "include": [
+        "./**/*"
+    ],
+    "compilerOptions": {
+        "lib": [
+            "ES2020",
+            "ESNext"
+        ],
+        "types": [],
+        "target": "ES6"
+    }
+}
