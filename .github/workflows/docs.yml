@@ -28,6 +28,8 @@ jobs:
                   npm install
                   npm run predocs:dev
                   npm run docs:build
+                  cd .vitepress/dist
+                  touch .nojekyll
 
             - name: Deploy
               uses: JamesIves/github-pages-deploy-action@v4
