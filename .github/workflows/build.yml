@@ -3,15 +3,13 @@ name: Build
 on:
     push:
         paths:
-            - xmake.lua
             - src/**
-            - patch/**
+            - xmake.lua
             - .github/workflows/build.yml
     pull_request:
         paths:
-            - xmake.lua
             - src/**
-            - patch/**
+            - xmake.lua
             - .github/workflows/build.yml
     workflow_dispatch:
 

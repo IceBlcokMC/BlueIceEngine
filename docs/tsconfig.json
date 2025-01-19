@@ -1,0 +1,19 @@
+{
+    "include": [
+        "../types/**/*.d.ts",
+    ],
+    "exclude": [
+        "node_modules/**/*",
+        "../types/api/_/**"
+    ],
+    "compilerOptions": {
+        "experimentalDecorators": true, // 启用装饰器
+        "lib": [
+            "es2020",
+            "DOM"
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node", // 使用node的模块解析方式
+        "target": "es2020" // 编译成es2020
+    }
+}
