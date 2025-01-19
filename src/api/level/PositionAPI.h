@@ -14,7 +14,7 @@ class PositionAPI : public VectorAPI {
 public:
     template <typename T>
     explicit PositionAPI(endstone::Position* pos, ScriptClass::ConstructFromCpp<T> class_)
-    : VectorAPI(pos, class_),
+    : VectorAPI(*pos, class_),
       mPosition(pos) {}
 
     explicit PositionAPI(endstone::Position* pos) : VectorAPI(*pos, ConstructFromCpp<PositionAPI>{}), mPosition(pos) {}
