@@ -5,7 +5,7 @@ import typedocSidebar from "../reference/typedoc-sidebar.json";
 export default defineConfig({
     title: "JS_Engine",
     description: "A Javascript engine for Endstone",
-    base: "js_engine",
+    base: "/js_engine/",
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
         outline: {
