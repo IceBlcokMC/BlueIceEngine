@@ -3,6 +3,7 @@
 #include "endstone/util/socket_address.h"
 #include "utils/Convert.h"
 #include "utils/Using.h"
+#include <cstdint>
 
 
 namespace jse {
@@ -20,7 +21,10 @@ SocketAddressAPI* SocketAddressAPI::make(Arguments const& args) {
     if (args.size() == 2 && args[0].isString() && args[1].isNumber()) {
         return new SocketAddressAPI(
             args.thiz(),
-            endstone::SocketAddress{ConvertFromScriptX<string>(args[0]), ConvertFromScriptX<int>(args[1])}
+            endstone::SocketAddress{
+                ConvertFromScriptX<string>(args[0]),
+                static_cast<uint32_t>(ConvertFromScriptX<int>(args[1]))
+            }
         );
     }
     return nullptr;
