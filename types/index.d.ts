@@ -23,6 +23,8 @@
 /* level */
 /// <reference path="./api/level/Level.d.ts"/>
 /// <reference path="./api/level/Dimension.d.ts"/>
+/// <reference path="./api/level/Position.d.ts"/>
+/// <reference path="./api/level/Location.d.ts"/>
 
 /* permissions */
 /// <reference path="./api/permissions/Permissible.d.ts"/>

@@ -14,6 +14,8 @@
 #include "api/lang/TranslatableAPI.h"
 #include "api/level/DimensionAPI.h"
 #include "api/level/LevelAPI.h"
+#include "api/level/LocationAPI.h"
+#include "api/level/PositionAPI.h"
 #include "api/permissions/PermissibleAPI.h"
 #include "api/permissions/PermissionAPI.h"
 #include "api/permissions/PermissionAttachmentAPI.h"
@@ -52,6 +54,8 @@ inline void BindAPI(ScriptEngine* engine) {
     /* level */
     INSTANCE_CLASS(LevelAPI);
     INSTANCE_CLASS(DimensionAPI);
+    INSTANCE_CLASS(PositionAPI);
+    INSTANCE_CLASS(LocationAPI);
 
     /* permissions */
     INSTANCE_CLASS(PermissibleAPI);

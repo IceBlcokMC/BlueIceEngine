@@ -10,6 +10,11 @@ class VectorAPI : public ScriptClass {
 
 public:
     // C++ new
+    template <typename T>
+    explicit VectorAPI(endstone::Vector<float> vec, ScriptClass::ConstructFromCpp<T> class_)
+    : ScriptClass(class_),
+      mVector(vec) {}
+
     explicit VectorAPI(endstone::Vector<float> vec)
     : ScriptClass(ConstructFromCpp<VectorAPI>{}),
       mVector(std::move(vec)) {}
