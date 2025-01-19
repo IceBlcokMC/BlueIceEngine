@@ -14,8 +14,8 @@ public:
     : ScriptClass(ScriptClass::ConstructFromCpp<PermissionAttachmentAPI>{}),
       mPermissionAttachment(permattachment) {}
 
-    static Local<Object> newPermissionAttachmentAPI(endstone::PermissionAttachment* permission) {
-        return (new PermissionAttachmentAPI{permission})->getScriptObject();
+    static Local<Object> newPermissionAttachmentAPI(endstone::PermissionAttachment* permattachment) {
+        return (new PermissionAttachmentAPI{permattachment})->getScriptObject();
     }
 
     endstone::PermissionAttachment* get() { return mPermissionAttachment; }
