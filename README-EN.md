@@ -38,8 +38,8 @@ Currently, there is no development documentation available. You can read the typ
 
 ## 💻 Supported Platforms
 
-| Platform | Backend | Version | CommonJs | ESM | package manager |
-| :------- | :------ | :------ | :------- | :-- | :-------------- |
+| Platform | Backend | Version  | CommonJs | ESM | package manager |
+| :------- | :------ | :------- | :------- | :-- | :-------------- |
 | Windows  | NodeJs  | v22.12.0 | y        | y   | npm             |
 | Linux    | NodeJs  | v22.12.0 | y        | y   | npm             |
 
@@ -47,9 +47,9 @@ Currently, there is no development documentation available. You can read the typ
 
 Before building, make sure you have installed the following toolchains:
 
-- Xmake
-- MSVC++ 2019 or higher (Windows only)
-- LLVM 15 (with Clang, libc++) (Linux only)
+-   Xmake
+-   MSVC++ 2019 or higher (Windows only)
+-   LLVM 15 (with Clang, libc++) (Linux only)
 
 ```bash
 git clone --depth=1 https://github.com/engsr6982/JS_Engine.git
@@ -64,3 +64,7 @@ Issues and Pull Requests are welcome.
 ## 📍 License
 
 This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=IceBlcokMC/Js_Engine&type=Date)](https://star-history.com/#IceBlcokMC/Js_Engine&Date)

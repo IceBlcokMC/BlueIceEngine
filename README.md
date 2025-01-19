@@ -64,3 +64,7 @@ xmake -y
 ## 📍 许可证
 
 本项目采用 GPL-3.0 许可证。
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=IceBlcokMC/Js_Engine&type=Date)](https://star-history.com/#IceBlcokMC/Js_Engine&Date)
