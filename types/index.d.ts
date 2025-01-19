@@ -28,6 +28,7 @@
 /// <reference path="./api/permissions/Permissible.d.ts"/>
 /// <reference path="./api/permissions/Permission.d.ts"/>
 /// <reference path="./api/permissions/PermissionAttachment.d.ts"/>
+/// <reference path="./api/permissions/PermissionAttachmentInfo.d.ts"/>
 
 /* plugin */
 /// <reference path="./api/plugin/Plugin.d.ts"/>
