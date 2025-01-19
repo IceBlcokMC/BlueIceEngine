@@ -2,6 +2,7 @@
 #include "APIHelper.h"
 #include "api/APIHelper.h"
 #include "api/SkinAPI.h"
+#include "api/util/SocketAddressAPI.h"
 #include "api/util/UUIDAPI.h"
 #include "endstone/skin.h"
 #include "utils/Convert.h"
@@ -119,11 +120,11 @@ Local<Value> PlayerAPI::getUniqueId(Arguments const& /* args */) { return UUIDAP
 Local<Value> PlayerAPI::getXuid(Arguments const& /* args */) { return ConvertToScriptX(get()->getXuid()); }
 
 Local<Value> PlayerAPI::getAddress(Arguments const& /* args */) {
-    auto result  = Object::newObject();
-    auto address = get()->getAddress();
-    result.set("host", ConvertToScriptX(address.getHostname()));
-    result.set("port", ConvertToScriptX(address.getPort()));
-    return result;
+    try {
+        auto address = get()->getAddress();
+        return SocketAddressAPI::newSocketAddressAPI(address);
+    }
+    Catch;
 }
 
 Local<Value> PlayerAPI::sendPopup(Arguments const& args) {

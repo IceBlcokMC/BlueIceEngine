@@ -2,6 +2,8 @@
 /// <reference path="./enum/PermissionDefault.d.ts"/>
 /// <reference path="./enum/LoggerLevel.d.ts"/>
 /// <reference path="./enum/PluginLoadOrder.d.ts"/>
+/// <reference path="./enum/GameMode.d.ts"/>
+/// <reference path="./enum/DimensionType.d.ts"/>
 
 /* actor */
 /// <reference path="./api/actor/Actor.d.ts"/>
@@ -33,9 +35,11 @@
 /* util */
 /// <reference path="./api/util/UUID.d.ts"/>
 /// <reference path="./api/util/Vector.d.ts"/>
+/// <reference path="./api/util/SocketAddress.d.ts"/>
 
 /* other */
 /// <reference path="./api/Logger.d.ts"/>
 /// <reference path="./api/Player.d.ts"/>
 /// <reference path="./api/Server.d.ts"/>
 /// <reference path="./api/ColorFormat.d.ts"/>
+/// <reference path="./api/Skin.d.ts"/>

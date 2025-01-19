@@ -14,12 +14,7 @@ declare class Player extends Mob {
     getXuid(): string;
 
     /** 获取客户端连接地址 */
-    getAddress(): {
-        /** 地址 */
-        host: string;
-        /** 端口 */
-        port: number;
-    };
+    getAddress(): SocketAddress;
 
     /** 发生音符盒消息 */
     sendPopup(
@@ -165,6 +160,7 @@ declare class Player extends Mob {
     /** 获取玩家游戏版本 */
     getGameVersion(): string;
 
+    /** 获取玩家皮肤 */
     getSkin(): Skin;
 
     /** 将玩家转移到另一个服务器 */

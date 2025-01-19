@@ -18,6 +18,7 @@
 #include "api/permissions/PermissionAPI.h"
 #include "api/plugin/PluginAPI.h"
 #include "api/plugin/PluginDescriptionAPI.h"
+#include "api/util/SocketAddressAPI.h"
 #include "api/util/UUIDAPI.h"
 #include "api/util/VectorAPI.h"
 #include "utils/Using.h"
@@ -61,6 +62,7 @@ inline void BindAPI(ScriptEngine* engine) {
     /* util */
     INSTANCE_CLASS(UUIDAPI);
     INSTANCE_CLASS(VectorAPI);
+    INSTANCE_CLASS(SocketAddressAPI);
 
     /* other */
     INSTANCE_CLASS(LoggerAPI);
