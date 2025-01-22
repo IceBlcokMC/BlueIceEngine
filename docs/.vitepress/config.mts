@@ -64,7 +64,7 @@ export default defineConfig({
                 ],
             },
         },
-        en: {
+        root: {
             lang: "en",
             label: "English",
             link: "/en",
