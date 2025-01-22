@@ -8,8 +8,8 @@ hero:
     tagline:
     actions:
         - theme: brand
-          text: Get Started
-          link: /guide
+          text: Quick Start
+          link: /en/guides/quick_start
         - theme: alt
           text: API Reference
           link: /reference
