@@ -6,7 +6,7 @@ JsEngine 基于 ScriptX 和 NodeJs 实现，支持在 EndStone 中运行 JavaScr
 
 ## 📚 文档
 
-访问我们的[在线文档](https://iceblcokmc.github.io/Js_Engine/)了解更多信息，包括：
+访问我们的[在线文档](https://iceblcokmc.github.io/Js_Engine/zh/)了解更多信息，包括：
 
 - 🚀 快速开始
 - 📦 安装指南
