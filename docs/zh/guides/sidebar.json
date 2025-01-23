@@ -2,5 +2,9 @@
     {
         "text": "快速开始",
         "link": "/zh/guides/quick_start"
+    },
+    {
+        "text": "创建你的插件",
+        "link": "/zh/guides/create_your_plugin.md"
     }
 ]

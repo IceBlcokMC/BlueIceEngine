@@ -2,5 +2,9 @@
     {
         "text": "Quick Start",
         "link": "/en/guides/quick_start"
+    },
+    {
+        "text": "Create Your Plugin",
+        "link": "/en/guides/create_your_plugin.md"
     }
 ]
