@@ -4,37 +4,14 @@
 
 JsEngine 基于 ScriptX 和 NodeJs 实现，支持在 EndStone 中运行 JavaScript 插件。
 
-## 📌 安装
+## 📚 文档
 
-> 🚧 目前项目处于开发阶段，请手动前往 Actions 查看最新版本。
+访问我们的[在线文档](https://iceblcokmc.github.io/Js_Engine/)了解更多信息，包括：
 
-1. 下载对应平台的 Js_Engine-full.zip 文件，如: `Js_Engine-windows-full-x64.zip`
-
-> full 为完整包，包含 LibNodeJs 和 JsEngine 的依赖库
-
-2. 将 Js_Engine-full.zip 解压，将压缩包内 libnode.xx 和 plugins 目录复制到 bedrock_server 的根目录下
-
-> 示例结构
-
-```tree
-.
-├── bedrock_server
-│   ├── bedrock_server.exe
-│   ├── libnode.xx
-│   └── plugins
-│       ├── js_engine
-│       │   ├── node_modules
-│       │   ├── dts
-│       │   └── ...
-│       └── js_engine.dll
-└── ...
-```
-
-3. 启动你的 endstone 服务器
-
-## 📗 开发
-
-目前项目没有任何开发文档，您可以阅读 `lib/dts` 目录下的类型定义文件，或者使用我们提供的模板项目[Js_Engine_Plugin_Template](https://github.com/IceBlcokMC/js_engine_plugin_template)。
+- 🚀 快速开始
+- 📦 安装指南
+- 🔧 插件开发
+- 📖 API 参考
 
 ## 💻 支持平台
 
