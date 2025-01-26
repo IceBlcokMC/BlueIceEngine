@@ -4,6 +4,7 @@
 #include "api/form/FormAPI.h"
 #include "endstone/endstone.h"
 #include "utils/Convert.h"
+#include "utils/SafeTransfer.h"
 #include "utils/Using.h"
 #include <variant>
 
@@ -107,15 +108,20 @@ Local<Value> MessageFormAPI::setOnSubmit(Arguments const& args) {
     CheckArgsCount(args, 1);
     CheckArgType(args[0], ValueKind::kFunction);
     try {
-        auto callback = args[0].asFunction();
-        auto engine   = EngineScope::currentEngine();
-        get().setOnSubmit([fn{script::Global(callback)}, engine](endstone::Player* player, int idk) {
-            EngineScope enter{engine};
-            try {
-                if (player) fn.get().call({}, PlayerAPI::newPlayerAPI(player), ConvertToScriptX(idk));
-                else fn.get().call({}, Local<Value>{}, ConvertToScriptX(idk));
+        auto           engine = EngineScope::currentEngine();
+        script::Global callback{args[0].asFunction()};
+
+        auto ptr = SafeTransfer<Function>::make(engine, std::move(callback));
+
+        get().setOnSubmit([ptr](endstone::Player* player, int idk) {
+            if (ptr) {
+                EngineScope enter{ptr->mEngine};
+                try {
+                    if (player) ptr->mGlobal.get().call({}, PlayerAPI::newPlayerAPI(player), ConvertToScriptX(idk));
+                    else ptr->mGlobal.get().call({}, Local<Value>{}, ConvertToScriptX(idk));
+                }
+                CatchNotReturn;
             }
-            CatchNotReturn;
         });
         return args.thiz();
     }

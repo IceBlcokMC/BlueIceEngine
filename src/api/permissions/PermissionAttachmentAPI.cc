@@ -6,6 +6,7 @@
 #include "endstone/permissions/permission_attachment.h"
 #include "utils/Convert.h"
 #include "utils/Defines.h"
+#include "utils/SafeTransfer.h"
 #include "utils/Using.h"
 
 namespace jse {
@@ -42,12 +43,20 @@ Local<Value> PermissionAttachmentAPI::setRemovalCallback(Arguments const& args) 
     try {
         CheckArgsCount(args, 1);
         CheckArgType(args[0], ValueKind::kFunction);
-        auto fn = script::Global(args[0].asFunction());
-        get()->setRemovalCallback([fn{std::move(fn)}](endstone::PermissionAttachment const& attachment) {
-            if (!fn.isEmpty()) {
-                fn.get().call(PermissionAttachmentAPI::newPermissionAttachmentAPI(
-                    &const_cast<endstone::PermissionAttachment&>(attachment)
-                ));
+        auto           engine = EngineScope::currentEngine();
+        script::Global callback{args[0].asFunction()};
+
+        auto ptr = SafeTransfer<Function>::make(engine, std::move(callback));
+
+        get()->setRemovalCallback([ptr](endstone::PermissionAttachment const& attachment) {
+            if (ptr) {
+                EngineScope enter{ptr->mEngine};
+                try {
+                    ptr->mGlobal.get().call(PermissionAttachmentAPI::newPermissionAttachmentAPI(
+                        &const_cast<endstone::PermissionAttachment&>(attachment)
+                    ));
+                }
+                CatchNotReturn;
             }
         });
         return Local<Value>();

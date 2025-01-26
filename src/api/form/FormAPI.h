@@ -4,6 +4,7 @@
 #include "api/lang/TranslatableAPI.h"
 #include "utils/Convert.h"
 #include "utils/Defines.h"
+#include "utils/SafeTransfer.h"
 #include "utils/Using.h"
 
 
@@ -66,15 +67,20 @@ public:
         CheckArgsCount(args, 1);
         CheckArgType(args[0], ValueKind::kFunction);
         try {
-            auto callback = args[0].asFunction();
-            auto engine   = EngineScope::currentEngine();
-            mForm.setOnClose([fn{script::Global{callback}}, engine](endstone::Player* player) {
-                EngineScope enter(engine);
-                try {
-                    if (player) fn.get().call({}, PlayerAPI::newPlayerAPI(player));
-                    else fn.get().call({});
+            auto           engine = EngineScope::currentEngine();
+            script::Global callback{args[0].asFunction()};
+
+            auto ptr = SafeTransfer<Function>::make(engine, std::move(callback));
+
+            mForm.setOnClose([ptr](endstone::Player* player) {
+                if (ptr) {
+                    EngineScope enter(ptr->mEngine);
+                    try {
+                        if (player) ptr->mGlobal.get().call({}, PlayerAPI::newPlayerAPI(player));
+                        else ptr->mGlobal.get().call({});
+                    }
+                    CatchNotReturn;
                 }
-                CatchNotReturn;
             });
             return args.thiz();
         }
