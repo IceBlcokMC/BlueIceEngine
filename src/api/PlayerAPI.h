@@ -63,8 +63,8 @@ public:
     METHODS(getGameVersion);
     METHODS(getSkin);
     METHODS(transfer);
-    METHODS(sendForm);   // todo
-    METHODS(closeForm);  // todo
+    METHODS(sendForm);
+    METHODS(closeForm);
     METHODS(sendPacket); // todo
 
     static ClassDefine<PlayerAPI> builder;

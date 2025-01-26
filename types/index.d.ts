@@ -13,6 +13,10 @@
 /// <reference path="./api/command/Command.d.ts"/>
 /// <reference path="./api/command/CommandSender.d.ts"/>
 
+/* form */
+/// <reference path="./api/form/Form.d.ts"/>
+/// <reference path="./api/form/MessageForm.d.ts"/>
+
 /* jse */
 /// <reference path="./api/jse/File.d.ts"/>
 /// <reference path="./api/jse/JSE.d.ts"/>
@@ -47,3 +51,6 @@
 /// <reference path="./api/Server.d.ts"/>
 /// <reference path="./api/ColorFormat.d.ts"/>
 /// <reference path="./api/Skin.d.ts"/>
+
+// endstone variant
+type Message = string | Translatable;

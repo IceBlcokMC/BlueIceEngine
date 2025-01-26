@@ -171,9 +171,9 @@ declare class Player extends Mob {
         port: number
     ): void;
 
-    //sendForm(form:FormVariant); //TODO FormVariant
+    sendForm(form: MessageForm): void;
 
-    // closeForm(): void;
+    closeForm(): void;
 
     //sendPacket(packet:Packet); //TODO Packet
 }

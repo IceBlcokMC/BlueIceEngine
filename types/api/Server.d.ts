@@ -43,7 +43,7 @@ declare class Server {
 
     reloadData(): void;
 
-    broadcast(message: string | Translatable, permission: string): void;
+    broadcast(message: Message, permission: string): void;
 
     broadcastMessage(message: string): void;
 

@@ -2,10 +2,12 @@
 #include "APIHelper.h"
 #include "api/APIHelper.h"
 #include "api/SkinAPI.h"
+#include "api/form/MessageFormAPI.h"
 #include "api/util/SocketAddressAPI.h"
 #include "api/util/UUIDAPI.h"
 #include "endstone/skin.h"
 #include "utils/Convert.h"
+#include "utils/Defines.h"
 #include "utils/Using.h"
 
 
@@ -314,9 +316,28 @@ Local<Value> PlayerAPI::transfer(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> PlayerAPI::sendForm(Arguments const& /* args */) { return Local<Value>(); }
+Local<Value> PlayerAPI::sendForm(Arguments const& args) {
+    try {
+        CheckArgsCount(args, 1);
+        CheckArgType(args[0], ValueKind::kObject);
+        auto arg = args[0];
 
-Local<Value> PlayerAPI::closeForm(Arguments const& /* args */) { return Local<Value>(); }
+        if (IsInstanceOf<MessageFormAPI>(arg)) {
+            get()->sendForm(GetScriptClass(MessageFormAPI, arg)->get());
+        }
+        // TODO: ActionForm、ModalForm
+        return Local<Value>();
+    }
+    Catch;
+}
+
+Local<Value> PlayerAPI::closeForm(Arguments const& /* args */) {
+    try {
+        get()->closeForm();
+        return Local<Value>();
+    }
+    Catch;
+}
 
 Local<Value> PlayerAPI::sendPacket(Arguments const& /* args */) { return Local<Value>(); }
 

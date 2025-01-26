@@ -8,6 +8,7 @@
 #include "api/actor/MobAPI.h"
 #include "api/command/CommandAPI.h"
 #include "api/command/CommandSenderAPI.h"
+#include "api/form/MessageFormAPI.h"
 #include "api/jse/EnumAPI.h"
 #include "api/jse/FileAPI.h"
 #include "api/jse/JSEAPI.h"
@@ -43,6 +44,9 @@ inline void BindAPI(ScriptEngine* engine) {
     /* command */
     INSTANCE_CLASS(CommandAPI);
     INSTANCE_CLASS(CommandSenderAPI);
+
+    /* form */
+    INSTANCE_CLASS(MessageFormAPI);
 
     /* jse */
     STATIC_CLASS(JSEAPI);

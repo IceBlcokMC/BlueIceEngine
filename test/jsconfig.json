@@ -1,8 +1,7 @@
 {
     "include": [
         "*.js",
-        "../lib/dts/index.d.ts",
-        "../lib/shortcutApi/*.d.ts"
+        "../types/**/*.d.ts"
     ],
     "compilerOptions": {
         "module": "ESNext",
