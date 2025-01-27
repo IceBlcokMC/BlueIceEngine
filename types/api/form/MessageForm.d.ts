@@ -17,5 +17,7 @@ declare class MessageForm extends Form {
 
     setButton2(msg: Message): this;
 
-    setOnSubmit(fn: (player: Player, num: number) => void): this;
+    setOnSubmit(fn: (player: Player, index: number) => void): this;
+
+    // getOnSubmit(): (player: Player, num: number) => void;
 }

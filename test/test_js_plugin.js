@@ -129,17 +129,33 @@ JSE.registerPlugin({
         JSE.debug("MessageForm: ", typeof MessageForm);
 
         if (cmd.getName() == "test") {
-            const fm = new MessageForm();
-            fm.setTitle("Test")
-                .setContent("AAA 建材批发")
-                .setButton1("10086")
-                .setButton2("close")
-                .setOnSubmit((pl, num) => {
-                    JSE.debug("setOnSubmit, pl: ", pl);
-                })
+            // const fm = new MessageForm();
+            // fm.setTitle("Test")
+            //     .setContent("AAA 建材批发")
+            //     .setButton1("10086")
+            //     .setButton2("close")
+            //     .setOnSubmit((pl, num) => {
+            //         JSE.debug("setOnSubmit, pl: ", pl);
+            //     })
+            //     .setOnClose((pl) => {
+            //         JSE.debug("setOnClose, pl: ", pl);
+            //     });
+            const fm = new ActionForm();
+            fm.setTitle("Test ActionForm")
+                .setContent("测试")
                 .setOnClose((pl) => {
-                    JSE.debug("setOnClose, pl: ", pl);
+                    JSE.debug("ActionForm onClose, pl: ", pl);
+                })
+                .setOnSubmit((pl, data) => {
+                    JSE.debug("ActionForm onSubmit, pl: ", pl);
+                    JSE.debug("ActionForm onSubmit, data: ", data);
                 });
+
+            for (let index = 0; index < 10; index++) {
+                fm.addButton(`Button #${index}`, "", (pl) => {
+                    pl.sendMessage(`clicked #${index}`);
+                });
+            }
 
             const player = sender.asPlayer();
             if (player) {

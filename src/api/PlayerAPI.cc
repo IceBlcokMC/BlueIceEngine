@@ -2,6 +2,7 @@
 #include "APIHelper.h"
 #include "api/APIHelper.h"
 #include "api/SkinAPI.h"
+#include "api/form/ActionFormAPI.h"
 #include "api/form/MessageFormAPI.h"
 #include "api/util/SocketAddressAPI.h"
 #include "api/util/UUIDAPI.h"
@@ -324,6 +325,8 @@ Local<Value> PlayerAPI::sendForm(Arguments const& args) {
 
         if (IsInstanceOf<MessageFormAPI>(arg)) {
             get()->sendForm(GetScriptClass(MessageFormAPI, arg)->get());
+        } else if (IsInstanceOf<ActionFormAPI>(arg)) {
+            get()->sendForm(GetScriptClass(ActionFormAPI, arg)->get());
         }
         // TODO: ActionForm、ModalForm
         return Local<Value>();

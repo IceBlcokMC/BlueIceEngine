@@ -16,6 +16,7 @@
 /* form */
 /// <reference path="./api/form/Form.d.ts"/>
 /// <reference path="./api/form/MessageForm.d.ts"/>
+/// <reference path="./api/form/ActionForm.d.ts"/>
 
 /* jse */
 /// <reference path="./api/jse/File.d.ts"/>

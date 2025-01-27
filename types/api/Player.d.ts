@@ -171,7 +171,7 @@ declare class Player extends Mob {
         port: number
     ): void;
 
-    sendForm(form: MessageForm): void;
+    sendForm(form: MessageForm | ActionForm): void;
 
     closeForm(): void;
 
