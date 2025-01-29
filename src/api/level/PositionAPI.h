@@ -19,7 +19,7 @@ public:
 
     explicit PositionAPI(endstone::Position* pos) : VectorAPI(*pos, ConstructFromCpp<PositionAPI>{}), mPosition(pos) {}
 
-    static Local<Object> newPositionAPI(endstone::Position* pos) { return (new PositionAPI(pos))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Position* pos) { return (new PositionAPI(pos))->getScriptObject(); }
 
     endstone::Position* get() { return mPosition; }
 

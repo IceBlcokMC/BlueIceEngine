@@ -13,7 +13,7 @@ public:
     : ScriptClass(ScriptClass::ConstructFromCpp<LoggerAPI>{}),
       mLogger(logger) {};
 
-    static Local<Object> newLoggerAPI(endstone::Logger* logger) { return (new LoggerAPI(logger))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Logger* logger) { return (new LoggerAPI(logger))->getScriptObject(); }
 
     endstone::Logger* get() { return mLogger; }
 

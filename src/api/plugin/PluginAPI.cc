@@ -10,23 +10,22 @@
 
 namespace jse {
 
-ClassDefine<PluginAPI> PluginAPI::builder = 
-	defineClass<PluginAPI>("Plugin")
-		.constructor(nullptr)
-		.instanceFunction("toString", &PluginAPI::toString)
-		.instanceFunction("getDescription", &PluginAPI::getDescription)
-		.instanceFunction("onLoad", &PluginAPI::onLoad)
-		.instanceFunction("onEnable", &PluginAPI::onEnable)
-		.instanceFunction("onDisable", &PluginAPI::onDisable)
-		.instanceFunction("getLogger", &PluginAPI::getLogger)
-		.instanceFunction("isEnabled", &PluginAPI::isEnabled)
-		.instanceFunction("getPluginLoader", &PluginAPI::getPluginLoader)
-		.instanceFunction("getServer", &PluginAPI::getServer)
-		.instanceFunction("getName", &PluginAPI::getName)
-		.instanceFunction("getCommand", &PluginAPI::getCommand)
-		.instanceFunction("getDataFolder", &PluginAPI::getDataFolder)
-		.instanceFunction("registerEvent", &PluginAPI::registerEvent)
-		.build();
+ClassDefine<PluginAPI> PluginAPI::builder = defineClass<PluginAPI>("Plugin")
+                                                .constructor(nullptr)
+                                                .instanceFunction("toString", &PluginAPI::toString)
+                                                .instanceFunction("getDescription", &PluginAPI::getDescription)
+                                                .instanceFunction("onLoad", &PluginAPI::onLoad)
+                                                .instanceFunction("onEnable", &PluginAPI::onEnable)
+                                                .instanceFunction("onDisable", &PluginAPI::onDisable)
+                                                .instanceFunction("getLogger", &PluginAPI::getLogger)
+                                                .instanceFunction("isEnabled", &PluginAPI::isEnabled)
+                                                .instanceFunction("getPluginLoader", &PluginAPI::getPluginLoader)
+                                                .instanceFunction("getServer", &PluginAPI::getServer)
+                                                .instanceFunction("getName", &PluginAPI::getName)
+                                                .instanceFunction("getCommand", &PluginAPI::getCommand)
+                                                .instanceFunction("getDataFolder", &PluginAPI::getDataFolder)
+                                                .instanceFunction("registerEvent", &PluginAPI::registerEvent)
+                                                .build();
 
 
 #define PLUGINAPI_MACRO(FUNC_NAME, ...)                                                                                \
@@ -41,9 +40,7 @@ PLUGINAPI_MACRO(toString, return String::newString("<Plugin>"));
 
 PLUGINAPI_MACRO(
     getDescription,
-    return PluginDescriptionAPI::newPluginDescriptionAPI(
-        &const_cast<endstone::PluginDescription&>(get()->getDescription())
-    )
+    return PluginDescriptionAPI::newInstance(&const_cast<endstone::PluginDescription&>(get()->getDescription()))
 );
 
 PLUGINAPI_MACRO(onLoad, get()->onLoad(); return Local<Value>());
@@ -52,13 +49,13 @@ PLUGINAPI_MACRO(onEnable, get()->onEnable(); return Local<Value>());
 
 PLUGINAPI_MACRO(onDisable, get()->onDisable(); return Local<Value>());
 
-PLUGINAPI_MACRO(getLogger, return LoggerAPI::newLoggerAPI(&get()->getLogger()));
+PLUGINAPI_MACRO(getLogger, return LoggerAPI::newInstance(&get()->getLogger()));
 
 PLUGINAPI_MACRO(isEnabled, return Boolean::newBoolean(get()->isEnabled()));
 
 PLUGINAPI_MACRO(getPluginLoader, return Local<Value>()); // TODO: PluginLoader
 
-PLUGINAPI_MACRO(getServer, return ServerAPI::newServerAPI(&get()->getServer()));
+PLUGINAPI_MACRO(getServer, return ServerAPI::newInstance(&get()->getServer()));
 
 PLUGINAPI_MACRO(getName, return String::newString(get()->getName()));
 

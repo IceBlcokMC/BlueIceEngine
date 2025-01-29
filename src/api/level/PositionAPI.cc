@@ -46,7 +46,7 @@ Local<Value> PositionAPI::getDimension(Arguments const& /* args */) {
     try {
         auto dim = get()->getDimension();
         if (dim) {
-            return DimensionAPI::newDimensionAPI(dim);
+            return DimensionAPI::newInstance(dim);
         }
         return Local<Value>();
     }

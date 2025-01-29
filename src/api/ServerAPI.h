@@ -13,7 +13,7 @@ public:
     : ScriptClass(ScriptClass::ConstructFromCpp<ServerAPI>{}),
       mServer(server) {}
 
-    static Local<Object> newServerAPI(endstone::Server* server) { return (new ServerAPI(server))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Server* server) { return (new ServerAPI(server))->getScriptObject(); }
 
     endstone::Server* get() { return mServer; }
 

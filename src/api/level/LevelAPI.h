@@ -13,7 +13,7 @@ class LevelAPI : public ScriptClass {
 public:
     explicit LevelAPI(endstone::Level* Level) : ScriptClass(ScriptClass::ConstructFromCpp<LevelAPI>{}), mLevel(Level) {}
 
-    static Local<Object> newLevelAPI(endstone::Level* Level) { return (new LevelAPI(Level))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Level* Level) { return (new LevelAPI(Level))->getScriptObject(); }
 
     endstone::Level* get() { return mLevel; }
 

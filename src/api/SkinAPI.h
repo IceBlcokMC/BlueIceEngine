@@ -12,7 +12,7 @@ class SkinAPI : public ScriptClass {
 public:
     explicit SkinAPI(endstone::Skin* skin) : ScriptClass(ScriptClass::ConstructFromCpp<SkinAPI>{}), mSkin(skin) {};
 
-    static Local<Object> newSkinAPI(endstone::Skin* skin) { return (new SkinAPI(skin))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Skin* skin) { return (new SkinAPI(skin))->getScriptObject(); }
 
     endstone::Skin* get() { return mSkin; }
 
@@ -37,7 +37,7 @@ public:
     : ScriptClass(ConstructFromCpp<SkinImageDataAPI>{}),
       mSkinImageData(std::move(data)) {}
 
-    static Local<Object> newSkinImageDataAPI(endstone::Skin::ImageData data) {
+    static Local<Object> newInstance(endstone::Skin::ImageData data) {
         return (new SkinImageDataAPI(std::move(data)))->getScriptObject();
     }
 

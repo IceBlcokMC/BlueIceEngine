@@ -34,7 +34,7 @@ Local<Value> PermissionAttachmentAPI::toString(Arguments const& /* args */) {
 
 Local<Value> PermissionAttachmentAPI::getPlugin(Arguments const& /* args */) {
     try {
-        return PluginAPI::newPluginAPI(&get()->getPlugin());
+        return PluginAPI::newInstance(&get()->getPlugin());
     }
     Catch;
 }
@@ -52,9 +52,9 @@ Local<Value> PermissionAttachmentAPI::setRemovalCallback(Arguments const& args) 
             if (ptr) {
                 EngineScope enter{ptr->mEngine};
                 try {
-                    ptr->mGlobal.get().call(PermissionAttachmentAPI::newPermissionAttachmentAPI(
-                        &const_cast<endstone::PermissionAttachment&>(attachment)
-                    ));
+                    ptr->mGlobal.get().call(
+                        PermissionAttachmentAPI::newInstance(&const_cast<endstone::PermissionAttachment&>(attachment))
+                    );
                 }
                 CatchNotReturn;
             }
@@ -86,7 +86,7 @@ Local<Value> PermissionAttachmentAPI::getRemovalCallback(Arguments const& /* arg
 
 Local<Value> PermissionAttachmentAPI::getPermissible(Arguments const& /* args */) {
     try {
-        return PermissibleAPI::newPermissibleAPI(&get()->getPermissible());
+        return PermissibleAPI::newInstance(&get()->getPermissible());
     }
     Catch;
 }

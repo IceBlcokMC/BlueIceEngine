@@ -65,8 +65,8 @@ bool JavaScriptPlugin::onCommand(
                 return func.asFunction()
                     .call(
                         {},
-                        CommandSenderAPI::newCommandSenderAPI(&sender),
-                        CommandAPI::newCommandAPI(const_cast<endstone::Command*>(&command)), // dangerous?
+                        CommandSenderAPI::newInstance(&sender),
+                        CommandAPI::newInstance(const_cast<endstone::Command*>(&command)), // dangerous?
                         ConvertToScriptX(args)
                     )
                     .asBoolean()

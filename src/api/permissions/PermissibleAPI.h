@@ -18,7 +18,7 @@ public:
     : ScriptClass(ScriptClass::ConstructFromCpp<PermissibleAPI>{}),
       mPermissible(permissible) {}
 
-    static Local<Object> newPermissibleAPI(endstone::Permissible* permissible) {
+    static Local<Object> newInstance(endstone::Permissible* permissible) {
         return (new PermissibleAPI(permissible))->getScriptObject();
     }
 

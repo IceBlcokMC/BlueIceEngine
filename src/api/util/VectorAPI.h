@@ -19,7 +19,7 @@ public:
     : ScriptClass(ConstructFromCpp<VectorAPI>{}),
       mVector(std::move(vec)) {}
 
-    static Local<Object> newVectorAPI(endstone::Vector<float> vec) {
+    static Local<Object> newInstance(endstone::Vector<float> vec) {
         return (new VectorAPI(std::move(vec)))->getScriptObject();
     }
 

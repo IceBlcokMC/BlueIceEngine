@@ -88,7 +88,7 @@ Local<Value> ActionFormAPI::addButton(Arguments const& args) {
                 if (ptr) {
                     EngineScope enter{ptr->mEngine};
                     try {
-                        ptr->mGlobal.get().call({}, player ? PlayerAPI::newPlayerAPI(player) : Local<Value>{});
+                        ptr->mGlobal.get().call({}, player ? PlayerAPI::newInstance(player) : Local<Value>{});
                     }
                     CatchNotReturn;
                 }
@@ -116,7 +116,7 @@ Local<Value> ActionFormAPI::setOnSubmit(Arguments const& args) {
             if (ptr) {
                 EngineScope enter{ptr->mEngine};
                 try {
-                    if (player) ptr->mGlobal.get().call({}, PlayerAPI::newPlayerAPI(player), ConvertToScriptX(idk));
+                    if (player) ptr->mGlobal.get().call({}, PlayerAPI::newInstance(player), ConvertToScriptX(idk));
                     else ptr->mGlobal.get().call({}, Local<Value>{}, ConvertToScriptX(idk));
                 }
                 CatchNotReturn;

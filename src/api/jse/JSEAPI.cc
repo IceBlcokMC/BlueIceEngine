@@ -8,14 +8,13 @@
 
 namespace jse {
 
-ClassDefine<void> JSEAPI::builder = 
-	defineClass<void>("JSE")
-		.function("registerPlugin", &JSEAPI::registerPlugin)
-		.function("getSelf", &JSEAPI::getSelf)
-		.function("debug", &JSEAPI::debug)
-		.function("isLinux", &JSEAPI::isLinux)
-		.function("isWindows", &JSEAPI::isWindows)
-		.build();
+ClassDefine<void> JSEAPI::builder = defineClass<void>("JSE")
+                                        .function("registerPlugin", &JSEAPI::registerPlugin)
+                                        .function("getSelf", &JSEAPI::getSelf)
+                                        .function("debug", &JSEAPI::debug)
+                                        .function("isLinux", &JSEAPI::isLinux)
+                                        .function("isWindows", &JSEAPI::isWindows)
+                                        .build();
 
 Local<Value> JSEAPI::registerPlugin(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -34,7 +33,7 @@ Local<Value> JSEAPI::getSelf(Arguments const&) {
         if (!ENGINE_DATA()->mPlugin) {
             return Local<Value>();
         }
-        return PluginAPI::newPluginAPI(ENGINE_DATA()->mPlugin);
+        return PluginAPI::newInstance(ENGINE_DATA()->mPlugin);
     }
     Catch;
 }

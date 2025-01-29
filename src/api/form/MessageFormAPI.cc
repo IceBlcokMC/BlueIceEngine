@@ -117,7 +117,7 @@ Local<Value> MessageFormAPI::setOnSubmit(Arguments const& args) {
             if (ptr) {
                 EngineScope enter{ptr->mEngine};
                 try {
-                    if (player) ptr->mGlobal.get().call({}, PlayerAPI::newPlayerAPI(player), ConvertToScriptX(idk));
+                    if (player) ptr->mGlobal.get().call({}, PlayerAPI::newInstance(player), ConvertToScriptX(idk));
                     else ptr->mGlobal.get().call({}, Local<Value>{}, ConvertToScriptX(idk));
                 }
                 CatchNotReturn;

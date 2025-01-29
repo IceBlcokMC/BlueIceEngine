@@ -14,7 +14,7 @@ public:
     : ScriptClass(ScriptClass::ConstructFromCpp<CommandAPI>{}),
       mCommand(command) {}
 
-    static Local<Object> newCommandAPI(endstone::Command* cmd) { return (new CommandAPI(cmd))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Command* cmd) { return (new CommandAPI(cmd))->getScriptObject(); }
 
     endstone::Command* get() { return mCommand; }
 

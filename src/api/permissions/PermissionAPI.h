@@ -13,7 +13,7 @@ public:
     : ScriptClass(ScriptClass::ConstructFromCpp<PermissionAPI>{}),
       mPermission(permission) {}
 
-    static Local<Object> newPermissionAPI(endstone::Permission* permission) {
+    static Local<Object> newInstance(endstone::Permission* permission) {
         return (new PermissionAPI{permission})->getScriptObject();
     }
 

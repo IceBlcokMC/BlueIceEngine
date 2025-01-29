@@ -28,7 +28,7 @@ Local<Value> LevelAPI::getActors(Arguments const& /* args */) {
         auto actors = get()->getActors();
         auto res    = Array::newArray(actors.size());
         for (std::size_t i = 0; i < actors.size(); i++) {
-            res.set(i, ActorAPI::newActorAPI(actors[i]));
+            res.set(i, ActorAPI::newInstance(actors[i]));
         }
         return res;
     }
@@ -52,7 +52,7 @@ Local<Value> LevelAPI::getDimensions(Arguments const& /* args */) {
         auto dimensions = get()->getDimensions();
         auto res        = Array::newArray(dimensions.size());
         for (std::size_t i = 0; i < dimensions.size(); i++) {
-            res.set(i, DimensionAPI::newDimensionAPI(dimensions[i]));
+            res.set(i, DimensionAPI::newInstance(dimensions[i]));
         }
         return res;
     }
@@ -63,7 +63,7 @@ Local<Value> LevelAPI::getDimension(Arguments const& args) {
     try {
         CheckArgsCount(args, 1);
         CheckArgType(args[0], ValueKind::kString);
-        return DimensionAPI::newDimensionAPI(get()->getDimension(ConvertFromScriptX<std::string>(args[0])));
+        return DimensionAPI::newInstance(get()->getDimension(ConvertFromScriptX<std::string>(args[0])));
     }
     Catch;
 }

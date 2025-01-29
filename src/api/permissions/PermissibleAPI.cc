@@ -14,20 +14,20 @@
 
 namespace jse {
 
-ClassDefine<PermissibleAPI> PermissibleAPI::builder = 
-	defineClass<PermissibleAPI>("Permissible")
-		.constructor(nullptr)
-		.instanceFunction("toString", &PermissibleAPI::toString)
-		.instanceFunction("isOp", &PermissibleAPI::isOp)
-		.instanceFunction("setOp", &PermissibleAPI::setOp)
-		.instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
-		.instanceFunction("hasPermission", &PermissibleAPI::hasPermission)
-		.instanceFunction("addAttachment", &PermissibleAPI::addAttachment)
-		.instanceFunction("removeAttachment", &PermissibleAPI::removeAttachment)
-		.instanceFunction("recalculatePermissions", &PermissibleAPI::recalculatePermissions)
-		.instanceFunction("getEffectivePermissions", &PermissibleAPI::getEffectivePermissions)
-		.instanceFunction("asCommandSender", &PermissibleAPI::asCommandSender)
-		.build();
+ClassDefine<PermissibleAPI> PermissibleAPI::builder =
+    defineClass<PermissibleAPI>("Permissible")
+        .constructor(nullptr)
+        .instanceFunction("toString", &PermissibleAPI::toString)
+        .instanceFunction("isOp", &PermissibleAPI::isOp)
+        .instanceFunction("setOp", &PermissibleAPI::setOp)
+        .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
+        .instanceFunction("hasPermission", &PermissibleAPI::hasPermission)
+        .instanceFunction("addAttachment", &PermissibleAPI::addAttachment)
+        .instanceFunction("removeAttachment", &PermissibleAPI::removeAttachment)
+        .instanceFunction("recalculatePermissions", &PermissibleAPI::recalculatePermissions)
+        .instanceFunction("getEffectivePermissions", &PermissibleAPI::getEffectivePermissions)
+        .instanceFunction("asCommandSender", &PermissibleAPI::asCommandSender)
+        .build();
 
 
 Local<Value> PermissibleAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Permissible>"); };
@@ -139,7 +139,7 @@ Local<Value> PermissibleAPI::asCommandSender(Arguments const& /* args */) {
         if (!sender) {
             return Local<Value>();
         }
-        return CommandSenderAPI::newCommandSenderAPI(sender);
+        return CommandSenderAPI::newInstance(sender);
     }
     Catch;
 }

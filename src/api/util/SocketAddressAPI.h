@@ -16,7 +16,7 @@ public:
     : ScriptClass(ConstructFromCpp<SocketAddressAPI>{}),
       mSocketAddress(std::move(socketAddress)) {}
 
-    static Local<Object> newSocketAddressAPI(endstone::SocketAddress socketAddress) {
+    static Local<Object> newInstance(endstone::SocketAddress socketAddress) {
         return (new SocketAddressAPI(std::move(socketAddress)))->getScriptObject();
     }
 

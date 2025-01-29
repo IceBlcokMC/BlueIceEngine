@@ -118,14 +118,14 @@ ClassDefine<PlayerAPI> PlayerAPI::builder =
 
 Local<Value> PlayerAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Player>"); }
 
-Local<Value> PlayerAPI::getUniqueId(Arguments const& /* args */) { return UUIDAPI::newUUIDAPI(get()->getUniqueId()); }
+Local<Value> PlayerAPI::getUniqueId(Arguments const& /* args */) { return UUIDAPI::newInstance(get()->getUniqueId()); }
 
 Local<Value> PlayerAPI::getXuid(Arguments const& /* args */) { return ConvertToScriptX(get()->getXuid()); }
 
 Local<Value> PlayerAPI::getAddress(Arguments const& /* args */) {
     try {
         auto address = get()->getAddress();
-        return SocketAddressAPI::newSocketAddressAPI(address);
+        return SocketAddressAPI::newInstance(address);
     }
     Catch;
 }
@@ -304,7 +304,7 @@ Local<Value> PlayerAPI::getGameVersion(Arguments const& /* args */) {
 
 Local<Value> PlayerAPI::getSkin(Arguments const& /* args */) {
     try {
-        return SkinAPI::newSkinAPI(&const_cast<endstone::Skin&>(get()->getSkin()));
+        return SkinAPI::newInstance(&const_cast<endstone::Skin&>(get()->getSkin()));
     }
     Catch;
 }

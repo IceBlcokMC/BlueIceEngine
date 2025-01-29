@@ -15,7 +15,7 @@ public:
     : ScriptClass(ScriptClass::ConstructFromCpp<DimensionAPI>{}),
       mDimension(dimension) {}
 
-    static Local<Object> newDimensionAPI(endstone::Dimension* dimension) {
+    static Local<Object> newInstance(endstone::Dimension* dimension) {
         return (new DimensionAPI(dimension))->getScriptObject();
     }
 

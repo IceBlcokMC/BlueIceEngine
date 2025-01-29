@@ -47,9 +47,9 @@ public:
     // C++ new
     explicit UUIDAPI(endstone::UUID uuid) : ScriptClass(ConstructFromCpp<UUIDAPI>{}), mUUID(std::move(uuid)) {}
 
-    static Local<Object> newUUIDAPI(endstone::UUID uuid) { return (new UUIDAPI(std::move(uuid)))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::UUID uuid) { return (new UUIDAPI(std::move(uuid)))->getScriptObject(); }
 
-    static Local<Object> newUUIDAPI(string const& uuid) { return (new UUIDAPI(fromString(uuid)))->getScriptObject(); }
+    static Local<Object> newInstance(string const& uuid) { return (new UUIDAPI(fromString(uuid)))->getScriptObject(); }
 
     // Js new
     explicit UUIDAPI(Local<Object> const& thiz, endstone::UUID uuid) : ScriptClass(thiz), mUUID(std::move(uuid)) {}

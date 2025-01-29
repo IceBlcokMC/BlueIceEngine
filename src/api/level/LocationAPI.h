@@ -21,7 +21,7 @@ public:
     : PositionAPI(location, ConstructFromCpp<LocationAPI>{}),
       mLocation(location) {}
 
-    static Local<Object> newLocationAPI(endstone::Location* pos) { return (new LocationAPI(pos))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Location* pos) { return (new LocationAPI(pos))->getScriptObject(); }
 
     endstone::Location* get() { return mLocation; }
 

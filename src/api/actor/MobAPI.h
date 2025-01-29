@@ -16,7 +16,7 @@ public:
 
     explicit MobAPI(endstone::Mob* mob) : ActorAPI(mob, ScriptClass::ConstructFromCpp<MobAPI>{}), mMob(mob) {}
 
-    static Local<Object> newMobAPI(endstone::Mob* mob) { return (new MobAPI(mob))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Mob* mob) { return (new MobAPI(mob))->getScriptObject(); }
 
     endstone::Mob* get() { return mMob; }
 

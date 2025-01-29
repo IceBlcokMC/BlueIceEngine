@@ -20,7 +20,7 @@ public:
     : CommandSenderAPI(actor, ScriptClass::ConstructFromCpp<ActorAPI>{}),
       mActor(actor) {}
 
-    static Local<Object> newActorAPI(endstone::Actor* actor) { return (new ActorAPI(actor))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Actor* actor) { return (new ActorAPI(actor))->getScriptObject(); }
 
     endstone::Actor* get() { return mActor; }
 

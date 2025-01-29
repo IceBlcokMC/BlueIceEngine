@@ -80,7 +80,7 @@ Local<Value> PermissionAPI::getPermissibles(Arguments const& /* args */) {
         auto perms = this->mPermission->getPermissibles();
         auto array = Array::newArray(perms.size());
         for (auto p : perms) {
-            array.add(PermissibleAPI::newPermissibleAPI(p));
+            array.add(PermissibleAPI::newInstance(p));
         }
         return array;
     }
@@ -100,7 +100,7 @@ Local<Value> PermissionAPI::addParent(Arguments const& args) {
     try {
         if (args[0].isString()) {
             if (auto val = this->mPermission->addParent(args[0].asString().toString(), args[1].asBoolean().value())) {
-                return PermissionAPI::newPermissionAPI(val);
+                return PermissionAPI::newInstance(val);
             }
         } else if (IsInstanceOf<PermissionAPI>(args[0])) {
             this->mPermission->addParent(*GetScriptClass(PermissionAPI, args[0])->get(), args[1].asBoolean().value());

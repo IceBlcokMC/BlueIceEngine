@@ -33,7 +33,7 @@ Local<Value> SkinAPI::getSkinId(Arguments const& /* args */) { return ConvertToS
 
 Local<Value> SkinAPI::getSkinData(Arguments const& /* args */) {
     try {
-        return SkinImageDataAPI::newSkinImageDataAPI(get()->getSkinData());
+        return SkinImageDataAPI::newInstance(get()->getSkinData());
     }
     Catch;
 }
@@ -53,7 +53,7 @@ Local<Value> SkinAPI::getCapeData(Arguments const& /* args */) {
     try {
         auto capeData = get()->getCapeData();
         if (capeData.has_value()) {
-            return SkinImageDataAPI::newSkinImageDataAPI(capeData.value());
+            return SkinImageDataAPI::newInstance(capeData.value());
         }
         return Local<Value>();
     }

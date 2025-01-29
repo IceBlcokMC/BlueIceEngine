@@ -27,7 +27,7 @@ Local<Value> PermissionAttachmentInfoAPI::toString(Arguments const& /* args */) 
 
 Local<Value> PermissionAttachmentInfoAPI::getPermissible(Arguments const& /* args */) {
     try {
-        return PermissibleAPI::newPermissibleAPI(&get()->getPermissible());
+        return PermissibleAPI::newInstance(&get()->getPermissible());
     }
     Catch;
 }
@@ -45,7 +45,7 @@ Local<Value> PermissionAttachmentInfoAPI::getAttachment(Arguments const& /* args
         if (attachment == nullptr) {
             return Local<Value>();
         }
-        return PermissionAttachmentAPI::newPermissionAttachmentAPI(attachment);
+        return PermissionAttachmentAPI::newInstance(attachment);
     }
     Catch;
 }

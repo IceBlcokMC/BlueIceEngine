@@ -19,7 +19,7 @@ public:
     : PermissibleAPI(sender, ScriptClass::ConstructFromCpp<CommandSenderAPI>{}),
       mSender(sender) {}
 
-    static Local<Object> newCommandSenderAPI(endstone::CommandSender* sender) {
+    static Local<Object> newInstance(endstone::CommandSender* sender) {
         return (new CommandSenderAPI(sender))->getScriptObject();
     }
 

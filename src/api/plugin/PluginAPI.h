@@ -14,7 +14,7 @@ public:
     : ScriptClass(ScriptClass::ConstructFromCpp<PluginAPI>{}),
       mPlugin(plugin) {}
 
-    static Local<Object> newPluginAPI(endstone::Plugin* plugin) { return (new PluginAPI(plugin))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Plugin* plugin) { return (new PluginAPI(plugin))->getScriptObject(); }
 
     endstone::Plugin* get() { return mPlugin; }
 

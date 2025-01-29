@@ -7,7 +7,7 @@ class FileAPI : public ScriptClass {
 public:
     explicit FileAPI() : ScriptClass(ScriptClass::ConstructFromCpp<FileAPI>{}) {}
 
-    static Local<Object> newFileAPI() { return (new FileAPI())->getScriptObject(); }
+    static Local<Object> newInstance() { return (new FileAPI())->getScriptObject(); }
 
 public:
     static METHODS(readFile);

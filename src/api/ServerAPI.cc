@@ -67,7 +67,7 @@ Local<Value> ServerAPI::getMinecraftVersion(Arguments const& /* args */) {
     return ConvertToScriptX(get()->getMinecraftVersion());
 }
 
-Local<Value> ServerAPI::getLogger(Arguments const& /* args */) { return LoggerAPI::newLoggerAPI(&get()->getLogger()); }
+Local<Value> ServerAPI::getLogger(Arguments const& /* args */) { return LoggerAPI::newInstance(&get()->getLogger()); }
 
 Local<Value> ServerAPI::getLanguage(Arguments const& /* args */) { return Local<Value>(); }
 
@@ -90,12 +90,12 @@ Catch;
 
 Local<Value> ServerAPI::getScheduler(Arguments const& /* args */) { return Local<Value>(); }
 
-Local<Value> ServerAPI::getLevel(Arguments const& /* args */) { return LevelAPI::newLevelAPI(get()->getLevel()); }
+Local<Value> ServerAPI::getLevel(Arguments const& /* args */) { return LevelAPI::newInstance(get()->getLevel()); }
 
 Local<Value> ServerAPI::getOnlinePlayers(Arguments const& /* args */) {
     auto result = Array::newArray();
     for (auto* player : get()->getOnlinePlayers()) {
-        result.add(PlayerAPI::newPlayerAPI(player));
+        result.add(PlayerAPI::newInstance(player));
     }
     return result;
 }
@@ -120,7 +120,7 @@ Local<Value> ServerAPI::getPlayer(Arguments const& args) {
         } else {
             throw script::Exception("Invalid argument type");
         }
-        return player ? PlayerAPI::newPlayerAPI(player) : Local<Value>();
+        return player ? PlayerAPI::newInstance(player) : Local<Value>();
     }
     Catch;
 }

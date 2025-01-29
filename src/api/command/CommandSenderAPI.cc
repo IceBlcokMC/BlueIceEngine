@@ -9,48 +9,48 @@
 
 namespace jse {
 
-ClassDefine<CommandSenderAPI> CommandSenderAPI::builder = 
-	defineClass<CommandSenderAPI>("CommandSender")
-		.constructor(nullptr)
-		.instanceFunction("toString", &CommandSenderAPI::toString)
-		.instanceFunction("asCommandSender", &CommandSenderAPI::asCommandSender)
-		.instanceFunction("asConsole", &CommandSenderAPI::asConsole)
-		.instanceFunction("asActor", &CommandSenderAPI::asActor)
-		.instanceFunction("asPlayer", &CommandSenderAPI::asPlayer)
-		.instanceFunction("sendMessage", &CommandSenderAPI::sendMessage)
-		.instanceFunction("sendErrorMessage", &CommandSenderAPI::sendErrorMessage)
-		.instanceFunction("getServer", &CommandSenderAPI::getServer)
-		.instanceFunction("getName", &CommandSenderAPI::getName)
+ClassDefine<CommandSenderAPI> CommandSenderAPI::builder =
+    defineClass<CommandSenderAPI>("CommandSender")
+        .constructor(nullptr)
+        .instanceFunction("toString", &CommandSenderAPI::toString)
+        .instanceFunction("asCommandSender", &CommandSenderAPI::asCommandSender)
+        .instanceFunction("asConsole", &CommandSenderAPI::asConsole)
+        .instanceFunction("asActor", &CommandSenderAPI::asActor)
+        .instanceFunction("asPlayer", &CommandSenderAPI::asPlayer)
+        .instanceFunction("sendMessage", &CommandSenderAPI::sendMessage)
+        .instanceFunction("sendErrorMessage", &CommandSenderAPI::sendErrorMessage)
+        .instanceFunction("getServer", &CommandSenderAPI::getServer)
+        .instanceFunction("getName", &CommandSenderAPI::getName)
 
-		// CommandSenderAPI extends PermissibleAPI
-		.instanceFunction("isOp", &PermissibleAPI::isOp)
-		.instanceFunction("setOp", &PermissibleAPI::setOp)
-		.instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
-		.instanceFunction("hasPermission", &PermissibleAPI::hasPermission)
-		.instanceFunction("addAttachment", &PermissibleAPI::addAttachment)
-		.instanceFunction("removeAttachment", &PermissibleAPI::removeAttachment)
-		.instanceFunction("recalculatePermissions", &PermissibleAPI::recalculatePermissions)
-		.instanceFunction("getEffectivePermissions", &PermissibleAPI::getEffectivePermissions)
-		.instanceFunction("asCommandSender", &PermissibleAPI::asCommandSender)
-		.build();
+        // CommandSenderAPI extends PermissibleAPI
+        .instanceFunction("isOp", &PermissibleAPI::isOp)
+        .instanceFunction("setOp", &PermissibleAPI::setOp)
+        .instanceFunction("isPermissionSet", &PermissibleAPI::isPermissionSet)
+        .instanceFunction("hasPermission", &PermissibleAPI::hasPermission)
+        .instanceFunction("addAttachment", &PermissibleAPI::addAttachment)
+        .instanceFunction("removeAttachment", &PermissibleAPI::removeAttachment)
+        .instanceFunction("recalculatePermissions", &PermissibleAPI::recalculatePermissions)
+        .instanceFunction("getEffectivePermissions", &PermissibleAPI::getEffectivePermissions)
+        .instanceFunction("asCommandSender", &PermissibleAPI::asCommandSender)
+        .build();
 
 
 Local<Value> CommandSenderAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<CommandSender>"); }
 
 Local<Value> CommandSenderAPI::asCommandSender(Arguments const& /* args */) {
-    return CommandSenderAPI::newCommandSenderAPI(get());
+    return CommandSenderAPI::newInstance(get());
 }
 
 Local<Value> CommandSenderAPI::asConsole(Arguments const& /* args */) { return Local<Value>(); }
 
 Local<Value> CommandSenderAPI::asActor(Arguments const& /* args */) {
     if (mSender->asActor() == nullptr) return Local<Value>();
-    return ActorAPI::newActorAPI(mSender->asActor());
+    return ActorAPI::newInstance(mSender->asActor());
 }
 
 Local<Value> CommandSenderAPI::asPlayer(Arguments const& /* args */) {
     if (mSender->asPlayer() == nullptr) return Local<Value>();
-    return PlayerAPI::newPlayerAPI(mSender->asPlayer());
+    return PlayerAPI::newInstance(mSender->asPlayer());
 }
 
 Local<Value> CommandSenderAPI::sendMessage(Arguments const& args) {

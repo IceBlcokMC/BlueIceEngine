@@ -22,7 +22,7 @@ Local<Value> DimensionAPI::getName(Arguments const& /* args */) { return Convert
 
 Local<Value> DimensionAPI::getType(Arguments const& /* args */) { return ConvertToScriptX(get()->getType()); }
 
-Local<Value> DimensionAPI::getLevel(Arguments const& /* args */) { return LevelAPI::newLevelAPI(&get()->getLevel()); }
+Local<Value> DimensionAPI::getLevel(Arguments const& /* args */) { return LevelAPI::newInstance(&get()->getLevel()); }
 
 Local<Value> DimensionAPI::getBlockAt(Arguments const& /* args */) { return Local<Value>(); } // TODO: BlockAPI
 

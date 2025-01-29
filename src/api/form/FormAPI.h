@@ -19,7 +19,7 @@ Local<Value> ConvertVariantToScriptX(Variant&& val) {
             if constexpr (std::is_same_v<T, std::string>) {
                 return ConvertToScriptX(arg);
             } else if constexpr (std::is_same_v<T, endstone::Translatable>) {
-                return TranslatableAPI::newTranslatableAPI(arg);
+                return TranslatableAPI::newInstance(arg);
             } else {
                 throw script::Exception("Unsupported variant type");
             }
@@ -76,7 +76,7 @@ public:
                 if (ptr) {
                     EngineScope enter(ptr->mEngine);
                     try {
-                        if (player) ptr->mGlobal.get().call({}, PlayerAPI::newPlayerAPI(player));
+                        if (player) ptr->mGlobal.get().call({}, PlayerAPI::newInstance(player));
                         else ptr->mGlobal.get().call({});
                     }
                     CatchNotReturn;

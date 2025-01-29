@@ -19,7 +19,7 @@ public:
     : MobAPI(player, ScriptClass::ConstructFromCpp<PlayerAPI>{}),
       mPlayer(player) {}
 
-    static Local<Object> newPlayerAPI(endstone::Player* player) { return (new PlayerAPI(player))->getScriptObject(); }
+    static Local<Object> newInstance(endstone::Player* player) { return (new PlayerAPI(player))->getScriptObject(); }
 
     endstone::Player* get() { return mPlayer; }
 
