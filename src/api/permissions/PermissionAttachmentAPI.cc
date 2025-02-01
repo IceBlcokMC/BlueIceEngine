@@ -5,9 +5,9 @@
 #include "api/plugin/PluginAPI.h"
 #include "converter/Convert.h"
 #include "endstone/permissions/permission_attachment.h"
-#include "utils/Defines.h"
 #include "utils/SafeTransfer.h"
 #include "utils/Using.h"
+
 
 namespace jse {
 
@@ -108,11 +108,11 @@ Local<Value> PermissionAttachmentAPI::setPermission(Arguments const& args) {
         } else if (args[0].isObject() && IsInstanceOf<PermissionAPI>(args[0])) {
             get()->setPermission(*GetScriptClass(PermissionAPI, args[0])->get(), args[1].asBoolean().value());
         } else {
-            throw script::Exception("Invalid permission argument");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return Local<Value>();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> PermissionAttachmentAPI::unsetPermission(Arguments const& args) {

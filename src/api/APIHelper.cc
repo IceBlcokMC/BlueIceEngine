@@ -1,6 +1,7 @@
 #include "APIHelper.h"
 #include "Entry.h"
 #include "utils/Util.h"
+#include <exception>
 #include <fmt/core.h>
 #include <iostream>
 
@@ -62,7 +63,7 @@ void ToString(Local<Value> const& value, std::ostringstream& oss) {
         else oss << value.asNumber().toInt64();
         break;
     case ValueKind::kByteBuffer: {
-        Local<ByteBuffer> buffer = value.asByteBuffer();
+        Local<script::ByteBuffer> buffer = value.asByteBuffer();
         oss << (const char*)buffer.getRawBytes(), buffer.byteLength();
         break;
     }
@@ -128,9 +129,6 @@ void ToString(Local<Object> const& value, std::ostringstream& oss) {
 }
 
 
-void PrintException(string const& msg, string const& func, string const& plugin, string const& api) {
-    return PrintException(script::Exception(msg), func, plugin, api);
-}
 void PrintException(script::Exception const& e, string const& func, string const& plugin, string const& api) {
     string fail_msg  = fmt::format("Fail in {}", func);
     string in_plugin = fmt::format("In Plugin: {}", plugin);
@@ -150,5 +148,12 @@ void PrintException(script::Exception const& e, string const& func, string const
         std::cout << "\x1b[91m" << stack << "\x1b[0m" << std::endl;
     }
 }
+void PrintException(std::exception const& err, string const& func, string const& plugin, string const& api) {
+    return PrintException(script::Exception(err.what()), func, plugin, api);
+}
+void PrintException(string const& msg, string const& func, string const& plugin, string const& api) {
+    return PrintException(script::Exception(msg), func, plugin, api);
+}
+
 
 } // namespace jse

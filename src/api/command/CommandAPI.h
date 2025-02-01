@@ -1,8 +1,8 @@
 #pragma once
 #include "api/APIHelper.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
 #include <endstone/command/command.h>
+
 
 namespace jse {
 
@@ -18,6 +18,7 @@ public:
 
     endstone::Command* get() { return mCommand; }
 
+public:
     METHODS(toString);
     METHODS(execute);
     METHODS(getName);
@@ -38,6 +39,7 @@ public:
     METHODS(asPluginCommand);
 
 
+public:
     static ClassDefine<CommandAPI> builder;
 };
 

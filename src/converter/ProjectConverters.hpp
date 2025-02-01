@@ -1,6 +1,6 @@
 #pragma once
-#include "Converter.hpp"
 #include "api/lang/TranslatableAPI.h"
+#include "detail/Converter.hpp"
 
 
 namespace jse::detail {

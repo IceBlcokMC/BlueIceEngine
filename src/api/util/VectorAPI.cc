@@ -2,9 +2,9 @@
 #include "api/APIHelper.h"
 #include "converter/Convert.h"
 #include "endstone/util/vector.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
 #include <memory>
+
 
 
 namespace jse {
@@ -102,11 +102,11 @@ Local<Value> VectorAPI::distance(Arguments const& args) {
     CheckArgType(args[0], ValueKind::kObject);
     try {
         if (!IsInstanceOf<VectorAPI>(args[0])) {
-            throw script::Exception("Invalid argument type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return ConvertToScript(get().distance(GetScriptClass(VectorAPI, args[0])->get()));
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> VectorAPI::distanceSquared(Arguments const& args) {
@@ -114,11 +114,11 @@ Local<Value> VectorAPI::distanceSquared(Arguments const& args) {
     CheckArgType(args[0], ValueKind::kObject);
     try {
         if (!IsInstanceOf<VectorAPI>(args[0])) {
-            throw script::Exception("Invalid argument type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return ConvertToScript(get().distanceSquared(GetScriptClass(VectorAPI, args[0])->get()));
     }
-    Catch;
+    CatchAndThrow;
 }
 
 

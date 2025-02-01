@@ -1,7 +1,8 @@
 #pragma once
+#include "api/APIHelper.h"
 #include "endstone/permissions/permission_attachment.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
+
 
 namespace jse {
 

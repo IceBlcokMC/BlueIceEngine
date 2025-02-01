@@ -1,7 +1,8 @@
 #pragma once
+#include "api/APIHelper.h"
 #include "endstone/lang/translatable.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
+
 
 
 namespace jse {

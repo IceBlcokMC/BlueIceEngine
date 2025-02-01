@@ -1,8 +1,9 @@
 #pragma once
+#include "api/APIHelper.h"
 #include "api/permissions/PermissibleAPI.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
 #include <endstone/command/command_sender.h>
+
 
 namespace jse {
 
@@ -25,6 +26,7 @@ public:
 
     endstone::CommandSender* get() { return mSender; }
 
+public:
     METHODS(toString);
     METHODS(asCommandSender);
     METHODS(asConsole);

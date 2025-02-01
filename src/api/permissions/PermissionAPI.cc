@@ -2,9 +2,9 @@
 #include "api/APIHelper.h"
 #include "api/permissions/PermissibleAPI.h"
 #include "converter/Convert.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
 #include <endstone/permissions/permission_default.h>
+
 
 namespace jse {
 
@@ -105,11 +105,11 @@ Local<Value> PermissionAPI::addParent(Arguments const& args) {
         } else if (IsInstanceOf<PermissionAPI>(args[0])) {
             this->mPermission->addParent(*GetScriptClass(PermissionAPI, args[0])->get(), args[1].asBoolean().value());
         } else {
-            throw script::Exception("Parameter 0 is of the wrong type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return Local<Value>();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> PermissionAPI::init(Arguments const& /* args */) {

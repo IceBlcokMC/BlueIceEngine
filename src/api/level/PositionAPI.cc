@@ -3,7 +3,7 @@
 #include "api/APIHelper.h"
 #include "api/actor/ActorAPI.h"
 #include "converter/Convert.h"
-#include "utils/Defines.h"
+
 
 
 namespace jse {
@@ -58,13 +58,13 @@ Local<Value> PositionAPI::setDimension(Arguments const& args) {
         CheckArgsCount(args, 1);
         CheckArgType(args[0], ValueKind::kObject);
         if (!IsInstanceOf<DimensionAPI>(args[0])) {
-            throw script::Exception("Invalid argument type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         auto dim = GetScriptClass(DimensionAPI, args[0])->get();
         get()->setDimension(*dim);
         return Local<Value>();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> PositionAPI::getBlockX(Arguments const& /* args */) {

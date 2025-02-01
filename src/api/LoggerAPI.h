@@ -1,6 +1,6 @@
 #pragma once
 #include "endstone/logger.h"
-#include "utils/Defines.h"
+#include "api/APIHelper.h"
 #include "utils/Using.h"
 
 namespace jse {

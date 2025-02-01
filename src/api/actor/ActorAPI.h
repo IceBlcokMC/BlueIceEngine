@@ -1,7 +1,7 @@
 #pragma once
+#include "api/APIHelper.h"
 #include "api/command/CommandSenderAPI.h"
 #include "endstone/actor/actor.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
 
 
@@ -24,6 +24,7 @@ public:
 
     endstone::Actor* get() { return mActor; }
 
+public:
     METHODS(toString);
     METHODS(getType);
     METHODS(getRuntimeId);
@@ -53,6 +54,7 @@ public:
     METHODS(getScoreTag);
     METHODS(setScoreTag);
 
+public:
     static ClassDefine<ActorAPI> builder;
 };
 

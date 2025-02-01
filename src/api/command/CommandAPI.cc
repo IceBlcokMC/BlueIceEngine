@@ -2,9 +2,9 @@
 #include "api/APIHelper.h"
 #include "api/command/CommandSenderAPI.h"
 #include "converter/Convert.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
 #include <endstone/command/command.h>
+
 
 namespace jse {
 
@@ -36,17 +36,18 @@ Local<Value> CommandAPI::toString(Arguments const& /* args */) { return ConvertT
 
 Local<Value> CommandAPI::execute(Arguments const& args) {
     CheckArgsCount(args, 2);
+    CheckArgType(args[0], ValueKind::kObject);
     CheckArgType(args[1], ValueKind::kArray);
     try {
         if (!IsInstanceOf<CommandSenderAPI>(args[0])) {
-            throw script::Exception("Invalid argument 0: expected CommandSenderAPI");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return ConvertToScript(this->mCommand->execute(
             *GetScriptClass(CommandSenderAPI, args[0])->get(),
             ConvertToCpp<std::vector<string>>(args[1])
         ));
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> CommandAPI::getName(Arguments const& /* args */) {
@@ -136,11 +137,11 @@ Local<Value> CommandAPI::testPermission(Arguments const& args) {
     CheckArgType(args[0], ValueKind::kObject);
     try {
         if (!IsInstanceOf<CommandSenderAPI>(args[0])) {
-            throw script::Exception("Invalid argument 0: expected CommandSenderAPI");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return ConvertToScript(this->mCommand->testPermission(*GetScriptClass(CommandSenderAPI, args[0])->get()));
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> CommandAPI::testPermissionSilently(Arguments const& args) {
@@ -148,12 +149,12 @@ Local<Value> CommandAPI::testPermissionSilently(Arguments const& args) {
     CheckArgType(args[0], ValueKind::kObject);
     try {
         if (!IsInstanceOf<CommandSenderAPI>(args[0])) {
-            throw script::Exception("Invalid argument 0: expected CommandSenderAPI");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return ConvertToScript(this->mCommand->testPermissionSilently(*GetScriptClass(CommandSenderAPI, args[0])->get())
         );
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> CommandAPI::registerTo(Arguments const& /* args */) {

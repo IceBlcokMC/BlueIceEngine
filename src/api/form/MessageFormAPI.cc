@@ -53,11 +53,11 @@ Local<Value> MessageFormAPI::setContent(Arguments const& args) {
         } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
             mMessageForm.setContent(GetScriptClass(TranslatableAPI, args[0])->get());
         } else {
-            throw script::Exception("Invalid parameter type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return args.thiz();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> MessageFormAPI::getButton1(Arguments const& /* args */) {
@@ -75,11 +75,11 @@ Local<Value> MessageFormAPI::setButton1(Arguments const& args) {
         } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
             mMessageForm.setButton1(GetScriptClass(TranslatableAPI, args[0])->get());
         } else {
-            throw script::Exception("Invalid parameter type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return args.thiz();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> MessageFormAPI::getButton2(Arguments const& /* args */) {
@@ -97,11 +97,11 @@ Local<Value> MessageFormAPI::setButton2(Arguments const& args) {
         } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
             mMessageForm.setButton2(GetScriptClass(TranslatableAPI, args[0])->get());
         } else {
-            throw script::Exception("Invalid parameter type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return args.thiz();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> MessageFormAPI::setOnSubmit(Arguments const& args) {

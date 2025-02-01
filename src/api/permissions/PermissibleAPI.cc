@@ -4,12 +4,12 @@
 #include "api/permissions/PermissionAPI.h"
 #include "api/plugin/PluginAPI.h"
 #include "converter/Convert.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
 #include <endstone/permissions/permissible.h>
 #include <endstone/plugin/plugin.h>
 #include <endstone/util/result.h>
 #include <stdexcept>
+
 
 
 namespace jse {
@@ -59,10 +59,10 @@ Local<Value> PermissibleAPI::isPermissionSet(Arguments const& args) {
             // overload 2
             return ConvertToScript(this->mPermissible->isPermissionSet(*GetScriptClass(PermissionAPI, args[0])->get()));
         } else {
-            throw script::Exception("Parameter 0 must be a string or Permission");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> PermissibleAPI::hasPermission(Arguments const& args) {
@@ -75,10 +75,10 @@ Local<Value> PermissibleAPI::hasPermission(Arguments const& args) {
             // overload 2
             return ConvertToScript(this->mPermissible->hasPermission(*GetScriptClass(PermissionAPI, args[0])->get()));
         } else {
-            throw script::Exception("Parameter 0 must be a string or Permission");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> PermissibleAPI::addAttachment(Arguments const& args) {
@@ -95,7 +95,7 @@ Local<Value> PermissibleAPI::addAttachment(Arguments const& args) {
                 args[2].asBoolean().value()
             );
         } else {
-            throw script::Exception("Invalid arguments");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
 
         if (!val.has_value()) {
@@ -105,7 +105,7 @@ Local<Value> PermissibleAPI::addAttachment(Arguments const& args) {
         // TODO: PermissionAttachment
         return Local<Value>();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> PermissibleAPI::removeAttachment(Arguments const& /* args */) {

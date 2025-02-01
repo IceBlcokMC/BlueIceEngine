@@ -27,7 +27,7 @@ void JavaScriptPlugin::onLoad() {
     EngineScope scope(engine->mEngine);
     try {
         ENGINE_DATA()->callOnLoad();
-    }
+    } 
     CatchNotReturn;
 }
 

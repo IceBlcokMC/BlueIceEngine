@@ -3,9 +3,10 @@
 #include "api/PlayerAPI.h"
 #include "api/lang/TranslatableAPI.h"
 #include "converter/Convert.h"
-#include "utils/Defines.h"
 #include "utils/SafeTransfer.h"
 #include "utils/Using.h"
+
+#include "converter/ProjectConverters.hpp"
 
 
 namespace jse {
@@ -57,11 +58,11 @@ public:
             } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
                 mForm.setTitle(GetScriptClass(TranslatableAPI, args[0])->get());
             } else {
-                throw script::Exception("Invalid parameter type");
+                throw script::Exception(ERR_WRONG_ARG_TYPE);
             }
             return args.thiz();
         }
-        Catch;
+        CatchAndThrow;
     }
 
     Local<Value> setOnClose(Arguments const& args) {

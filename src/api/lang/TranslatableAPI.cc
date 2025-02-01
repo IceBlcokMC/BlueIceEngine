@@ -17,16 +17,12 @@ ClassDefine<TranslatableAPI> TranslatableAPI::builder =
         .build();
 
 TranslatableAPI* TranslatableAPI::make(Arguments const& args) {
-    try {
-        if (args.size() == 2 && args[0].isString() && args[1].isArray()) {
-            return new TranslatableAPI(
-                args.thiz(),
-                endstone::Translatable{ConvertToCpp<string>(args[0]), ConvertToCpp<std::vector<string>>(args[1])}
-            );
-        }
-        return nullptr;
+    if (args.size() == 2 && args[0].isString() && args[1].isArray()) {
+        return new TranslatableAPI(
+            args.thiz(),
+            endstone::Translatable{ConvertToCpp<string>(args[0]), ConvertToCpp<std::vector<string>>(args[1])}
+        );
     }
-    CatchNotReturn;
     return nullptr;
 }
 

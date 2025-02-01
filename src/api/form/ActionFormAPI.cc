@@ -57,7 +57,7 @@ Local<Value> ActionFormAPI::setContent(Arguments const& args) {
         // } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
         //     mActionForm.setContent(GetScriptClass(TranslatableAPI, args[0])->get());
         // } else {
-        //     throw script::Exception("Invalid parameter type");
+        //     throw script::Exception(ERR_WRONG_ARG_TYPE);
         // }
         mActionForm.setContent(ConvertToCpp<endstone::Message>(args[0]));
         return args.thiz();
@@ -71,7 +71,7 @@ endstone::Message ArgHelper(Local<Value> const& arg) {
     } else if (arg.isObject() && IsInstanceOf<TranslatableAPI>(arg)) {
         return GetScriptClass(TranslatableAPI, arg)->get();
     } else {
-        throw script::Exception("Invalid parameter type");
+        throw script::Exception(ERR_WRONG_ARG_TYPE);
     }
 }
 

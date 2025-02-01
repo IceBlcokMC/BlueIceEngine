@@ -3,7 +3,7 @@
 
 #include "detail/StlConverter.hpp"
 
-#include "detail/ProjectConverters.hpp"
+// #include "ProjectConverters.hpp" // circular reference, please include manually
 
 
 namespace jse {

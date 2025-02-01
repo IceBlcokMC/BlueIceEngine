@@ -9,7 +9,6 @@
 #include "endstone/player.h"
 #include "endstone/server.h"
 #include "level/LevelAPI.h"
-#include "utils/Defines.h"
 
 
 namespace jse {
@@ -117,11 +116,11 @@ Local<Value> ServerAPI::getPlayer(Arguments const& args) {
         } else if (args[0].isObject() && IsInstanceOf<UUIDAPI>(args[0])) {
             player = get()->getPlayer(GetScriptClass(UUIDAPI, args[0])->get());
         } else {
-            throw script::Exception("Invalid argument type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return player ? PlayerAPI::newInstance(player) : Local<Value>();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> ServerAPI::getOnlineMode(Arguments const& /* args */) { return ConvertToScript(get()->getOnlineMode()); }
@@ -151,11 +150,11 @@ Local<Value> ServerAPI::broadcast(Arguments const& args) {
         } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
             get()->broadcast(GetScriptClass(TranslatableAPI, args[0])->get(), ConvertToCpp<std::string>(args[1]));
         } else {
-            throw script::Exception("Invalid argument type");
+            throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
         return Local<Value>();
     }
-    Catch;
+    CatchAndThrow;
 }
 
 Local<Value> ServerAPI::broadcastMessage(Arguments const& args) {

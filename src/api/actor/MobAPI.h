@@ -1,8 +1,9 @@
 #pragma once
+#include "api/APIHelper.h"
 #include "api/actor/ActorAPI.h"
-#include "utils/Defines.h"
 #include "utils/Using.h"
 #include <endstone/actor/mob.h>
+
 
 namespace jse {
 
@@ -20,9 +21,11 @@ public:
 
     endstone::Mob* get() { return mMob; }
 
+public:
     METHODS(toString);
     METHODS(isGliding);
 
+public:
     static ClassDefine<MobAPI> builder;
 };
 
