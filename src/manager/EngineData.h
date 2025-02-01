@@ -1,7 +1,7 @@
 #pragma once
 #include "Entry.h"
+#include "converter/Convert.h"
 #include "loader/JavaScriptPlugin.h"
-#include "utils/Convert.h"
 #include "utils/StringUtils.h"
 #include "utils/Using.h"
 #include <cstdint>
@@ -20,7 +20,7 @@
             if (mRegisterInfo.isEmpty()) return DEFAULT;                                                               \
             auto obj = mRegisterInfo.get();                                                                            \
             if (obj.has(KEY) && !obj.get(KEY).isNull()) {                                                              \
-                return ConvertFromScriptX<TYPE>(obj.get(KEY).as##SCRIPT_TYPE());                                       \
+                return ConvertToCpp<TYPE>(obj.get(KEY).as##SCRIPT_TYPE());                                             \
             }                                                                                                          \
         } catch (...) {                                                                                                \
             Entry::getInstance()->getLogger().error("Failed to parse " #KEY " from " + mFileName);                     \
@@ -100,12 +100,12 @@ public:
 
             // 描述
             if (cmdObj.has("description")) {
-                builder.description(ConvertFromScriptX<string>(cmdObj.get("description")));
+                builder.description(ConvertToCpp<string>(cmdObj.get("description")));
             }
 
             // 用法
             if (cmdObj.has("usages")) {
-                auto usages = ConvertFromScriptX<std::vector<string>>(cmdObj.get("usages"));
+                auto usages = ConvertToCpp<std::vector<string>>(cmdObj.get("usages"));
                 for (const auto& usage : usages) {
                     builder.usages(usage);
                 }
@@ -113,7 +113,7 @@ public:
 
             // 权限
             if (cmdObj.has("permissions")) {
-                auto permissions = ConvertFromScriptX<std::vector<string>>(cmdObj.get("permissions"));
+                auto permissions = ConvertToCpp<std::vector<string>>(cmdObj.get("permissions"));
                 for (const auto& permission : permissions) {
                     builder.permissions(permission);
                 }
@@ -139,12 +139,12 @@ public:
 
             // 设置描述
             if (permObj.has("description")) {
-                builder.description(ConvertFromScriptX<string>(permObj.get("description")));
+                builder.description(ConvertToCpp<string>(permObj.get("description")));
             }
 
             // 设置默认权限
             if (permObj.has("default")) {
-                builder.default_(ConvertFromScriptX<endstone::PermissionDefault>(permObj.get("default")));
+                builder.default_(ConvertToCpp<endstone::PermissionDefault>(permObj.get("default")));
             }
 
             jbuilder.permissions.emplace(key, std::move(builder));

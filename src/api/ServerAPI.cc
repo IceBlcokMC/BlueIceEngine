@@ -53,18 +53,18 @@ ClassDefine<ServerAPI> ServerAPI::builder =
         .instanceFunction("createBlockData", &ServerAPI::createBlockData)
         .instanceFunction("getBanList", &ServerAPI::getBanList)
         .instanceFunction("getIpBanList", &ServerAPI::getIpBanList)
-        .property("BroadcastChannelAdmin", []() { return ConvertToScriptX(endstone::Server::BroadcastChannelAdmin); })
-        .property("BroadcastChannelUser", []() { return ConvertToScriptX(endstone::Server::BroadcastChannelUser); })
+        .property("BroadcastChannelAdmin", []() { return ConvertToScript(endstone::Server::BroadcastChannelAdmin); })
+        .property("BroadcastChannelUser", []() { return ConvertToScript(endstone::Server::BroadcastChannelUser); })
         .build();
 
-Local<Value> ServerAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Server>"); }
+Local<Value> ServerAPI::toString(Arguments const& /* args */) { return ConvertToScript("<Server>"); }
 
-Local<Value> ServerAPI::getName(Arguments const& /* args */) { return ConvertToScriptX(get()->getName()); }
+Local<Value> ServerAPI::getName(Arguments const& /* args */) { return ConvertToScript(get()->getName()); }
 
-Local<Value> ServerAPI::getVersion(Arguments const& /* args */) { return ConvertToScriptX(get()->getVersion()); }
+Local<Value> ServerAPI::getVersion(Arguments const& /* args */) { return ConvertToScript(get()->getVersion()); }
 
 Local<Value> ServerAPI::getMinecraftVersion(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getMinecraftVersion());
+    return ConvertToScript(get()->getMinecraftVersion());
 }
 
 Local<Value> ServerAPI::getLogger(Arguments const& /* args */) { return LoggerAPI::newInstance(&get()->getLogger()); }
@@ -81,10 +81,9 @@ Local<Value> ServerAPI::dispatchCommand(Arguments const& args) try {
     CheckArgsCount(args, 2);
     CheckArgType(args[0], ValueKind::kObject);
     CheckArgType(args[1], ValueKind::kString);
-    return ConvertToScriptX(get()->dispatchCommand(
-        *GetScriptClass(CommandSenderAPI, args[0])->get(),
-        ConvertFromScriptX<std::string>(args[1])
-    ));
+    return ConvertToScript(
+        get()->dispatchCommand(*GetScriptClass(CommandSenderAPI, args[0])->get(), ConvertToCpp<std::string>(args[1]))
+    );
 }
 Catch;
 
@@ -100,12 +99,12 @@ Local<Value> ServerAPI::getOnlinePlayers(Arguments const& /* args */) {
     return result;
 }
 
-Local<Value> ServerAPI::getMaxPlayers(Arguments const& /* args */) { return ConvertToScriptX(get()->getMaxPlayers()); }
+Local<Value> ServerAPI::getMaxPlayers(Arguments const& /* args */) { return ConvertToScript(get()->getMaxPlayers()); }
 
 Local<Value> ServerAPI::setMaxPlayers(Arguments const& args) {
     CheckArgsCount(args, 1);
     CheckArgType(args[0], ValueKind::kNumber);
-    get()->setMaxPlayers(ConvertFromScriptX<int>(args[0]));
+    get()->setMaxPlayers(ConvertToCpp<int>(args[0]));
     return Local<Value>();
 }
 
@@ -114,7 +113,7 @@ Local<Value> ServerAPI::getPlayer(Arguments const& args) {
     try {
         endstone::Player* player{nullptr};
         if (args[0].isString()) {
-            player = get()->getPlayer(ConvertFromScriptX<std::string>(args[0]));
+            player = get()->getPlayer(ConvertToCpp<std::string>(args[0]));
         } else if (args[0].isObject() && IsInstanceOf<UUIDAPI>(args[0])) {
             player = get()->getPlayer(GetScriptClass(UUIDAPI, args[0])->get());
         } else {
@@ -125,7 +124,7 @@ Local<Value> ServerAPI::getPlayer(Arguments const& args) {
     Catch;
 }
 
-Local<Value> ServerAPI::getOnlineMode(Arguments const& /* args */) { return ConvertToScriptX(get()->getOnlineMode()); }
+Local<Value> ServerAPI::getOnlineMode(Arguments const& /* args */) { return ConvertToScript(get()->getOnlineMode()); }
 
 Local<Value> ServerAPI::shutdown(Arguments const& /* args */) {
     get()->shutdown();
@@ -148,9 +147,9 @@ Local<Value> ServerAPI::broadcast(Arguments const& args) {
         // CheckArgType(args[0], ValueKind::kString);
         CheckArgType(args[1], ValueKind::kString);
         if (args[0].isString()) {
-            get()->broadcast(ConvertFromScriptX<std::string>(args[0]), ConvertFromScriptX<std::string>(args[1]));
+            get()->broadcast(ConvertToCpp<std::string>(args[0]), ConvertToCpp<std::string>(args[1]));
         } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
-            get()->broadcast(GetScriptClass(TranslatableAPI, args[0])->get(), ConvertFromScriptX<std::string>(args[1]));
+            get()->broadcast(GetScriptClass(TranslatableAPI, args[0])->get(), ConvertToCpp<std::string>(args[1]));
         } else {
             throw script::Exception("Invalid argument type");
         }
@@ -162,12 +161,12 @@ Local<Value> ServerAPI::broadcast(Arguments const& args) {
 Local<Value> ServerAPI::broadcastMessage(Arguments const& args) {
     CheckArgsCount(args, 1);
     CheckArgType(args[0], ValueKind::kString);
-    get()->broadcastMessage(ConvertFromScriptX<std::string>(args[0]));
+    get()->broadcastMessage(ConvertToCpp<std::string>(args[0]));
     return Local<Value>();
 }
 
 Local<Value> ServerAPI::isPrimaryThread(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->isPrimaryThread());
+    return ConvertToScript(get()->isPrimaryThread());
 }
 
 Local<Value> ServerAPI::getScoreboard(Arguments const& /* args */) { return Local<Value>(); }
@@ -175,31 +174,31 @@ Local<Value> ServerAPI::getScoreboard(Arguments const& /* args */) { return Loca
 Local<Value> ServerAPI::createScoreboard(Arguments const& /* args */) { return Local<Value>(); }
 
 Local<Value> ServerAPI::getCurrentMillisecondsPerTick(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getCurrentMillisecondsPerTick());
+    return ConvertToScript(get()->getCurrentMillisecondsPerTick());
 }
 
 Local<Value> ServerAPI::getAverageMillisecondsPerTick(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getAverageMillisecondsPerTick());
+    return ConvertToScript(get()->getAverageMillisecondsPerTick());
 }
 
 Local<Value> ServerAPI::getCurrentTicksPerSecond(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getCurrentTicksPerSecond());
+    return ConvertToScript(get()->getCurrentTicksPerSecond());
 }
 
 Local<Value> ServerAPI::getAverageTicksPerSecond(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getAverageTicksPerSecond());
+    return ConvertToScript(get()->getAverageTicksPerSecond());
 }
 
 Local<Value> ServerAPI::getCurrentTickUsage(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getCurrentTickUsage());
+    return ConvertToScript(get()->getCurrentTickUsage());
 }
 
 Local<Value> ServerAPI::getAverageTickUsage(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getAverageTickUsage());
+    return ConvertToScript(get()->getAverageTickUsage());
 }
 
 Local<Value> ServerAPI::getStartTime(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getStartTime().time_since_epoch().count());
+    return ConvertToScript(get()->getStartTime().time_since_epoch().count());
 }
 
 Local<Value> ServerAPI::createBossBar(Arguments const& /* args */) { return Local<Value>(); }

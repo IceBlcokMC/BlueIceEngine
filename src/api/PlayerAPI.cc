@@ -6,8 +6,8 @@
 #include "api/form/MessageFormAPI.h"
 #include "api/util/SocketAddressAPI.h"
 #include "api/util/UUIDAPI.h"
+#include "converter/Convert.h"
 #include "endstone/skin.h"
-#include "utils/Convert.h"
 #include "utils/Defines.h"
 #include "utils/Using.h"
 
@@ -116,11 +116,11 @@ ClassDefine<PlayerAPI> PlayerAPI::builder =
         .build();
 
 
-Local<Value> PlayerAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Player>"); }
+Local<Value> PlayerAPI::toString(Arguments const& /* args */) { return ConvertToScript("<Player>"); }
 
 Local<Value> PlayerAPI::getUniqueId(Arguments const& /* args */) { return UUIDAPI::newInstance(get()->getUniqueId()); }
 
-Local<Value> PlayerAPI::getXuid(Arguments const& /* args */) { return ConvertToScriptX(get()->getXuid()); }
+Local<Value> PlayerAPI::getXuid(Arguments const& /* args */) { return ConvertToScript(get()->getXuid()); }
 
 Local<Value> PlayerAPI::getAddress(Arguments const& /* args */) {
     try {
@@ -173,9 +173,7 @@ Local<Value> PlayerAPI::giveExpLevels(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> PlayerAPI::getExpProgress(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getExpProgress());
-}
+Local<Value> PlayerAPI::getExpProgress(Arguments const& /* args */) { return ConvertToScript(get()->getExpProgress()); }
 
 Local<Value> PlayerAPI::setExpProgress(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -184,7 +182,7 @@ Local<Value> PlayerAPI::setExpProgress(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> PlayerAPI::getExpLevel(Arguments const& /* args */) { return ConvertToScriptX(get()->getExpLevel()); }
+Local<Value> PlayerAPI::getExpLevel(Arguments const& /* args */) { return ConvertToScript(get()->getExpLevel()); }
 
 Local<Value> PlayerAPI::setExpLevel(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -193,11 +191,9 @@ Local<Value> PlayerAPI::setExpLevel(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> PlayerAPI::getTotalExp(Arguments const& /* args */) { return ConvertToScriptX(get()->getTotalExp()); }
+Local<Value> PlayerAPI::getTotalExp(Arguments const& /* args */) { return ConvertToScript(get()->getTotalExp()); }
 
-Local<Value> PlayerAPI::getAllowFlight(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getAllowFlight());
-}
+Local<Value> PlayerAPI::getAllowFlight(Arguments const& /* args */) { return ConvertToScript(get()->getAllowFlight()); }
 
 Local<Value> PlayerAPI::setAllowFlight(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -206,7 +202,7 @@ Local<Value> PlayerAPI::setAllowFlight(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> PlayerAPI::isFlying(Arguments const& /* args */) { return ConvertToScriptX(get()->isFlying()); }
+Local<Value> PlayerAPI::isFlying(Arguments const& /* args */) { return ConvertToScript(get()->isFlying()); }
 
 Local<Value> PlayerAPI::setFlying(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -215,7 +211,7 @@ Local<Value> PlayerAPI::setFlying(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> PlayerAPI::getFlySpeed(Arguments const& /* args */) { return ConvertToScriptX(get()->getFlySpeed()); }
+Local<Value> PlayerAPI::getFlySpeed(Arguments const& /* args */) { return ConvertToScript(get()->getFlySpeed()); }
 
 Local<Value> PlayerAPI::setFlySpeed(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -224,7 +220,7 @@ Local<Value> PlayerAPI::setFlySpeed(Arguments const& args) {
     return Local<Value>();
 }
 
-Local<Value> PlayerAPI::getWalkSpeed(Arguments const& /* args */) { return ConvertToScriptX(get()->getWalkSpeed()); }
+Local<Value> PlayerAPI::getWalkSpeed(Arguments const& /* args */) { return ConvertToScript(get()->getWalkSpeed()); }
 
 Local<Value> PlayerAPI::setWalkSpeed(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -268,7 +264,7 @@ Local<Value> PlayerAPI::resetTitle(Arguments const& /* args */) {
 
 Local<Value> PlayerAPI::spawnParticle(Arguments const& /* args */) { return Local<Value>(); }
 
-Local<Value> PlayerAPI::getPing(Arguments const& /* args */) { return ConvertToScriptX(get()->getPing().count()); }
+Local<Value> PlayerAPI::getPing(Arguments const& /* args */) { return ConvertToScript(get()->getPing().count()); }
 
 Local<Value> PlayerAPI::updateCommands(Arguments const& /* args */) {
     get()->updateCommands();
@@ -278,29 +274,27 @@ Local<Value> PlayerAPI::updateCommands(Arguments const& /* args */) {
 Local<Value> PlayerAPI::performCommand(Arguments const& args) {
     CheckArgsCount(args, 1);
     CheckArgType(args[0], ValueKind::kString);
-    return ConvertToScriptX(get()->performCommand(args[0].asString().toString()));
+    return ConvertToScript(get()->performCommand(args[0].asString().toString()));
 }
 
-Local<Value> PlayerAPI::getGameMode(Arguments const& /* args */) { return ConvertToScriptX(get()->getGameMode()); }
+Local<Value> PlayerAPI::getGameMode(Arguments const& /* args */) { return ConvertToScript(get()->getGameMode()); }
 
 Local<Value> PlayerAPI::setGameMode(Arguments const& args) {
     CheckArgsCount(args, 1);
     CheckArgType(args[0], ValueKind::kNumber);
-    get()->setGameMode(ConvertFromScriptX<endstone::GameMode>(args[0]));
+    get()->setGameMode(ConvertToCpp<endstone::GameMode>(args[0]));
     return Local<Value>();
 }
 
 Local<Value> PlayerAPI::getInventory(Arguments const& /* args */) { return Local<Value>(); }
 
-Local<Value> PlayerAPI::getLocale(Arguments const& /* args */) { return ConvertToScriptX(get()->getLocale()); }
+Local<Value> PlayerAPI::getLocale(Arguments const& /* args */) { return ConvertToScript(get()->getLocale()); }
 
-Local<Value> PlayerAPI::getDeviceOS(Arguments const& /* args */) { return ConvertToScriptX(get()->getDeviceOS()); }
+Local<Value> PlayerAPI::getDeviceOS(Arguments const& /* args */) { return ConvertToScript(get()->getDeviceOS()); }
 
-Local<Value> PlayerAPI::getDeviceId(Arguments const& /* args */) { return ConvertToScriptX(get()->getDeviceId()); }
+Local<Value> PlayerAPI::getDeviceId(Arguments const& /* args */) { return ConvertToScript(get()->getDeviceId()); }
 
-Local<Value> PlayerAPI::getGameVersion(Arguments const& /* args */) {
-    return ConvertToScriptX(get()->getGameVersion());
-}
+Local<Value> PlayerAPI::getGameVersion(Arguments const& /* args */) { return ConvertToScript(get()->getGameVersion()); }
 
 Local<Value> PlayerAPI::getSkin(Arguments const& /* args */) {
     try {

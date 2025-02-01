@@ -3,9 +3,9 @@
 #include "api/APIHelper.h"
 #include "api/command/CommandAPI.h"
 #include "api/command/CommandSenderAPI.h"
+#include "converter/Convert.h"
 #include "manager/EngineData.h"
 #include "manager/NodeManager.h"
-#include "utils/Convert.h"
 #include "utils/Using.h"
 #include <endstone/command/command.h>
 #include <endstone/logger.h>
@@ -67,7 +67,7 @@ bool JavaScriptPlugin::onCommand(
                         {},
                         CommandSenderAPI::newInstance(&sender),
                         CommandAPI::newInstance(const_cast<endstone::Command*>(&command)), // dangerous?
-                        ConvertToScriptX(args)
+                        ConvertToScript(args)
                     )
                     .asBoolean()
                     .value();

@@ -1,6 +1,6 @@
 #include "api/level/LocationAPI.h"
 #include "api/APIHelper.h"
-#include "utils/Convert.h"
+#include "converter/Convert.h"
 #include "utils/Defines.h"
 
 
@@ -40,14 +40,14 @@ ClassDefine<LocationAPI> LocationAPI::builder = defineClass<LocationAPI>("Locati
 
 Local<Value> LocationAPI::toString(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX("<Location>");
+        return ConvertToScript("<Location>");
     }
     Catch;
 }
 
 Local<Value> LocationAPI::getPitch(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get()->getPitch());
+        return ConvertToScript(get()->getPitch());
     }
     Catch;
 }
@@ -56,7 +56,7 @@ Local<Value> LocationAPI::setPitch(Arguments const& args) {
     try {
         CheckArgsCount(args, 1);
         CheckArgType(args[0], ValueKind::kNumber);
-        get()->setPitch(ConvertFromScriptX<float>(args[0]));
+        get()->setPitch(ConvertToCpp<float>(args[0]));
         return Local<Value>();
     }
     Catch;
@@ -64,7 +64,7 @@ Local<Value> LocationAPI::setPitch(Arguments const& args) {
 
 Local<Value> LocationAPI::getYaw(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get()->getYaw());
+        return ConvertToScript(get()->getYaw());
     }
     Catch;
 }
@@ -73,7 +73,7 @@ Local<Value> LocationAPI::setYaw(Arguments const& args) {
     try {
         CheckArgsCount(args, 1);
         CheckArgType(args[0], ValueKind::kNumber);
-        get()->setYaw(ConvertFromScriptX<float>(args[0]));
+        get()->setYaw(ConvertToCpp<float>(args[0]));
         return Local<Value>();
     }
     Catch;

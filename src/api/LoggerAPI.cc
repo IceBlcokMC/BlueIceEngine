@@ -1,27 +1,27 @@
 #include "api/LoggerAPI.h"
 #include "api/APIHelper.h"
+#include "converter/Convert.h"
 #include "endstone/logger.h"
 #include "manager/EngineData.h"
-#include "utils/Convert.h"
 #include <cstddef>
+
 
 namespace jse {
 
-ClassDefine<LoggerAPI> LoggerAPI::builder = 
-	defineClass<LoggerAPI>("Logger")
-		.constructor(nullptr)
-		.instanceFunction("toString", &LoggerAPI::toString)
-		.instanceFunction("log", &LoggerAPI::log)
-		.instanceFunction("info", &LoggerAPI::info)
-		.instanceFunction("warning", &LoggerAPI::warning)
-		.instanceFunction("error", &LoggerAPI::error)
-		.instanceFunction("debug", &LoggerAPI::debug)
-		.instanceFunction("critical", &LoggerAPI::critical)
-		.instanceFunction("trace", &LoggerAPI::trace)
-		.instanceFunction("setLevel", &LoggerAPI::setLevel)
-		.instanceFunction("isEnabledFor", &LoggerAPI::isEnabledFor)
-		.instanceFunction("getName", &LoggerAPI::getName)
-		.build();
+ClassDefine<LoggerAPI> LoggerAPI::builder = defineClass<LoggerAPI>("Logger")
+                                                .constructor(nullptr)
+                                                .instanceFunction("toString", &LoggerAPI::toString)
+                                                .instanceFunction("log", &LoggerAPI::log)
+                                                .instanceFunction("info", &LoggerAPI::info)
+                                                .instanceFunction("warning", &LoggerAPI::warning)
+                                                .instanceFunction("error", &LoggerAPI::error)
+                                                .instanceFunction("debug", &LoggerAPI::debug)
+                                                .instanceFunction("critical", &LoggerAPI::critical)
+                                                .instanceFunction("trace", &LoggerAPI::trace)
+                                                .instanceFunction("setLevel", &LoggerAPI::setLevel)
+                                                .instanceFunction("isEnabledFor", &LoggerAPI::isEnabledFor)
+                                                .instanceFunction("getName", &LoggerAPI::getName)
+                                                .build();
 
 void LoggerAPIHelper(endstone::Logger* logger, endstone::Logger::Level level, string const& message) {
     try {
@@ -44,7 +44,7 @@ void LoggerAPIHelper(endstone::Logger* logger, endstone::Logger::Level level, Ar
 Local<Value> LoggerAPI::toString(Arguments const& /* args */) { return String::newString("<Logger>"); }
 
 Local<Value> LoggerAPI::log(Arguments const& args) {
-    auto level = ConvertFromScriptX<endstone::Logger::Level>(args[0]);
+    auto level = ConvertToCpp<endstone::Logger::Level>(args[0]);
     LoggerAPIHelper(get(), level, args, 1);
     return Local<Value>();
 }

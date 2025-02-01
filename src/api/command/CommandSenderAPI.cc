@@ -1,7 +1,7 @@
 #include "api/command/CommandSenderAPI.h"
 #include "api/APIHelper.h"
 #include "api/PlayerAPI.h"
-#include "utils/Convert.h"
+#include "converter/Convert.h"
 #include "utils/Using.h"
 #include <cstddef>
 #include <sstream>
@@ -35,7 +35,7 @@ ClassDefine<CommandSenderAPI> CommandSenderAPI::builder =
         .build();
 
 
-Local<Value> CommandSenderAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<CommandSender>"); }
+Local<Value> CommandSenderAPI::toString(Arguments const& /* args */) { return ConvertToScript("<CommandSender>"); }
 
 Local<Value> CommandSenderAPI::asCommandSender(Arguments const& /* args */) {
     return CommandSenderAPI::newInstance(get());
@@ -79,7 +79,7 @@ Local<Value> CommandSenderAPI::getServer(Arguments const& /* args */) { return L
 
 Local<Value> CommandSenderAPI::getName(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(this->mSender->getName());
+        return ConvertToScript(this->mSender->getName());
     }
     Catch;
 }

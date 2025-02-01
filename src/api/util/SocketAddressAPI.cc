@@ -1,7 +1,7 @@
 #include "api/util/SocketAddressAPI.h"
 #include "api/APIHelper.h"
+#include "converter/Convert.h"
 #include "endstone/util/socket_address.h"
-#include "utils/Convert.h"
 #include "utils/Using.h"
 #include <cstdint>
 
@@ -21,27 +21,24 @@ SocketAddressAPI* SocketAddressAPI::make(Arguments const& args) {
     if (args.size() == 2 && args[0].isString() && args[1].isNumber()) {
         return new SocketAddressAPI(
             args.thiz(),
-            endstone::SocketAddress{
-                ConvertFromScriptX<string>(args[0]),
-                static_cast<uint32_t>(ConvertFromScriptX<int>(args[1]))
-            }
+            endstone::SocketAddress{ConvertToCpp<string>(args[0]), static_cast<uint32_t>(ConvertToCpp<int>(args[1]))}
         );
     }
     return nullptr;
 }
 
-Local<Value> SocketAddressAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<SocketAddress>"); }
+Local<Value> SocketAddressAPI::toString(Arguments const& /* args */) { return ConvertToScript("<SocketAddress>"); }
 
 Local<Value> SocketAddressAPI::getHostname(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get().getHostname());
+        return ConvertToScript(get().getHostname());
     }
     Catch;
 }
 
 Local<Value> SocketAddressAPI::getPort(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get().getPort());
+        return ConvertToScript(get().getPort());
     }
     Catch;
 }

@@ -2,8 +2,8 @@
 #include "api/APIHelper.h"
 #include "api/command/CommandAPI.h"
 #include "api/permissions/PermissionAPI.h"
+#include "converter/Convert.h"
 #include "manager/EngineData.h"
-#include "utils/Convert.h"
 #include "utils/Using.h"
 
 
@@ -40,7 +40,7 @@ ClassDefine<PluginDescriptionAPI> PluginDescriptionAPI::builder =
         Catch;                                                                                                         \
     }
 
-#define GETDESCRIPTION_MACRO(FUNC_NAME) return ConvertToScriptX(get()->FUNC_NAME());
+#define GETDESCRIPTION_MACRO(FUNC_NAME) return ConvertToScript(get()->FUNC_NAME());
 
 PLUGINDESCRIPTIONAPI_MACRO(toString, return String::newString("<PluginDescription>"));
 

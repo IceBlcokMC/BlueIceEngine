@@ -3,8 +3,8 @@
 #include "api/permissions/PermissibleAPI.h"
 #include "api/permissions/PermissionAPI.h"
 #include "api/plugin/PluginAPI.h"
+#include "converter/Convert.h"
 #include "endstone/permissions/permission_attachment.h"
-#include "utils/Convert.h"
 #include "utils/Defines.h"
 #include "utils/SafeTransfer.h"
 #include "utils/Using.h"
@@ -27,7 +27,7 @@ ClassDefine<PermissionAttachmentAPI> PermissionAttachmentAPI::builder =
 
 Local<Value> PermissionAttachmentAPI::toString(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX("<PermissionAttachment>");
+        return ConvertToScript("<PermissionAttachment>");
     }
     Catch;
 }
@@ -94,7 +94,7 @@ Local<Value> PermissionAttachmentAPI::getPermissible(Arguments const& /* args */
 Local<Value> PermissionAttachmentAPI::getPermissions(Arguments const& /* args */) {
     try {
         auto res = get()->getPermissions();
-        return ConvertToScriptX(std::move(res));
+        return ConvertToScript(std::move(res));
     }
     Catch;
 }
@@ -104,7 +104,7 @@ Local<Value> PermissionAttachmentAPI::setPermission(Arguments const& args) {
         CheckArgsCount(args, 2);
         CheckArgType(args[1], ValueKind::kBoolean);
         if (args[0].isString()) {
-            get()->setPermission(ConvertFromScriptX<string>(args[0]), args[1].asBoolean().value());
+            get()->setPermission(ConvertToCpp<string>(args[0]), args[1].asBoolean().value());
         } else if (args[0].isObject() && IsInstanceOf<PermissionAPI>(args[0])) {
             get()->setPermission(*GetScriptClass(PermissionAPI, args[0])->get(), args[1].asBoolean().value());
         } else {
@@ -119,7 +119,7 @@ Local<Value> PermissionAttachmentAPI::unsetPermission(Arguments const& args) {
     try {
         CheckArgsCount(args, 1);
         if (args[0].isString()) {
-            get()->unsetPermission(ConvertFromScriptX<string>(args[0]));
+            get()->unsetPermission(ConvertToCpp<string>(args[0]));
         } else if (args[0].isObject() && IsInstanceOf<PermissionAPI>(args[0])) {
             get()->unsetPermission(*GetScriptClass(PermissionAPI, args[0])->get());
         }

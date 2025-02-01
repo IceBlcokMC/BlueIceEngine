@@ -1,7 +1,7 @@
 #include "api/util/VectorAPI.h"
 #include "api/APIHelper.h"
+#include "converter/Convert.h"
 #include "endstone/util/vector.h"
-#include "utils/Convert.h"
 #include "utils/Defines.h"
 #include "utils/Using.h"
 #include <memory>
@@ -36,9 +36,9 @@ VectorAPI* VectorAPI::make(Arguments const& args) {
         return (new VectorAPI(
             args.thiz(),
             endstone::Vector<float>{
-                ConvertFromScriptX<float>(args[0]),
-                ConvertFromScriptX<float>(args[1]),
-                ConvertFromScriptX<float>(args[2])
+                ConvertToCpp<float>(args[0]),
+                ConvertToCpp<float>(args[1]),
+                ConvertToCpp<float>(args[2])
             }
         ));
     }
@@ -46,18 +46,18 @@ VectorAPI* VectorAPI::make(Arguments const& args) {
 }
 
 /* instanceProperty */
-Local<Value> VectorAPI::GetterX() { return ConvertToScriptX(this->mVector.getX()); }
-Local<Value> VectorAPI::GetterY() { return ConvertToScriptX(this->mVector.getY()); }
-Local<Value> VectorAPI::GetterZ() { return ConvertToScriptX(this->mVector.getZ()); }
+Local<Value> VectorAPI::GetterX() { return ConvertToScript(this->mVector.getX()); }
+Local<Value> VectorAPI::GetterY() { return ConvertToScript(this->mVector.getY()); }
+Local<Value> VectorAPI::GetterZ() { return ConvertToScript(this->mVector.getZ()); }
 
-void VectorAPI::SetterX(Local<Value> const& value) { this->mVector.setX(ConvertFromScriptX<float>(value)); }
-void VectorAPI::SetterY(Local<Value> const& value) { this->mVector.setY(ConvertFromScriptX<float>(value)); }
-void VectorAPI::SetterZ(Local<Value> const& value) { this->mVector.setZ(ConvertFromScriptX<float>(value)); }
+void VectorAPI::SetterX(Local<Value> const& value) { this->mVector.setX(ConvertToCpp<float>(value)); }
+void VectorAPI::SetterY(Local<Value> const& value) { this->mVector.setY(ConvertToCpp<float>(value)); }
+void VectorAPI::SetterZ(Local<Value> const& value) { this->mVector.setZ(ConvertToCpp<float>(value)); }
 
 
 /* Methods */
 Local<Value> VectorAPI::toString(Arguments const& /* args */) {
-    return ConvertToScriptX(fmt::format("<Vector({0}, {1}, {2})>", get().getX(), get().getY(), get().getZ()));
+    return ConvertToScript(fmt::format("<Vector({0}, {1}, {2})>", get().getX(), get().getY(), get().getZ()));
 }
 
 Local<Value> VectorAPI::getX(Arguments const& /* args */) { return GetterX(); }
@@ -93,9 +93,9 @@ Local<Value> VectorAPI::setZ(Arguments const& args) {
 }
 
 
-Local<Value> VectorAPI::length(Arguments const& /* args */) { return ConvertToScriptX(get().length()); }
+Local<Value> VectorAPI::length(Arguments const& /* args */) { return ConvertToScript(get().length()); }
 
-Local<Value> VectorAPI::lengthSquared(Arguments const& /* args */) { return ConvertToScriptX(get().lengthSquared()); }
+Local<Value> VectorAPI::lengthSquared(Arguments const& /* args */) { return ConvertToScript(get().lengthSquared()); }
 
 Local<Value> VectorAPI::distance(Arguments const& args) {
     CheckArgsCount(args, 1);
@@ -104,7 +104,7 @@ Local<Value> VectorAPI::distance(Arguments const& args) {
         if (!IsInstanceOf<VectorAPI>(args[0])) {
             throw script::Exception("Invalid argument type");
         }
-        return ConvertToScriptX(get().distance(GetScriptClass(VectorAPI, args[0])->get()));
+        return ConvertToScript(get().distance(GetScriptClass(VectorAPI, args[0])->get()));
     }
     Catch;
 }
@@ -116,7 +116,7 @@ Local<Value> VectorAPI::distanceSquared(Arguments const& args) {
         if (!IsInstanceOf<VectorAPI>(args[0])) {
             throw script::Exception("Invalid argument type");
         }
-        return ConvertToScriptX(get().distanceSquared(GetScriptClass(VectorAPI, args[0])->get()));
+        return ConvertToScript(get().distanceSquared(GetScriptClass(VectorAPI, args[0])->get()));
     }
     Catch;
 }

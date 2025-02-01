@@ -3,10 +3,10 @@
 #include "api/PlayerAPI.h"
 #include "api/form/FormAPI.h"
 #include "api/lang/TranslatableAPI.h"
+#include "converter/Convert.h"
 #include "endstone/endstone.h"
 #include "endstone/message.h"
 #include "endstone/player.h"
-#include "utils/Convert.h"
 #include "utils/SafeTransfer.h"
 #include "utils/Using.h"
 #include <optional>
@@ -37,7 +37,7 @@ ActionFormAPI* ActionFormAPI::make(Arguments const& args) { return new ActionFor
 
 Local<Value> ActionFormAPI::toString(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX("<ActionForm>");
+        return ConvertToScript("<ActionForm>");
     }
     Catch;
 }
@@ -52,13 +52,14 @@ Local<Value> ActionFormAPI::getContent(Arguments const& /* args */) {
 Local<Value> ActionFormAPI::setContent(Arguments const& args) {
     CheckArgsCount(args, 1);
     try {
-        if (args[0].isString()) {
-            mActionForm.setContent(ConvertFromScriptX<string>(args[0]));
-        } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
-            mActionForm.setContent(GetScriptClass(TranslatableAPI, args[0])->get());
-        } else {
-            throw script::Exception("Invalid parameter type");
-        }
+        // if (args[0].isString()) {
+        //     mActionForm.setContent(ConvertToCpp<string>(args[0]));
+        // } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
+        //     mActionForm.setContent(GetScriptClass(TranslatableAPI, args[0])->get());
+        // } else {
+        //     throw script::Exception("Invalid parameter type");
+        // }
+        mActionForm.setContent(ConvertToCpp<endstone::Message>(args[0]));
         return args.thiz();
     }
     Catch;
@@ -66,7 +67,7 @@ Local<Value> ActionFormAPI::setContent(Arguments const& args) {
 
 endstone::Message ArgHelper(Local<Value> const& arg) {
     if (arg.isString()) {
-        return ConvertFromScriptX<string>(arg);
+        return ConvertToCpp<string>(arg);
     } else if (arg.isObject() && IsInstanceOf<TranslatableAPI>(arg)) {
         return GetScriptClass(TranslatableAPI, arg)->get();
     } else {
@@ -81,10 +82,10 @@ Local<Value> ActionFormAPI::addButton(Arguments const& args) {
         if (args.size() == 1) {
             mActionForm.addButton(std::move(val));
         } else if (args.size() == 2) {
-            mActionForm.addButton(std::move(val), ConvertFromScriptX<string>(args[1]));
+            mActionForm.addButton(std::move(val), ConvertToCpp<string>(args[1]));
         } else if (args.size() == 3) {
             auto ptr = SafeTransfer<Function>::make(EngineScope::currentEngine(), script::Global{args[2].asFunction()});
-            mActionForm.addButton(std::move(val), ConvertFromScriptX<string>(args[1]), [ptr](endstone::Player* player) {
+            mActionForm.addButton(std::move(val), ConvertToCpp<string>(args[1]), [ptr](endstone::Player* player) {
                 if (ptr) {
                     EngineScope enter{ptr->mEngine};
                     try {
@@ -116,8 +117,8 @@ Local<Value> ActionFormAPI::setOnSubmit(Arguments const& args) {
             if (ptr) {
                 EngineScope enter{ptr->mEngine};
                 try {
-                    if (player) ptr->mGlobal.get().call({}, PlayerAPI::newInstance(player), ConvertToScriptX(idk));
-                    else ptr->mGlobal.get().call({}, Local<Value>{}, ConvertToScriptX(idk));
+                    if (player) ptr->mGlobal.get().call({}, PlayerAPI::newInstance(player), ConvertToScript(idk));
+                    else ptr->mGlobal.get().call({}, Local<Value>{}, ConvertToScript(idk));
                 }
                 CatchNotReturn;
             }

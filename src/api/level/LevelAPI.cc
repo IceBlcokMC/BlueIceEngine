@@ -2,7 +2,7 @@
 #include "DimensionAPI.h"
 #include "api/APIHelper.h"
 #include "api/actor/ActorAPI.h"
-#include "utils/Convert.h"
+#include "converter/Convert.h"
 
 
 namespace jse {
@@ -19,9 +19,9 @@ ClassDefine<LevelAPI> LevelAPI::builder = defineClass<LevelAPI>("Level")
                                               .instanceFunction("getDimension", &LevelAPI::getDimension)
                                               .build();
 
-Local<Value> LevelAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Level>"); }
+Local<Value> LevelAPI::toString(Arguments const& /* args */) { return ConvertToScript("<Level>"); }
 
-Local<Value> LevelAPI::getName(Arguments const& /* args */) { return ConvertToScriptX(get()->getName()); }
+Local<Value> LevelAPI::getName(Arguments const& /* args */) { return ConvertToScript(get()->getName()); }
 
 Local<Value> LevelAPI::getActors(Arguments const& /* args */) {
     try {
@@ -63,7 +63,7 @@ Local<Value> LevelAPI::getDimension(Arguments const& args) {
     try {
         CheckArgsCount(args, 1);
         CheckArgType(args[0], ValueKind::kString);
-        return DimensionAPI::newInstance(get()->getDimension(ConvertFromScriptX<std::string>(args[0])));
+        return DimensionAPI::newInstance(get()->getDimension(ConvertToCpp<std::string>(args[0])));
     }
     Catch;
 }

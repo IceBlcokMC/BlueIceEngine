@@ -1,8 +1,9 @@
 #include "api/lang/TranslatableAPI.h"
 #include "api/APIHelper.h"
+#include "converter/Convert.h"
 #include "endstone/lang/translatable.h"
-#include "utils/Convert.h"
 #include "utils/Using.h"
+
 
 namespace jse {
 
@@ -20,10 +21,7 @@ TranslatableAPI* TranslatableAPI::make(Arguments const& args) {
         if (args.size() == 2 && args[0].isString() && args[1].isArray()) {
             return new TranslatableAPI(
                 args.thiz(),
-                endstone::Translatable{
-                    ConvertFromScriptX<string>(args[0]),
-                    ConvertFromScriptX<std::vector<string>>(args[1])
-                }
+                endstone::Translatable{ConvertToCpp<string>(args[0]), ConvertToCpp<std::vector<string>>(args[1])}
             );
         }
         return nullptr;
@@ -33,25 +31,25 @@ TranslatableAPI* TranslatableAPI::make(Arguments const& args) {
 }
 
 
-Local<Value> TranslatableAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Translatable>"); }
+Local<Value> TranslatableAPI::toString(Arguments const& /* args */) { return ConvertToScript("<Translatable>"); }
 
 Local<Value> TranslatableAPI::getText(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get().getText());
+        return ConvertToScript(get().getText());
     }
     Catch;
 }
 
 Local<Value> TranslatableAPI::getParameters(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get().getParameters());
+        return ConvertToScript(get().getParameters());
     }
     Catch;
 }
 
 Local<Value> TranslatableAPI::empty(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get().empty());
+        return ConvertToScript(get().empty());
     }
     Catch;
 }

@@ -2,7 +2,7 @@
 #include "api/APIHelper.h"
 #include "api/PlayerAPI.h"
 #include "api/lang/TranslatableAPI.h"
-#include "utils/Convert.h"
+#include "converter/Convert.h"
 #include "utils/Defines.h"
 #include "utils/SafeTransfer.h"
 #include "utils/Using.h"
@@ -17,7 +17,7 @@ Local<Value> ConvertVariantToScriptX(Variant&& val) {
         [](auto&& arg) -> Local<Value> {
             using T = std::decay_t<decltype(arg)>;
             if constexpr (std::is_same_v<T, std::string>) {
-                return ConvertToScriptX(arg);
+                return ConvertToScript(arg);
             } else if constexpr (std::is_same_v<T, endstone::Translatable>) {
                 return TranslatableAPI::newInstance(arg);
             } else {
@@ -43,7 +43,8 @@ public:
 public:
     Local<Value> getTitle(Arguments const& /* args */) {
         try {
-            return ConvertToScriptX(mForm.getTitle());
+            // return detail::ConvertVariantToScriptX(mForm.getTitle());
+            return ConvertToScript(mForm.getTitle());
         }
         Catch;
     }
@@ -52,7 +53,7 @@ public:
         CheckArgsCount(args, 1);
         try {
             if (args[0].isString()) {
-                mForm.setTitle(ConvertFromScriptX<string>(args[0]));
+                mForm.setTitle(ConvertToCpp<string>(args[0]));
             } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
                 mForm.setTitle(GetScriptClass(TranslatableAPI, args[0])->get());
             } else {

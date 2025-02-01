@@ -1,6 +1,6 @@
 #include "api/jse/EnumAPI.h"
+#include "converter/Convert.h"
 #include "endstone/level/dimension.h"
-#include "utils/Convert.h"
 #include "utils/Using.h"
 #include <endstone/game_mode.h>
 #include <endstone/logger.h>
@@ -30,7 +30,7 @@ void RegisterEnum(ScriptEngine* engine) {
     // Fix magic_enum serach scope -128 ~ 128
     enumMap["DimensionType"]["Custom"] = static_cast<int>(endstone::Dimension::Type::Custom);
 
-    engine->set("Enums", ConvertToScriptX(enumMap));
+    engine->set("Enums", ConvertToScript(enumMap));
 }
 
 #undef REGISTER_ENUM_MACRO

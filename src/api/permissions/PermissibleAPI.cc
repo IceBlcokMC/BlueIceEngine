@@ -3,7 +3,7 @@
 #include "api/command/CommandSenderAPI.h"
 #include "api/permissions/PermissionAPI.h"
 #include "api/plugin/PluginAPI.h"
-#include "utils/Convert.h"
+#include "converter/Convert.h"
 #include "utils/Defines.h"
 #include "utils/Using.h"
 #include <endstone/permissions/permissible.h>
@@ -30,11 +30,11 @@ ClassDefine<PermissibleAPI> PermissibleAPI::builder =
         .build();
 
 
-Local<Value> PermissibleAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Permissible>"); };
+Local<Value> PermissibleAPI::toString(Arguments const& /* args */) { return ConvertToScript("<Permissible>"); };
 
 Local<Value> PermissibleAPI::isOp(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(this->mPermissible->isOp());
+        return ConvertToScript(this->mPermissible->isOp());
     }
     Catch;
 }
@@ -54,11 +54,10 @@ Local<Value> PermissibleAPI::isPermissionSet(Arguments const& args) {
     try {
         if (args[0].isString()) {
             // overload 1
-            return ConvertToScriptX(this->mPermissible->isPermissionSet(args[0].asString().toString()));
+            return ConvertToScript(this->mPermissible->isPermissionSet(args[0].asString().toString()));
         } else if (IsInstanceOf<PermissionAPI>(args[0])) {
             // overload 2
-            return ConvertToScriptX(this->mPermissible->isPermissionSet(*GetScriptClass(PermissionAPI, args[0])->get())
-            );
+            return ConvertToScript(this->mPermissible->isPermissionSet(*GetScriptClass(PermissionAPI, args[0])->get()));
         } else {
             throw script::Exception("Parameter 0 must be a string or Permission");
         }
@@ -71,10 +70,10 @@ Local<Value> PermissibleAPI::hasPermission(Arguments const& args) {
     try {
         if (args[0].isString()) {
             // overload 1
-            return ConvertToScriptX(this->mPermissible->hasPermission(args[0].asString().toString()));
+            return ConvertToScript(this->mPermissible->hasPermission(args[0].asString().toString()));
         } else if (IsInstanceOf<PermissionAPI>(args[0])) {
             // overload 2
-            return ConvertToScriptX(this->mPermissible->hasPermission(*GetScriptClass(PermissionAPI, args[0])->get()));
+            return ConvertToScript(this->mPermissible->hasPermission(*GetScriptClass(PermissionAPI, args[0])->get()));
         } else {
             throw script::Exception("Parameter 0 must be a string or Permission");
         }

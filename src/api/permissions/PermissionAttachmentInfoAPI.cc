@@ -2,7 +2,7 @@
 #include "api/APIHelper.h"
 #include "api/permissions/PermissibleAPI.h"
 #include "api/permissions/PermissionAttachmentAPI.h"
-#include "utils/Convert.h"
+#include "converter/Convert.h"
 #include "utils/Defines.h"
 #include "utils/Using.h"
 
@@ -20,7 +20,7 @@ ClassDefine<PermissionAttachmentInfoAPI> PermissionAttachmentInfoAPI::builder =
 
 Local<Value> PermissionAttachmentInfoAPI::toString(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX("<PermissionAttachmentInfo>");
+        return ConvertToScript("<PermissionAttachmentInfo>");
     }
     Catch;
 }
@@ -34,7 +34,7 @@ Local<Value> PermissionAttachmentInfoAPI::getPermissible(Arguments const& /* arg
 
 Local<Value> PermissionAttachmentInfoAPI::getPermission(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get()->getPermission());
+        return ConvertToScript(get()->getPermission());
     }
     Catch;
 }
@@ -52,7 +52,7 @@ Local<Value> PermissionAttachmentInfoAPI::getAttachment(Arguments const& /* args
 
 Local<Value> PermissionAttachmentInfoAPI::getValue(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get()->getValue());
+        return ConvertToScript(get()->getValue());
     }
     Catch;
 }

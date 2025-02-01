@@ -1,7 +1,7 @@
 #include "api/permissions/PermissionAPI.h"
 #include "api/APIHelper.h"
 #include "api/permissions/PermissibleAPI.h"
-#include "utils/Convert.h"
+#include "converter/Convert.h"
 #include "utils/Defines.h"
 #include "utils/Using.h"
 #include <endstone/permissions/permission_default.h>
@@ -25,25 +25,25 @@ ClassDefine<PermissionAPI> PermissionAPI::builder =
         .build();
 
 
-Local<Value> PermissionAPI::toString(Arguments const& /* args */) { return ConvertToScriptX("<Permission>"); }
+Local<Value> PermissionAPI::toString(Arguments const& /* args */) { return ConvertToScript("<Permission>"); }
 
 Local<Value> PermissionAPI::getName(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(this->mPermission->getName());
+        return ConvertToScript(this->mPermission->getName());
     }
     Catch;
 }
 
 Local<Value> PermissionAPI::getChildren(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(this->mPermission->getChildren());
+        return ConvertToScript(this->mPermission->getChildren());
     }
     Catch;
 }
 
 Local<Value> PermissionAPI::getDefault(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(this->mPermission->getDefault());
+        return ConvertToScript(this->mPermission->getDefault());
     }
     Catch;
 }
@@ -52,7 +52,7 @@ Local<Value> PermissionAPI::setDefault(Arguments const& args) {
     CheckArgsCount(args, 1);
     CheckArgType(args[0], ValueKind::kNumber);
     try {
-        this->mPermission->setDefault(ConvertFromScriptX<endstone::PermissionDefault>(args[0]));
+        this->mPermission->setDefault(ConvertToCpp<endstone::PermissionDefault>(args[0]));
         return Local<Value>();
     }
     Catch;
@@ -60,7 +60,7 @@ Local<Value> PermissionAPI::setDefault(Arguments const& args) {
 
 Local<Value> PermissionAPI::getDescription(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(this->mPermission->getDescription());
+        return ConvertToScript(this->mPermission->getDescription());
     }
     Catch;
 }

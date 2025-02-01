@@ -2,7 +2,7 @@
 #include "DimensionAPI.h"
 #include "api/APIHelper.h"
 #include "api/actor/ActorAPI.h"
-#include "utils/Convert.h"
+#include "converter/Convert.h"
 #include "utils/Defines.h"
 
 
@@ -37,7 +37,7 @@ ClassDefine<PositionAPI> PositionAPI::builder = defineClass<PositionAPI>("Positi
 
 Local<Value> PositionAPI::toString(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX("<Position>");
+        return ConvertToScript("<Position>");
     }
     Catch;
 }
@@ -69,21 +69,21 @@ Local<Value> PositionAPI::setDimension(Arguments const& args) {
 
 Local<Value> PositionAPI::getBlockX(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get()->getBlockX());
+        return ConvertToScript(get()->getBlockX());
     }
     Catch;
 }
 
 Local<Value> PositionAPI::getBlockY(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get()->getBlockY());
+        return ConvertToScript(get()->getBlockY());
     }
     Catch;
 }
 
 Local<Value> PositionAPI::getBlockZ(Arguments const& /* args */) {
     try {
-        return ConvertToScriptX(get()->getBlockZ());
+        return ConvertToScript(get()->getBlockZ());
     }
     Catch;
 }
