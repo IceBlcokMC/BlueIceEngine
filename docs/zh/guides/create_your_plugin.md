@@ -178,6 +178,12 @@ JSE.registerPlugin({
 
 这样，当用户执行 `/hello` 命令时，插件就会输出 `Hello world!`。
 
+:::warning
+由于加载机制问题，引擎需要等待 ES（`Endstone`）分配一些资源，所以在 `onLoad` 调用前您不能访问任何 `Endstone` 资源（如 `Logger` 等）。
+在 `onEnable` 调用前，您不能访问任何 Minecraft 资源（如 `getServer` 等）。
+`JSE`、`FileAPI` 类和其它 Node API 不受影响。
+:::
+
 ## 6. 编译并运行插件
 
 在完成插件的编写后，我们需要将插件编译成 JavaScript，然后运行。

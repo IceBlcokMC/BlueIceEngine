@@ -178,6 +178,12 @@ JSE.registerPlugin({
 
 Now, when users execute the `/hello` command, the plugin will output `Hello world!`.
 
+:::warning
+Due to issues with the loading mechanism, the engine needs to wait for ES (`Endstone`) to allocate some resources. Therefore, you cannot access any `Endstone` resources (such as `Logger`, etc.) before the `onLoad` method is called.
+You cannot access any Minecraft resources (such as `getServer`, etc.) before the `onEnable` method is called.
+`JSE`, `FileAPI` classes, and other Node APIs are not affected.
+:::
+
 ## 6. Compile and Run Plugin
 
 After completing the plugin development, we need to compile it to JavaScript and then run it.
