@@ -27,4 +27,38 @@ struct SafeTransfer {
 };
 
 
+template <typename T>
+struct SafePointerHolder {
+    T*                 mRawPtr{nullptr};
+    std::unique_ptr<T> mUniquePtr{nullptr};
+
+    /* SDK */
+    explicit SafePointerHolder<T>(T* ptr) : mRawPtr(ptr) {}
+
+    /* Js New */
+    explicit SafePointerHolder<T>(std::unique_ptr<T> ptr) : mUniquePtr(std::move(ptr)) {}
+
+
+    [[nodiscard]] T* get() const { return mRawPtr ? mRawPtr : mUniquePtr.get(); }
+
+    [[nodiscard]] T copy() const { return *get(); }
+
+    T* operator->() const { return get(); }
+
+    operator bool() const { return mRawPtr || mUniquePtr; }
+
+    SafeTransfer<T>& operator=(T* ptr) {
+        mRawPtr = ptr;
+        mUniquePtr.reset();
+        return *this;
+    }
+
+    SafeTransfer<T>& operator=(std::unique_ptr<T> ptr) {
+        mRawPtr    = nullptr;
+        mUniquePtr = std::move(ptr);
+        return *this;
+    }
+};
+
+
 } // namespace jse

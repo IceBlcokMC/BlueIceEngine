@@ -5,7 +5,7 @@
 #include "api/plugin/PluginAPI.h"
 #include "converter/Convert.h"
 #include "endstone/permissions/permission_attachment.h"
-#include "utils/SafeTransfer.h"
+#include "utils/ResourceSafety.h"
 #include "utils/Using.h"
 
 

@@ -4,7 +4,7 @@
 #include "api/form/FormAPI.h"
 #include "converter/Convert.h"
 #include "endstone/endstone.h"
-#include "utils/SafeTransfer.h"
+#include "utils/ResourceSafety.h"
 #include "utils/Using.h"
 #include <variant>
 

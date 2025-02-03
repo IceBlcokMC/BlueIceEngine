@@ -1,13 +1,14 @@
 #include "api/level/LocationAPI.h"
 #include "api/APIHelper.h"
+#include "api/level/DimensionAPI.h"
 #include "converter/Convert.h"
-
+#include "endstone/level/location.h"
 
 
 namespace jse {
 
 ClassDefine<LocationAPI> LocationAPI::builder = defineClass<LocationAPI>("Location")
-                                                    .constructor(nullptr)
+                                                    .constructor(&LocationAPI::make)
                                                     .instanceFunction("toString", &LocationAPI::toString)
                                                     .instanceFunction("getPitch", &LocationAPI::getPitch)
                                                     .instanceFunction("setPitch", &LocationAPI::setPitch)
@@ -37,6 +38,35 @@ ClassDefine<LocationAPI> LocationAPI::builder = defineClass<LocationAPI>("Locati
                                                     .instanceProperty("y", &VectorAPI::GetterY, &VectorAPI::SetterY)
                                                     .instanceProperty("z", &VectorAPI::GetterZ, &VectorAPI::SetterZ)
                                                     .build();
+
+
+LocationAPI* LocationAPI::make(const Arguments& args) {
+    if (args.size() != 6) return nullptr;
+
+    auto dim   = args[0];
+    auto x     = args[1];
+    auto y     = args[2];
+    auto z     = args[3];
+    auto pitch = args[4];
+    auto yaw   = args[5];
+    if (!IsInstanceOf<DimensionAPI>(dim) || !x.isNumber() || !y.isNumber() || !z.isNumber() || !pitch.isNumber()
+        || !yaw.isNumber()) {
+        return nullptr;
+    }
+
+    return new LocationAPI(
+        args.thiz(),
+        std::make_unique<endstone::Location>(
+            GetScriptClass(DimensionAPI, dim)->get(),
+            ConvertToCpp<int>(x),
+            ConvertToCpp<int>(y),
+            ConvertToCpp<int>(z),
+            ConvertToCpp<float>(pitch),
+            ConvertToCpp<float>(yaw)
+        )
+    );
+}
+
 
 Local<Value> LocationAPI::toString(Arguments const& /* args */) {
     try {

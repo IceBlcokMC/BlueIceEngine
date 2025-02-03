@@ -3,13 +3,13 @@
 #include "api/APIHelper.h"
 #include "api/actor/ActorAPI.h"
 #include "converter/Convert.h"
-
+#include "endstone/level/position.h"
 
 
 namespace jse {
 
 ClassDefine<PositionAPI> PositionAPI::builder = defineClass<PositionAPI>("Position")
-                                                    .constructor(nullptr)
+                                                    .constructor(&PositionAPI::make)
                                                     .instanceFunction("toString", &PositionAPI::toString)
                                                     .instanceFunction("getDimension", &PositionAPI::getDimension)
                                                     .instanceFunction("setDimension", &PositionAPI::setDimension)
@@ -33,6 +33,29 @@ ClassDefine<PositionAPI> PositionAPI::builder = defineClass<PositionAPI>("Positi
                                                     .instanceProperty("y", &VectorAPI::GetterY, &VectorAPI::SetterY)
                                                     .instanceProperty("z", &VectorAPI::GetterZ, &VectorAPI::SetterZ)
                                                     .build();
+
+PositionAPI* PositionAPI::make(const Arguments& args) {
+    if (args.size() != 4) {
+        return nullptr;
+    }
+    auto dim = args[0];
+    auto x   = args[1];
+    auto y   = args[2];
+    auto z   = args[3];
+    if (!IsInstanceOf<DimensionAPI>(dim) || !x.isNumber() || !y.isNumber() || !z.isNumber()) {
+        return nullptr;
+    }
+
+    return new PositionAPI(
+        args.thiz(),
+        std::make_unique<endstone::Position>(
+            GetScriptClass(DimensionAPI, dim)->get(),
+            ConvertToCpp<float>(x),
+            ConvertToCpp<float>(y),
+            ConvertToCpp<float>(z)
+        )
+    );
+}
 
 
 Local<Value> PositionAPI::toString(Arguments const& /* args */) {

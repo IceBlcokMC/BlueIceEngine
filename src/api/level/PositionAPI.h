@@ -2,27 +2,34 @@
 #include "api/APIHelper.h"
 #include "api/util/VectorAPI.h"
 #include "endstone/level/position.h"
+#include "utils/ResourceSafety.h"
 #include "utils/Using.h"
-
+#include <memory>
 
 
 namespace jse {
 
 
 class PositionAPI : public VectorAPI {
-    endstone::Position* mPosition;
+    SafePointerHolder<endstone::Position> mData;
 
 public:
-    template <typename T>
-    explicit PositionAPI(endstone::Position* pos, ScriptClass::ConstructFromCpp<T> class_)
-    : VectorAPI(*pos, class_),
-      mPosition(pos) {}
+    explicit PositionAPI(endstone::Position* pos) : VectorAPI(pos), mData(pos) {
+        this->_ReConstructScriptClass(ConstructFromCpp<PositionAPI>{});
+    }
 
-    explicit PositionAPI(endstone::Position* pos) : VectorAPI(*pos, ConstructFromCpp<PositionAPI>{}), mPosition(pos) {}
+    explicit PositionAPI(Local<Object> const& thiz, std::unique_ptr<endstone::Position> pos)
+    : VectorAPI(pos.get()),
+      mData(std::move(pos)) {
+        this->_ReConstructScriptClass(thiz);
+    }
 
+public:
     static Local<Object> newInstance(endstone::Position* pos) { return (new PositionAPI(pos))->getScriptObject(); }
 
-    endstone::Position* get() { return mPosition; }
+    static PositionAPI* make(Arguments const& args);
+
+    endstone::Position* get() { return mData.get(); }
 
 public:
     METHODS(toString);

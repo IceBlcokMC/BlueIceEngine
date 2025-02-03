@@ -3,7 +3,7 @@
 #include "api/PlayerAPI.h"
 #include "api/lang/TranslatableAPI.h"
 #include "converter/Convert.h"
-#include "utils/SafeTransfer.h"
+#include "utils/ResourceSafety.h"
 #include "utils/Using.h"
 
 #include "converter/ProjectConverters.hpp"

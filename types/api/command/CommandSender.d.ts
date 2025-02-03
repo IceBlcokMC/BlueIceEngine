@@ -24,7 +24,7 @@ declare class CommandSender extends Permissible {
     /** 返回错误消息 */
     sendErrorMessage(...args: any[]): void;
 
-    // getServer(): Server // TODO: ServerAPI
+    getServer(): Server;
 
     getName(): string;
 }

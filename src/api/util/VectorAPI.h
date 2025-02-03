@@ -1,36 +1,28 @@
 #pragma once
 #include "api/APIHelper.h"
+#include "utils/ResourceSafety.h"
 #include "utils/Using.h"
 #include <endstone/util/vector.h>
+#include <memory>
 
 namespace jse {
 
 class VectorAPI : public ScriptClass {
-    endstone::Vector<float> mVector;
+    SafePointerHolder<endstone::Vector<float>> mData;
 
 public:
-    // C++ new
-    template <typename T>
-    explicit VectorAPI(endstone::Vector<float> vec, ScriptClass::ConstructFromCpp<T> class_)
-    : ScriptClass(class_),
-      mVector(vec) {}
+    explicit VectorAPI(endstone::Vector<float>* vec) : ScriptClass(ConstructFromCpp<VectorAPI>{}), mData(vec) {}
 
-    explicit VectorAPI(endstone::Vector<float> vec)
-    : ScriptClass(ConstructFromCpp<VectorAPI>{}),
-      mVector(std::move(vec)) {}
-
-    static Local<Object> newInstance(endstone::Vector<float> vec) {
-        return (new VectorAPI(std::move(vec)))->getScriptObject();
-    }
-
-    // Js new
-    explicit VectorAPI(Local<Object> const& thiz, endstone::Vector<float> vec)
+    explicit VectorAPI(Local<Object> const& thiz, std::unique_ptr<endstone::Vector<float>> vec)
     : ScriptClass(thiz),
-      mVector(std::move(vec)) {}
+      mData(std::move(vec)) {}
+
+public:
+    static Local<Object> newInstance(endstone::Vector<float>* vec) { return (new VectorAPI(vec))->getScriptObject(); }
 
     static VectorAPI* make(Arguments const& args);
 
-    endstone::Vector<float>& get() { return mVector; }
+    endstone::Vector<float>* get() { return mData.get(); }
 
 public: /* instanceProperty */
     Local<Value> GetterX();

@@ -1,6 +1,7 @@
 #include "api/command/CommandSenderAPI.h"
 #include "api/APIHelper.h"
 #include "api/PlayerAPI.h"
+#include "api/ServerAPI.h"
 #include "converter/Convert.h"
 #include "utils/Using.h"
 #include <cstddef>
@@ -75,7 +76,12 @@ Local<Value> CommandSenderAPI::sendErrorMessage(Arguments const& args) {
     Catch;
 }
 
-Local<Value> CommandSenderAPI::getServer(Arguments const& /* args */) { return Local<Value>(); }
+Local<Value> CommandSenderAPI::getServer(Arguments const& /* args */) {
+    try {
+        return ServerAPI::newInstance(&this->mSender->getServer());
+    }
+    Catch;
+}
 
 Local<Value> CommandSenderAPI::getName(Arguments const& /* args */) {
     try {
