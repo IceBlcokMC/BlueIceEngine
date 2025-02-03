@@ -1,6 +1,6 @@
-// /// <reference path="../js_engine/dts/index.d.ts"/>
-
-// const { JsonFileConfig } = require("../js_engine/shortcutApi/JsonFileConfig.js");
+JSE.debug("filename: ", __filename);
+JSE.debug("dirname: ", __dirname);
+JSE.debug("paths: ", module.paths);
 
 const assert = (condition) => {
   if (!condition) {

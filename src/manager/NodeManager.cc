@@ -306,11 +306,6 @@ bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool es
         return false;
     }
 
-    auto js_code = readFileContent(path);
-    if (!js_code) {
-        return false;
-    }
-
 #if defined(WIN32) || defined(_WIN32)
     string dirname  = ReplaceStr(path.parent_path().string(), "\\", "\\\\");
     string filename = ReplaceStr(path.string(), "\\", "\\\\");
@@ -362,11 +357,10 @@ bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool es
                         }};
                         require = PublicModule.createRequire(__PluginPath);
                     }})();
-                    {2}
+                    require("{1}");
                 )",
                 dirname,
-                filename,
-                js_code.value()
+                filename
             );
         }
 
