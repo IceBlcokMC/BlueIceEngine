@@ -137,24 +137,24 @@ void _PrintExceptionImpl(
     std::string const& funcFullName,      // 函数全名
     std::string const& plugin             // 插件名
 ) {
-    std::string fail_msg  = fmt::format("Fail in {}", func);
-    std::string nat_api   = fmt::format("Native API: {}", funcFullName);
-    std::string in_plugin = fmt::format("Exception plugin: {}", plugin);
-    std::string stack =
-        fmt::format("Exception Type: {}\n{}\nStackTrace: \n{}", exceptionFullName, exceptionMessage, stackTrace);
+    std::string msg_fail_func  = fmt::format("Fail in {}", func);
+    std::string msg_native_api = fmt::format("Native API: {}", funcFullName);
+    std::string msg_exc_plugin = fmt::format("Exception plugin: {}", plugin);
+    std::string msg_stacktrace =
+        fmt::format("Exception Type: {}\n{}\n{}", exceptionFullName, exceptionMessage, stackTrace);
 
     auto ptr = Entry::getInstance();
     if (ptr) {
-        ptr->getLogger().error(fail_msg);
-        ptr->getLogger().error(in_plugin);
-        ptr->getLogger().error(nat_api);
-        ptr->getLogger().error(stack);
+        ptr->getLogger().error(msg_fail_func);
+        ptr->getLogger().error(msg_native_api);
+        ptr->getLogger().error(msg_exc_plugin);
+        ptr->getLogger().error(msg_stacktrace);
     } else {
         std::cout << "\x1b[91m" << "failed to get engine entry instance" << "\x1b[0m" << std::endl;
-        std::cout << "\x1b[91m" << fail_msg << "\x1b[0m" << std::endl;
-        std::cout << "\x1b[91m" << in_plugin << "\x1b[0m" << std::endl;
-        std::cout << "\x1b[91m" << nat_api << "\x1b[0m" << std::endl;
-        std::cout << "\x1b[91m" << stack << "\x1b[0m" << std::endl;
+        std::cout << "\x1b[91m" << msg_fail_func << "\x1b[0m" << std::endl;
+        std::cout << "\x1b[91m" << msg_native_api << "\x1b[0m" << std::endl;
+        std::cout << "\x1b[91m" << msg_exc_plugin << "\x1b[0m" << std::endl;
+        std::cout << "\x1b[91m" << msg_stacktrace << "\x1b[0m" << std::endl;
     }
 }
 

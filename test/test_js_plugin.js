@@ -162,6 +162,11 @@ function TEST_UUID() {
   assert(newUUIDStr === playerUUIDStr); // 测试toString
 }
 
+function TEST_Native_StackTrace() {
+  Print_Test_Title("Native StackTrace");
+  throw new Error("Test Native StackTrace");
+}
+
 /**
  * @param {CommandSender} sender
  * @param {Command} cmd
@@ -174,6 +179,10 @@ function onCommand(sender, cmd, args) {
   }
 
   switch (args[0]) {
+    case "stacktrace":
+      TEST_Native_StackTrace();
+      break;
+
     case "uuid":
       TEST_UUID();
       break;
