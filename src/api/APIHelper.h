@@ -18,59 +18,43 @@ template <typename T>
     return EngineScope::currentEngine()->isInstanceOf<T>(value);
 }
 
-void PrintException(script::Exception const& e, string const& func, string const& plugin, string const& api);
-void PrintException(std::exception const& err, string const& func, string const& plugin, string const& api);
-void PrintException(string const& msg, string const& func, string const& plugin, string const& api);
+/* 异常处理 */
+void _PrintExceptionImpl(
+    std::string const& exceptionFullName, // 异常全名
+    std::string const& exceptionMessage,  // 异常信息
+    std::string const& stackTrace,        // 堆栈信息
+    std::string const& func,              // 函数名
+    std::string const& funcFullName,      // 函数全名
+    std::string const& plugin             // 插件名
+);
 
-#define PrintScriptError(msg_or_exception)                                                                             \
-    PrintException(msg_or_exception, __func__, ENGINE_DATA()->mFileName, __FUNCTION__);
+#define PRINT_SCRIPT_EXCEPTION(EXC_NAME, EXC_INSTANCE)                                                                 \
+    _PrintExceptionImpl(                                                                                               \
+        EXC_NAME,                                                                                                      \
+        EXC_INSTANCE.message(),                                                                                        \
+        EXC_INSTANCE.stacktrace(),                                                                                     \
+        __func__,                                                                                                      \
+        __FUNCTION__,                                                                                                  \
+        ENGINE_DATA()->mFileName                                                                                       \
+    )
 
-/* 预定义异常 */
+#define _CATCH_IMPL(RET_CODE)                                                                                          \
+    catch (script::Exception const& err) {                                                                             \
+        PRINT_SCRIPT_EXCEPTION("script::Exception", err);                                                              \
+        RET_CODE;                                                                                                      \
+    }                                                                                                                  \
+    catch (std::exception const& err) {                                                                                \
+        PRINT_SCRIPT_EXCEPTION("std::exception", script::Exception(err.what()));                                       \
+        RET_CODE;                                                                                                      \
+    }                                                                                                                  \
+    catch (...) {                                                                                                      \
+        PRINT_SCRIPT_EXCEPTION("unknown", script::Exception("Unknown exception"));                                     \
+        RET_CODE;                                                                                                      \
+    }
+
 #define ERR_WRONG_ARG_TYPE   "Wrong argument type, please check the documentation" /* 参数类型错误，请查阅文档 */
 #define ERR_TOO_FEW_ARGS     "Too few arguments"                                   /* 参数数量不足 */
 #define ERR_WRONG_ARGS_COUNT "Wrong arguments count"                               /* 参数数量错误 */
-
-
-/* 参数检查 */
-#define _CHECK_IMPL(EXPRESSION, ERR, RET_CODE)                                                                         \
-    if (EXPRESSION) {                                                                                                  \
-        PrintScriptError(ERR);                                                                                         \
-        RET_CODE;                                                                                                      \
-    }
-#define _ONLY_CHECK_IMPL(EXPRESSION, ERR) _CHECK_IMPL(EXPRESSION, ERR, 0) // 仅检查，不返回值(填0避免编译器警告)
-
-/* 检查参数数量(错误返回 undefined) */
-#define CheckArgsCount(args, count) _CHECK_IMPL(args.size() < count, ERR_TOO_FEW_ARGS, Local<Value>())
-
-/* 检查参数类型(错误返回 undefined) */
-#define CheckArgType(arg, type) _CHECK_IMPL(arg.getKind() != type, ERR_WRONG_ARG_TYPE, Local<Value>())
-
-/* 检查参数是否是类型1或2(错误返回 undefined) */
-#define CheckArgTypeOr(arg, type1, type2)                                                                              \
-    _CHECK_IMPL(arg.getKind() != type1 && arg.getKind() != type2, ERR_WRONG_ARG_TYPE, Local<Value>())
-
-/* 仅检查参数数量 */
-#define CheckArgsCountVoid(args, count) _ONLY_CHECK_IMPL(args.size() < count, ERR_TOO_FEW_ARGS)
-
-/* 仅检查参数类型 */
-#define CheckArgTypeVoid(arg, type) _ONLY_CHECK_IMPL(arg.getKind() != type, ERR_WRONG_ARG_TYPE)
-
-/* 仅检查参数是否是类型1或2 */
-#define CheckArgTypeOrVoid(arg, type1, type2)                                                                          \
-    _ONLY_CHECK_IMPL(arg.getKind() != type1 && arg.getKind() != type2, ERR_WRONG_ARG_TYPE)
-
-
-/* 异常处理 */
-#define _CATCH_IMPL(RET_CODE)                                                                                          \
-    catch (script::Exception const& e) {                                                                               \
-        PrintScriptError(e) RET_CODE;                                                                                  \
-    }                                                                                                                  \
-    catch (std::exception const& e) {                                                                                  \
-        PrintScriptError(e) RET_CODE;                                                                                  \
-    }                                                                                                                  \
-    catch (...) {                                                                                                      \
-        PrintScriptError("Unknown exception") RET_CODE;                                                                \
-    }
 
 /* 仅捕获异常 */
 #define CatchNotReturn _CATCH_IMPL(0) // 填0，防止编译器警告
@@ -81,7 +65,6 @@ void PrintException(string const& msg, string const& func, string const& plugin,
 /* 捕获异常并返回 undefined */
 #define Catch CatchAndReturn(Local<Value>())
 
-
 /* 捕获异常并抛回脚本层 */
 #define CatchAndThrow                                                                                                  \
     catch (script::Exception const& e) {                                                                               \
@@ -91,8 +74,26 @@ void PrintException(string const& msg, string const& func, string const& plugin,
         throw script::Exception(e.what());                                                                             \
     }                                                                                                                  \
     catch (...) {                                                                                                      \
-        throw script::Exception("Unknown exception in " __FUNCTION__);                                                 \
+        throw script::Exception(fmt::format("Unknown exception in {}", __func__));                                     \
     }
+
+
+/* 参数检查 */
+#define _CHECK_IMPL(EXPRESSION, ERR, RET_VALUE)                                                                        \
+    if (EXPRESSION) {                                                                                                  \
+        PRINT_SCRIPT_EXCEPTION("argument check", script::Exception(ERR));                                              \
+        return RET_VALUE;                                                                                              \
+    }
+
+/* 检查参数数量(错误返回 undefined) */
+#define CheckArgsCount(args, count) _CHECK_IMPL(args.size() < count, ERR_TOO_FEW_ARGS, Local<Value>())
+
+/* 检查参数类型(错误返回 undefined) */
+#define CheckArgType(arg, type) _CHECK_IMPL(arg.getKind() != type, ERR_WRONG_ARG_TYPE, Local<Value>())
+
+/* 检查参数是否是类型1或2(错误返回 undefined) */
+#define CheckArgTypeOr(arg, type1, type2)                                                                              \
+    _CHECK_IMPL(arg.getKind() != type1 && arg.getKind() != type2, ERR_WRONG_ARG_TYPE, Local<Value>())
 
 
 /* 脚本辅助宏 */

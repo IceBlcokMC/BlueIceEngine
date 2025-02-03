@@ -129,30 +129,33 @@ void ToString(Local<Object> const& value, std::ostringstream& oss) {
 }
 
 
-void PrintException(script::Exception const& e, string const& func, string const& plugin, string const& api) {
-    string fail_msg  = fmt::format("Fail in {}", func);
-    string in_plugin = fmt::format("In Plugin: {}", plugin);
-    string in_api    = fmt::format("In API: {}", api);
-    string stack     = fmt::format("scriptx::Exception: {}\n{}", e.what(), e.stacktrace());
+void _PrintExceptionImpl(
+    std::string const& exceptionFullName, // 异常全名
+    std::string const& exceptionMessage,  // 异常信息
+    std::string const& stackTrace,        // 堆栈信息
+    std::string const& func,              // 函数名
+    std::string const& funcFullName,      // 函数全名
+    std::string const& plugin             // 插件名
+) {
+    std::string fail_msg  = fmt::format("Fail in {}", func);
+    std::string nat_api   = fmt::format("Native API: {}", funcFullName);
+    std::string in_plugin = fmt::format("Exception plugin: {}", plugin);
+    std::string stack =
+        fmt::format("Exception Type: {}\n{}\nStackTrace: \n{}", exceptionFullName, exceptionMessage, stackTrace);
 
     auto ptr = Entry::getInstance();
     if (ptr) {
         ptr->getLogger().error(fail_msg);
         ptr->getLogger().error(in_plugin);
-        ptr->getLogger().error(in_api);
+        ptr->getLogger().error(nat_api);
         ptr->getLogger().error(stack);
     } else {
+        std::cout << "\x1b[91m" << "failed to get engine entry instance" << "\x1b[0m" << std::endl;
         std::cout << "\x1b[91m" << fail_msg << "\x1b[0m" << std::endl;
         std::cout << "\x1b[91m" << in_plugin << "\x1b[0m" << std::endl;
-        std::cout << "\x1b[91m" << in_api << "\x1b[0m" << std::endl;
+        std::cout << "\x1b[91m" << nat_api << "\x1b[0m" << std::endl;
         std::cout << "\x1b[91m" << stack << "\x1b[0m" << std::endl;
     }
-}
-void PrintException(std::exception const& err, string const& func, string const& plugin, string const& api) {
-    return PrintException(script::Exception(err.what()), func, plugin, api);
-}
-void PrintException(string const& msg, string const& func, string const& plugin, string const& api) {
-    return PrintException(script::Exception(msg), func, plugin, api);
 }
 
 
