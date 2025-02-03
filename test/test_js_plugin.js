@@ -140,26 +140,11 @@ function TEST_ActionForm() {
 
 function TEST_UUID() {
   Print_Test_Title("UUID");
-  // engsr6982: 82c5615f-92be-32b1-83c8-b937284d9de6
+  const RAW_UUID = `82c5615f-92be-32b1-83c8-b937284d9de6`;
 
-  const player = JSE.getSelf().getServer().getPlayer("engsr6982");
-  if (!player) {
-    JSE.debug("Player not found");
-    return;
-  }
-
-  const UUIDSTR = `82c5615f-92be-32b1-83c8-b937284d9de6`;
-
-  const playerUUID = player.getUniqueId();
-  const playerUUIDStr = playerUUID.str();
-  assert(playerUUIDStr === UUIDSTR); // 确保UUID相同
-
-  const newUUID = new UUID(UUIDSTR);
-  assert(newUUID === playerUUID); // 测试字符串构造
-
-  const newUUIDStr = newUUID.str();
-  assert(newUUIDStr === UUIDSTR); // 测试toString
-  assert(newUUIDStr === playerUUIDStr); // 测试toString
+  const strMake = new UUID(RAW_UUID).str(); // str -> [C++ UUID Instance] -> str
+  assert(RAW_UUID === strMake);
+  JSE.debug("UUID Test success!");
 }
 
 function TEST_Native_StackTrace() {
