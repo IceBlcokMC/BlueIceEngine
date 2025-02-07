@@ -1,11 +1,17 @@
 /// <reference path="../index.d.ts"/>
 
 declare namespace Enums {
-    /** 插件加载顺序 */
+    /**
+     * @brief 表示插件应按初始化和启用的顺序排列。
+     */
     enum PluginLoadOrder {
-        /** 在启动时加载 */
+        /**
+         * 指示插件将在启动时加载
+         */
         Startup = 0,
-        /** 在世界加载后加载 */
-        PostWorld = 1
+        /**
+         * 表示该插件将与第一个/默认世界创建后加载
+         */
+        PostWorld = 1,
     }
 }
