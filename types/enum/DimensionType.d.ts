@@ -2,7 +2,7 @@
 
 declare namespace Enums {
     /**
-     * @brief 表示各种维度类型的接口。
+     * 表示各种维度类型的接口。
      */
     enum DimensionType {
         Overworld = 0,

@@ -2,7 +2,7 @@
 
 declare namespace Enums {
     /**
-     * @brief 表示插件应按初始化和启用的顺序排列。
+     * 表示插件应按初始化和启用的顺序排列。
      */
     enum PluginLoadOrder {
         /**
