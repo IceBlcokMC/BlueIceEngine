@@ -5,6 +5,7 @@ add_repositories("iceblcokmc https://github.com/IceBlcokMC/xmake-repo.git")
 -- iceblockmc
 add_requires("endstone 0.5.7.1")
 add_requires("scriptx jse", { configs = { backend = "V8" } })
+add_requires("nodejs 22.12.0")
 
 -- xmake-repo
 add_requires(
@@ -43,7 +44,7 @@ target("Js_Engine")
     )
     add_files("src/**.cc")
     add_includedirs("src")
-    add_packages("scriptx")
+    add_packages("scriptx", "nodejs")
     add_packages(
         "fmt",
         "expected-lite",

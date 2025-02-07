@@ -6,6 +6,8 @@
 #include "api/command/CommandSenderAPI.h"
 #include "api/lang/TranslatableAPI.h"
 #include "api/util/UUIDAPI.h"
+#include "converter/ProjectConverters.hpp"
+#include "endstone/message.h"
 #include "endstone/player.h"
 #include "endstone/server.h"
 #include "level/LevelAPI.h"
@@ -152,16 +154,16 @@ Local<Value> ServerAPI::broadcast(Arguments const& args) {
         } else {
             throw script::Exception(ERR_WRONG_ARG_TYPE);
         }
-        return Local<Value>();
+        return {};
     }
     CatchAndThrow;
 }
 
 Local<Value> ServerAPI::broadcastMessage(Arguments const& args) {
     CheckArgsCount(args, 1);
-    CheckArgType(args[0], ValueKind::kString);
-    get()->broadcastMessage(ConvertToCpp<std::string>(args[0]));
-    return Local<Value>();
+    CheckArgTypeOr(args[0], ValueKind::kObject, ValueKind::kString);
+    get()->broadcastMessage(ConvertToCpp<endstone::Message>(args[0]));
+    return {};
 }
 
 Local<Value> ServerAPI::isPrimaryThread(Arguments const& /* args */) {
