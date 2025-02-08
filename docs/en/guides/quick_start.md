@@ -6,20 +6,18 @@ Before you start, please make sure you have installed [endstone](https://github.
 
 ## Download Js_Engine
 
-> 🚧 Js_Engine is currently in development, please go to [Actions](https://github.com/IceBlcokMC/Js_Engine/actions/workflows/build.yml) to check the latest build.
-
 Currently, we provide the following build versions:
 
-| file                                                                | size    |
-| :------------------------------------------------------------------ | :------ |
-| Js_Engine-Linux-full-x64-1ce1360d13a2d89d06a091f7196dce12d7caa0b5   | 54.9 MB |
-| Js_Engine-Linux-x64-1ce1360d13a2d89d06a091f7196dce12d7caa0b5        | 6.48 MB |
-| Js_Engine-Windows-full-x64-1ce1360d13a2d89d06a091f7196dce12d7caa0b5 | 41 MB   |
-| Js_Engine-Windows-x64-1ce1360d13a2d89d06a091f7196dce12d7caa0b5      | 3.73 MB |
+| file                           | size    |
+| :----------------------------- | :------ |
+| Js_Engine-Linux-full-x64.zip   | 54.9 MB |
+| Js_Engine-Linux-x64.zip        | 6.48 MB |
+| Js_Engine-Windows-full-x64.zip | 41 MB   |
+| Js_Engine-Windows-x64.zip      | 3.73 MB |
 
 The `full` version includes all dependencies (including `libnode` and `npm`).
 
-We will take `windows` as an example, download `Js_Engine-windows-2022-full-x64-6feb3be0b10a10d88e3e7cadd7041f31ed9e0c57`.
+We will take `windows` as an example, download `Js_Engine-windows-full-x64.zip`.
 
 ## Install Js_Engine
 
