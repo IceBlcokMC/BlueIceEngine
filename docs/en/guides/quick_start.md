@@ -10,12 +10,12 @@ Before you start, please make sure you have installed [endstone](https://github.
 
 Currently, we provide the following build versions:
 
-| file                                                                     | size    |
-| :----------------------------------------------------------------------- | :------ |
-| Js_Engine-ubuntu-22.04-full-x64-6feb3be0b10a10d88e3e7cadd7041f31ed9e0c57 | 54.9 MB |
-| Js_Engine-ubuntu-22.04-x64-6feb3be0b10a10d88e3e7cadd7041f31ed9e0c57      | 6.48 MB |
-| Js_Engine-windows-2022-full-x64-6feb3be0b10a10d88e3e7cadd7041f31ed9e0c57 | 41 MB   |
-| Js_Engine-windows-2022-x64-6feb3be0b10a10d88e3e7cadd7041f31ed9e0c57      | 3.73 MB |
+| file                                                                | size    |
+| :------------------------------------------------------------------ | :------ |
+| Js_Engine-Linux-full-x64-1ce1360d13a2d89d06a091f7196dce12d7caa0b5   | 54.9 MB |
+| Js_Engine-Linux-x64-1ce1360d13a2d89d06a091f7196dce12d7caa0b5        | 6.48 MB |
+| Js_Engine-Windows-full-x64-1ce1360d13a2d89d06a091f7196dce12d7caa0b5 | 41 MB   |
+| Js_Engine-Windows-x64-1ce1360d13a2d89d06a091f7196dce12d7caa0b5      | 3.73 MB |
 
 The `full` version includes all dependencies (including `libnode` and `npm`).
 
