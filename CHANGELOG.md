@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 - Compatible with Endstone v0.5.7.1
-- Complete the following API bindings:
+- Complete the following API bindings: @engsr6982 @zimuya4153 @killcerr @minimouse0
   - enums:
     - `DimensionType`
     - `GameMode`
