@@ -4,7 +4,8 @@
     ],
     "exclude": [
         "node_modules/**/*",
-        "../types/api/_/**"
+        "../types/api/_/**",
+        "../types/tsconfig.json"
     ],
     "compilerOptions": {
         "experimentalDecorators": true, // 启用装饰器

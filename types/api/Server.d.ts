@@ -110,7 +110,7 @@ declare class Server {
     /**
      * 根据给定的通用唯一识别码（UUID）获取玩家信息。
      *
-     * @param id 要检索的玩家的通用唯一识别码（UUID）
+     * @param uuid 要检索的玩家的通用唯一识别码（UUID）
      * @return 如果找到，则返回一个玩家对象；否则返回 null
      */
     getPlayer(uuid: UUID): Player;

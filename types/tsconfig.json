@@ -1,9 +1,10 @@
 {
     "include": [
-        "./**/*"
+        "./**/*.d.ts"
     ],
     "exclude": [
         "node_modules/**/*",
+        "../types/api/_/**"
     ],
     "compilerOptions": {
         "lib": [

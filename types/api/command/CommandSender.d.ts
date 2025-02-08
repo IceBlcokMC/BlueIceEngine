@@ -36,14 +36,14 @@ declare class CommandSender extends Permissible {
      *
      * @param message 要显示的消息
      */
-    sendMessage(...args: any[]): void;
+    sendMessage(...message: any[]): void;
 
     /**
      * @brief 将这个发送者的错误消息发送出去
      *
      * @param message 错误消息要显示
      */
-    sendErrorMessage(...args: any[]): void;
+    sendErrorMessage(...message: any[]): void;
 
     /**
      * @brief 返回运行该命令的服务器实例

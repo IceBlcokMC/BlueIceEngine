@@ -185,7 +185,7 @@ declare class Actor extends CommandSender {
      *
      * @param invisible 是否设置名称标签为不可见。
      */
-    setNameTagAlwaysVisible(visible: string): boolean;
+    setNameTagAlwaysVisible(invisible: string): boolean;
 
     /**
      * 获取角色的当前名称标签。

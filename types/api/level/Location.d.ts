@@ -54,5 +54,5 @@ declare class Location extends Position {
      *
      * @param yaw 新旋转的yaw
      */
-    setYaw(): number;
+    setYaw(yaw: number): void;
 }

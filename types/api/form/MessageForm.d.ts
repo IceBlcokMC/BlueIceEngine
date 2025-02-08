@@ -21,7 +21,7 @@ declare class MessageForm extends Form {
      * @param text 要设置为表单内容的文字。
      * @return 当前表单的引用。
      */
-    setContent(msg: Message): this;
+    setContent(text: Message): this;
 
     /**
      * @brief 获取按钮1的文字。
@@ -36,7 +36,7 @@ declare class MessageForm extends Form {
      * @param text 要设置为按钮1文字的文字。
      * @return 当前表单的引用。
      */
-    setButton1(msg: Message): this;
+    setButton1(text: Message): this;
 
     /**
      * @brief 获取按钮2的文字。
@@ -51,7 +51,7 @@ declare class MessageForm extends Form {
      * @param text 要设置为按钮2文字的文字。
      * @return 当前表单的引用。
      */
-    setButton2(msg: Message): this;
+    setButton2(text: Message): this;
 
     /**
      * @brief 设置表单提交时的回调函数。
@@ -59,7 +59,7 @@ declare class MessageForm extends Form {
      * @param on_submit 回调函数要设置为。
      * @return 当前表单的引用。
      */
-    setOnSubmit(fn: (player: Player, index: number) => void): this;
+    setOnSubmit(on_submit: (player: Player, index: number) => void): this;
 
     /**
      * @brief 获取表单提交时的回调函数。

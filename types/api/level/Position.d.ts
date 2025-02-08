@@ -20,7 +20,7 @@ declare class Position extends Vector {
      *
      * @param dimension 新的维度对象，该位置将位于其中
      */
-    setDimension(dim: Dimension): void;
+    setDimension(dimension: Dimension): void;
 
     /**
      * 获取X组件的下确界值。这表示这个位置所包含的块ID为多少。

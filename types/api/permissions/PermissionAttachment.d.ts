@@ -21,7 +21,7 @@ declare class PermissionAttachment {
     /**
      * 设置一个在附件被移除时要调用的执行器。可以为空。
      *
-     * @param ex 在移除此附件时要调用的执行器
+     * @param callback 在移除此附件时要调用的执行器
      */
     setRemovalCallback(callback: PermissionRemovedExecutor): void;
 

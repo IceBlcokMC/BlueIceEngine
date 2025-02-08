@@ -27,7 +27,7 @@ declare class Form {
      * @param on_close 回调函数要设置为。
      * @return 当前表单的引用。
      */
-    setOnClose(callback: (player: Player | undefined) => void): this;
+    setOnClose(on_close: (player: Player | undefined) => void): this;
 
     /**
      * @brief 获取表单关闭时的回调函数。

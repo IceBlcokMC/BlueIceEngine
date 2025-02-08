@@ -40,7 +40,7 @@ declare class Vector {
      * @param x 新的X分量。
      * @return 这个向量。
      */
-    setX(value: number): number; // float
+    setX(x: number): number; // float
 
     /**
      * 设置Y分量。
@@ -48,7 +48,7 @@ declare class Vector {
      * @param y 新的Y分量。
      * @return 这个向量。
      */
-    setY(value: number): number; // float
+    setY(y: number): number; // float
 
     /**
      * 设置Z分量。
@@ -56,7 +56,7 @@ declare class Vector {
      * @param z 新的Z分量。
      * @return 这个向量。
      */
-    setZ(value: number): number; // float
+    setZ(z: number): number; // float
 
     /**
      * 获取向量的模，定义为sqrt(x^2 + y^2 + z^2)。

@@ -11,6 +11,7 @@
         "../types/api/_/**",
         "node_modules/**/*",
     ],
+    "name": "API Reference",
     "out": "./reference", // 输出目录
     "readme": "none", // 不生成README.md
     "useCodeBlocks": true, // 使用代码块
