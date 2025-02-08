@@ -12,3 +12,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial release.
+- Compatible with Endstone v0.5.7.1
+- Complete the following API bindings:
+  - enums:
+    - `DimensionType`
+    - `GameMode`
+    - `LoggerLevel`
+    - `PermissionDefault`
+    - `PluginLoadOrder`
+  - classes:
+    - `Skin`
+      - `SkinImageData`
+    - `Server`
+    - `Player`
+    - `Logger`
+    - `ColorFormat`
+    - `SocketAddress`
+    - `UUID`
+    - `Vector`
+    - `Plugin`
+    - `PluginDescriptiom`
+    - `Permission`
+    - `Permissible`
+    - `PermissionAttachment`
+    - `PermissionAttachmentInfo`
+    - `Dimension`
+    - `Level`
+    - `Location`
+    - `Position`
+    - `Translatable`
+    - `JSE`(Courtesy of the engine)
+    - `File`(Courtesy of the engine)
+    - `ActionForm`
+    - `Form`
+    - `MessageForm`
+    - `Command`
+    - `CommandSender`
+    - `Actor`
+    - `Mob`
