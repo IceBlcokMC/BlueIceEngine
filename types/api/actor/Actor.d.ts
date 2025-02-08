@@ -78,7 +78,7 @@ declare class Actor extends CommandSender {
      * 设置角色的旋转。
      * <p>
      * 注意，如果该角色受到AI影响，则可能会覆盖这个旋转。
-     *
+     * </p>
      * @param yaw 围绕Y轴旋转的旋转（Y轴）
      * @param pitch 绕X轴旋转的旋转（X轴）
      */

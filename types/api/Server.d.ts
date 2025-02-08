@@ -173,7 +173,7 @@ declare class Server {
      * 获取由服务器控制的主计分板。
      * <p>
      * 此计分板由服务器保存，会受到“/scoreboard”命令的影响，并且是默认向玩家显示的计分板。只有在关卡加载完成后，此计分板才会存在。
-     *
+     * </p>
      * @return 默认的服务器计分板
      */
     // getScoreboard(): any;
@@ -182,7 +182,7 @@ declare class Server {
      * 创建一个由服务器跟踪的新计分板。
      * <p>
      * 此计分板不会由服务器保存，也不受“/scoreboard”命令的影响。
-     *
+     * </p>
      * @return 新创建的计分板
      */
     // createScoreboard(): any;

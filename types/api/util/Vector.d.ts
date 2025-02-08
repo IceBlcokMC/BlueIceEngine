@@ -2,7 +2,7 @@
 
 /**
  * 表示一个三维向量。
- * Vector<float>
+ * 在底层表示为 Vector\<float\>
  */
 declare class Vector {
     constructor(x: number, y: number, z: number);
