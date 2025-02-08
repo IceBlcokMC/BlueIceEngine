@@ -5,7 +5,6 @@
 #include "utils/Using.h"
 
 
-
 namespace jse {
 
 class MessageFormAPI : public FormAPI<endstone::MessageForm>, public ScriptClass {

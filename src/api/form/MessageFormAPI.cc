@@ -4,6 +4,7 @@
 #include "api/form/FormAPI.h"
 #include "converter/Convert.h"
 #include "endstone/endstone.h"
+#include "endstone/message.h"
 #include "utils/ResourceSafety.h"
 #include "utils/Using.h"
 #include <variant>
@@ -40,7 +41,7 @@ Local<Value> MessageFormAPI::toString(Arguments const& /* args */) {
 
 Local<Value> MessageFormAPI::getContent(Arguments const& /* args */) {
     try {
-        return detail::ConvertVariantToScriptX(get().getContent());
+        return ConvertToScript(get().getContent());
     }
     Catch;
 }
@@ -48,13 +49,7 @@ Local<Value> MessageFormAPI::getContent(Arguments const& /* args */) {
 Local<Value> MessageFormAPI::setContent(Arguments const& args) {
     CheckArgsCount(args, 1);
     try {
-        if (args[0].isString()) {
-            mMessageForm.setContent(ConvertToCpp<string>(args[0]));
-        } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
-            mMessageForm.setContent(GetScriptClass(TranslatableAPI, args[0])->get());
-        } else {
-            throw script::Exception(ERR_WRONG_ARG_TYPE);
-        }
+        mMessageForm.setContent(ConvertToCpp<endstone::Message>(args[0]));
         return args.thiz();
     }
     CatchAndThrow;
@@ -62,7 +57,7 @@ Local<Value> MessageFormAPI::setContent(Arguments const& args) {
 
 Local<Value> MessageFormAPI::getButton1(Arguments const& /* args */) {
     try {
-        return detail::ConvertVariantToScriptX(get().getButton1());
+        return ConvertToScript(get().getButton1());
     }
     Catch;
 }
@@ -70,13 +65,7 @@ Local<Value> MessageFormAPI::getButton1(Arguments const& /* args */) {
 Local<Value> MessageFormAPI::setButton1(Arguments const& args) {
     CheckArgsCount(args, 1);
     try {
-        if (args[0].isString()) {
-            mMessageForm.setButton1(ConvertToCpp<string>(args[0]));
-        } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
-            mMessageForm.setButton1(GetScriptClass(TranslatableAPI, args[0])->get());
-        } else {
-            throw script::Exception(ERR_WRONG_ARG_TYPE);
-        }
+        mMessageForm.setButton1(ConvertToCpp<endstone::Message>(args[0]));
         return args.thiz();
     }
     CatchAndThrow;
@@ -84,7 +73,7 @@ Local<Value> MessageFormAPI::setButton1(Arguments const& args) {
 
 Local<Value> MessageFormAPI::getButton2(Arguments const& /* args */) {
     try {
-        return detail::ConvertVariantToScriptX(get().getButton2());
+        return ConvertToScript(get().getButton2());
     }
     Catch;
 }
@@ -92,13 +81,7 @@ Local<Value> MessageFormAPI::getButton2(Arguments const& /* args */) {
 Local<Value> MessageFormAPI::setButton2(Arguments const& args) {
     CheckArgsCount(args, 1);
     try {
-        if (args[0].isString()) {
-            mMessageForm.setButton2(ConvertToCpp<string>(args[0]));
-        } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
-            mMessageForm.setButton2(GetScriptClass(TranslatableAPI, args[0])->get());
-        } else {
-            throw script::Exception(ERR_WRONG_ARG_TYPE);
-        }
+        mMessageForm.setButton2(ConvertToCpp<endstone::Message>(args[0]));
         return args.thiz();
     }
     CatchAndThrow;

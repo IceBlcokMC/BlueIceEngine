@@ -3,6 +3,7 @@
 #include "api/PlayerAPI.h"
 #include "api/lang/TranslatableAPI.h"
 #include "converter/Convert.h"
+#include "endstone/message.h"
 #include "utils/ResourceSafety.h"
 #include "utils/Using.h"
 
@@ -10,25 +11,6 @@
 
 
 namespace jse {
-
-namespace detail {
-template <typename Variant>
-Local<Value> ConvertVariantToScriptX(Variant&& val) {
-    return std::visit(
-        [](auto&& arg) -> Local<Value> {
-            using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, std::string>) {
-                return ConvertToScript(arg);
-            } else if constexpr (std::is_same_v<T, endstone::Translatable>) {
-                return TranslatableAPI::newInstance(arg);
-            } else {
-                throw script::Exception("Unsupported variant type");
-            }
-        },
-        std::forward<Variant>(val)
-    );
-}
-} // namespace detail
 
 
 template <typename T>
@@ -44,7 +26,6 @@ public:
 public:
     Local<Value> getTitle(Arguments const& /* args */) {
         try {
-            // return detail::ConvertVariantToScriptX(mForm.getTitle());
             return ConvertToScript(mForm.getTitle());
         }
         Catch;
@@ -52,14 +33,9 @@ public:
 
     Local<Value> setTitle(Arguments const& args) {
         CheckArgsCount(args, 1);
+        CheckArgTypeOr(args[0], ValueKind::kString, ValueKind::kObject);
         try {
-            if (args[0].isString()) {
-                mForm.setTitle(ConvertToCpp<string>(args[0]));
-            } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
-                mForm.setTitle(GetScriptClass(TranslatableAPI, args[0])->get());
-            } else {
-                throw script::Exception(ERR_WRONG_ARG_TYPE);
-            }
+            mForm.setTitle(ConvertToCpp<endstone::Message>(args[0]));
             return args.thiz();
         }
         CatchAndThrow;

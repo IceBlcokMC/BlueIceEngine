@@ -35,14 +35,7 @@ DropdownAPI* DropdownAPI::make(Arguments const& args) {
         defaultIndex = ConvertToCpp<int>(args[2]);
     }
 
-    endstone::Message label;
-    if (args[0].isString()) {
-        label = ConvertToCpp<string>(args[0]);
-    } else if (args[0].isObject() && IsInstanceOf<TranslatableAPI>(args[0])) {
-        label = GetScriptClass(TranslatableAPI, args[0])->get();
-    } else {
-        return nullptr;
-    }
+    auto label = ConvertToCpp<endstone::Message>(args[0]);
 
     return new DropdownAPI(args.thiz(), label, ConvertToCpp<std::vector<string>>(args[1]), defaultIndex);
 }
@@ -57,7 +50,7 @@ Local<Value> DropdownAPI::toString(Arguments const& /* args */) {
 
 Local<Value> DropdownAPI::getLabel(Arguments const& /* args */) {
     try {
-        return detail::ConvertVariantToScriptX(get().getLabel());
+        return ConvertToScript(get().getLabel());
     }
     Catch;
 }
