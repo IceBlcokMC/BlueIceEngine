@@ -111,7 +111,7 @@ jobs:
           cp -r bin/* full/plugins/
           cp -a deps/node_modules/. full/plugins/js_engine/node_modules/
 
-          if [ "${{ runner.os }}" == "windows" ]; then
+          if [ "${{ runner.os }}" == "Windows" ]; then
             cp deps/libnode.dll full/
             cp deps/node.exe full/
           else
