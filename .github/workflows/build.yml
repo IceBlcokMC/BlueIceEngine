@@ -81,12 +81,15 @@ jobs:
       matrix:
         platform: [ubuntu-22.04, windows-2022]
 
+    env:
+      platformStr: ${{ matrix.platform == 'windows-2022' && 'Windows' || 'Linux' }}
+
     name: Package ${{ matrix.platform == 'windows-2022' && 'windows' || 'linux' }} platform dependencies
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-${{ runner.os }}-x64-${{ github.sha }}
+          name: ${{ github.event.repository.name }}-${{ env.platformStr }}-x64-${{ github.sha }}
           path: bin/
 
       - name: Download depends
@@ -111,7 +114,7 @@ jobs:
           cp -r bin/* full/plugins/
           cp -a deps/node_modules/. full/plugins/js_engine/node_modules/
 
-          if [ "${{ runner.os }}" == "Windows" ]; then
+          if [ "${{ env.platformStr }}" == "Windows" ]; then
             cp deps/libnode.dll full/
             cp deps/node.exe full/
           else
@@ -121,7 +124,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-${{ runner.os }}-full-x64-${{ github.sha }}
+          name: ${{ github.event.repository.name }}-${{ env.platformStr }}-full-x64-${{ github.sha }}
           include-hidden-files: true
           path: |
             full/
