@@ -1,23 +1,14 @@
-name: CI / CD
-
 on:
-  push:
-    paths:
-      - src/**
-      - xmake.lua
-      - .github/workflows/build.yml
-  pull_request:
-    paths:
-      - src/**
-      - xmake.lua
-      - .github/workflows/build.yml
-  workflow_dispatch:
+  release:
+    types:
+      - published
 
 env:
   LLVM_VERSION: 15
   LIBNODE_VERSION: 22.12.0
 
 jobs:
+  # 编译
   build:
     strategy:
       fail-fast: false
@@ -74,20 +65,39 @@ jobs:
           path: |
             bin/
 
-  pack:
-    needs: build
+  # 发布 Changelog
+  update-release-notes:
+    outputs:
+      release_notes: ${{ steps.extract-release-notes.outputs.release_notes }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: extract-release-notes
+        uses: ffurrer2/extract-release-notes@v2
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          body: |
+            ${{ steps.extract-release-notes.outputs.release_notes }}
+
+  # 发布
+  pack-and-upload-to-release:
+    needs:
+      - build
+      - update-release-notes
+    permissions:
+      contents: write
     strategy:
-      fail-fast: false
       matrix:
         platform: ["Windows", "Linux"]
 
-    name: Package ${{ matrix.platform }} platform dependencies
-    runs-on: ubuntu-22.04
+    name: Pack and upload to release
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-${{ matrix.platform }}-x64-${{ github.sha }}
-          path: bin/
+      - uses: actions/checkout@v4
 
       - name: Download depends
         run: |
@@ -103,7 +113,12 @@ jobs:
           unzip -a -q bin-windows.zip -d deps/
           unzip -a -q node_modules.zip -d deps/node_modules/
 
-      - name: Pack
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-${{ matrix.platform }}-x64-${{ github.sha }}
+          path: bin/
+
+      - name: Pack full
         run: |
           mkdir full
           mkdir full/plugins
@@ -119,9 +134,20 @@ jobs:
             cp deps/node full/
           fi
 
-      - uses: actions/upload-artifact@v4
+      - run: |
+          cp CHANGELOG.md README.md LICENSE full/
+          cp CHANGELOG.md README.md LICENSE bin/
+
+      - run: |
+          zip -r ../${{ github.event.repository.name }}-${{ matrix.platform }}-x64.zip .
+        working-directory: bin
+
+      - run: |
+          zip -r ../${{ github.event.repository.name }}-${{ matrix.platform }}-full-x64.zip .
+        working-directory: full
+
+      - uses: softprops/action-gh-release@v1
         with:
-          name: ${{ github.event.repository.name }}-${{ matrix.platform }}-full-x64-${{ github.sha }}
-          include-hidden-files: true
-          path: |
-            full/
+          files: |
+            ${{ github.event.repository.name }}-${{ matrix.platform }}-x64.zip
+            ${{ github.event.repository.name }}-${{ matrix.platform }}-full-x64.zip
