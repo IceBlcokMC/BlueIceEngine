@@ -7,14 +7,14 @@ declare class Permissible {
     toString(): "<Permissible>" | string;
 
     /**
-     * @brief 检查此对象是否是服务器管理员
+     * 检查此对象是否是服务器管理员
      *
      * @return true 如果这是服务器管理员，否则 false
      */
     isOp(): boolean;
 
     /**
-     * @brief 设置此对象的管理员状态
+     * 设置此对象的管理员状态
      *
      * @param value 新的管理员值
      */
@@ -91,7 +91,7 @@ declare class Permissible {
     //getEffectivePermissions(): PermissionAttachmentInfo[] // TODO: PermissionAttachmentInfo
 
     /**
-     * @brief 将 Permissible 转换为 CommandSender
+     * 将 Permissible 转换为 CommandSender
      *
      * @return CommandSender，如果不是一个 CommandSender，则返回 nullptr
      */

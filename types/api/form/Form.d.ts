@@ -7,14 +7,14 @@
  */
 declare class Form {
     /**
-     * @brief 获取表单的标题。
+     * 获取表单的标题。
      *
      * @return 表单的标题。
      */
     getTitle(): string;
 
     /**
-     * @brief 设置表单的标题。
+     * 设置表单的标题。
      *
      * @param title 要设置为表单的标题，可以是字符串或一个可翻译对象。
      * @return 当前表单的引用。
@@ -22,7 +22,7 @@ declare class Form {
     setTitle(title: string): this;
 
     /**
-     * @brief 设置表单关闭时的回调函数。
+     * 设置表单关闭时的回调函数。
      *
      * @param on_close 回调函数要设置为。
      * @return 当前表单的引用。
@@ -30,7 +30,7 @@ declare class Form {
     setOnClose(on_close: (player: Player | undefined) => void): this;
 
     /**
-     * @brief 获取表单关闭时的回调函数。
+     * 获取表单关闭时的回调函数。
      *
      * @return 表单关闭时的回调函数。
      */

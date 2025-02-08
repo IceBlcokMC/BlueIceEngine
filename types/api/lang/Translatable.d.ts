@@ -9,14 +9,14 @@ declare class Translatable {
     toString(): "<Translatable>" | string;
 
     /**
-     * @brief 获取要翻译的文本。
+     * 获取要翻译的文本。
      *
      * @return 要翻译的文本
      */
     getText(): string;
 
     /**
-     * @brief 获取翻译参数。
+     * 获取翻译参数。
      *
      * @return 翻译参数
      */

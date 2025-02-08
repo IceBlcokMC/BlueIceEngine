@@ -32,28 +32,28 @@ declare class CommandSender extends Permissible {
     asPlayer(): Player | undefined;
 
     /**
-     * @brief 将这个发送者的消息发送出去
+     * 将这个发送者的消息发送出去
      *
      * @param message 要显示的消息
      */
     sendMessage(...message: any[]): void;
 
     /**
-     * @brief 将这个发送者的错误消息发送出去
+     * 将这个发送者的错误消息发送出去
      *
      * @param message 错误消息要显示
      */
     sendErrorMessage(...message: any[]): void;
 
     /**
-     * @brief 返回运行该命令的服务器实例
+     * 返回运行该命令的服务器实例
      *
      * @return 服务器实例
      */
     getServer(): Server;
 
     /**
-     * @brief 获取此命令发送者的名称
+     * 获取此命令发送者的名称
      *
      * @return 发送者的名字
      */

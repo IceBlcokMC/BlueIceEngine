@@ -8,28 +8,28 @@ declare class Dimension {
     toString(): "<Dimension>" | string;
 
     /**
-     * @brief 获取此维度的名称
+     * 获取此维度的名称
      *
      * @return 此维度的名称
      */
     getName(): string;
 
     /**
-     * @brief 获取此维度的类型
+     * 获取此维度的类型
      *
      * @return 此维度的类型
      */
     getType(): Enums.DimensionType;
 
     /**
-     * @brief 获取包含该维度的级别。
+     * 获取包含该维度的级别。
      *
      * @return 包含该维度的级别。
      */
     getLevel(): Level;
 
     /**
-     * @brief 根据给定坐标获取块。
+     * 根据给定坐标获取块。
      *
      * @param x 块的 X 坐标
      * @param y 块的 Y 坐标
@@ -39,7 +39,7 @@ declare class Dimension {
     // getBlockAt(x: number, y: number, z: number): Block; // TODO: BlockAPI
 
     /**
-     * @brief 根据给定位置获取块。
+     * 根据给定位置获取块。
      *
      * @param location 块的位置
      * @return 包含给定坐标的块

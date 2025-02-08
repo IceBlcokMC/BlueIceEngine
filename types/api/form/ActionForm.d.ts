@@ -8,14 +8,14 @@ declare class ActionForm extends Form {
 
     toString(): "<ActionForm>" | string;
     /**
-     * @brief 获取表单的内容。
+     * 获取表单的内容。
      *
      * @return 表单的内容。
      */
     getContent(): Message;
 
     /**
-     * @brief 设置表单的内容。
+     * 设置表单的内容。
      *
      * @param msg 要设置为表单内容的文字。
      * @return 当前表单的引用。
@@ -23,7 +23,7 @@ declare class ActionForm extends Form {
     setContent(msg: Message): this;
 
     /**
-     * @brief 添加按钮到表单中。
+     * 添加按钮到表单中。
      *
      * @param text 按钮的文本
      * @param icon 图标图片的路径或URL
@@ -37,14 +37,14 @@ declare class ActionForm extends Form {
     ): this;
 
     /**
-     * @brief 获取动作表单中的按钮。
+     * 获取动作表单中的按钮。
      *
      * @return 动作表单中的按钮列表。
      */
     // getButtons(): any;
 
     /**
-     * @brief 设置动作表单中的按钮。
+     * 设置动作表单中的按钮。
      *
      * @param buttons 要设置的按钮列表。
      * @return 当前表单的引用。
@@ -52,14 +52,14 @@ declare class ActionForm extends Form {
     // setButtons(): any;
 
     /**
-     * @brief 获取表单提交时的回调函数。
+     * 获取表单提交时的回调函数。
      *
      * @return 表单提交时的回调函数。
      */
     // getOnSubmit(): any;
 
     /**
-     * @brief 设置表单提交时的回调函数。
+     * 设置表单提交时的回调函数。
      *
      * @param fn 回调函数。
      * @return 当前表单的引用。

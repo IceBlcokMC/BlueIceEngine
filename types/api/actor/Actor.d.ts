@@ -8,7 +8,7 @@ declare class Actor extends CommandSender {
     toString(): "<Actor>" | string;
 
     /**
-     * @brief 获取该实体的类型。
+     * 获取该实体的类型。
      *
      * 该方法返回实体的类型作为字符串，例如minecraft:pig。它用于获取实体的类型信息，以便可以为其提供相应的功能或属性。
      *
@@ -17,7 +17,7 @@ declare class Actor extends CommandSender {
     getType(): string;
 
     /**
-     * @brief 获取实体的运行时ID。
+     * 获取实体的运行时ID。
      *
      * 运行时ID是用于标识单个实体的唯一标识符。它在服务器之间传递实体信息，并且可以在命令中引用特定的实体。
      *
