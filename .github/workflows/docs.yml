@@ -1,38 +1,38 @@
-name: Build docs
+name: Docs
 
 on:
-    push:
-        paths:
-            - types/**
-            - docs/**
-            - .github/workflows/docs.yml
-    pull_request:
-        paths:
-            - types/**
-            - docs/**
-            - .github/workflows/docs.yml
-    workflow_dispatch:
+  push:
+    paths:
+      - types/**
+      - docs/**
+      - .github/workflows/docs.yml
+  pull_request:
+    paths:
+      - types/**
+      - docs/**
+      - .github/workflows/docs.yml
+  workflow_dispatch:
 
 jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: write
-        steps:
-            - name: Checkout
-              uses: actions/checkout@main
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
 
-            - name: Install and Build
-              run: |
-                  cd docs
-                  npm install
-                  npm run predocs:dev
-                  npm run docs:build
-                  cd .vitepress/dist
-                  touch .nojekyll
+      - name: Install and Build
+        run: |
+          cd docs
+          npm install
+          npm run predocs:dev
+          npm run docs:build
+          cd .vitepress/dist
+          touch .nojekyll
 
-            - name: Deploy
-              uses: JamesIves/github-pages-deploy-action@v4
-              with:
-                  branch: gh-pages
-                  folder: ./docs/.vitepress/dist
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: ./docs/.vitepress/dist
