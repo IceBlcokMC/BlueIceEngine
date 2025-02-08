@@ -1,9 +1,13 @@
 /// <reference path="../index.d.ts"/>
 /**
  * @hideconstructor
+ * 支持的颜色和格式代码。
  */
 declare class ColorFormat {
+    // Escape
     static get Escape(): string;
+
+    // Color codes
     static get Black(): string;
     static get DarkBlue(): string;
     static get DarkGreen(): string;
@@ -32,6 +36,8 @@ declare class ColorFormat {
     static get MaterialLapis(): string;
     static get MaterialAmethyst(): string;
     static get MaterialResin(): string;
+
+    // Format code
     static get Obfuscated(): string;
     static get Bold(): string;
     static get Italic(): string;

@@ -1,9 +1,14 @@
 /// <reference path="../../index.d.ts"/>
 
+/**
+ * 实现 universally unique identifier（UUID）。
+ *
+ * 引用自 https://github.com/boostorg/uuid/blob/develop/include/boost/uuid/uuid.hpp
+ */
 declare class UUID {
     constructor(uuid: string | UUID);
 
-	toString(): "<UUID>" | string;
+    toString(): "<UUID>" | string;
 
     forEach(callback: (u8: number) => void): void;
 
