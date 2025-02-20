@@ -44,6 +44,7 @@ ClassDefine<ActorAPI> ActorAPI::builder =
         .instanceFunction("asCommandSender", &CommandSenderAPI::asCommandSender)
         .instanceFunction("asConsole", &CommandSenderAPI::asConsole)
         .instanceFunction("asActor", &CommandSenderAPI::asActor)
+        .instanceFunction("asMob", &CommandSenderAPI::asMob)
         .instanceFunction("asPlayer", &CommandSenderAPI::asPlayer)
         .instanceFunction("sendMessage", &CommandSenderAPI::sendMessage)
         .instanceFunction("sendErrorMessage", &CommandSenderAPI::sendErrorMessage)

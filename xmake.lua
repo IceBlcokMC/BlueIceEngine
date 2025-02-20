@@ -3,16 +3,16 @@ add_rules("mode.debug", "mode.release")
 add_repositories("iceblcokmc https://github.com/IceBlcokMC/xmake-repo.git")
 
 -- iceblockmc
-add_requires("endstone 0.5.7.1")
+add_requires("endstone 0.6.0")
 add_requires("scriptx jse", { configs = { backend = "V8" } })
 add_requires("nodejs 22.12.0")
 
 -- xmake-repo
 add_requires(
     "entt 3.14.0",
-    "microsoft-gsl 4.0.0",
+    "microsoft-gsl 4.1.0",
     "nlohmann_json 3.11.3",
-    "boost 1.85.0",
+    "boost 1.86.0",
     "glm 1.0.1",
     "concurrentqueue 1.0.4",
     "magic_enum 0.9.7",

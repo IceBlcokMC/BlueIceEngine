@@ -4,7 +4,6 @@
 #include "utils/Using.h"
 
 
-
 namespace jse {
 
 
@@ -28,6 +27,9 @@ public:
     METHODS(getType);
     METHODS(getLevel);
     METHODS(getBlockAt); // TODO: BlockAPI
+    METHODS(getHighestBlockYAt);
+    METHODS(getHighestBlockAt);
+    METHODS(getLoadedChunks);
 
 public:
     static ClassDefine<DimensionAPI> builder;

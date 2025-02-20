@@ -25,6 +25,11 @@ declare class CommandSender extends Permissible {
     asActor(): Actor | undefined;
 
     /**
+     * 该方法获取一个CommandSender作为Mob。
+     */
+    asMob(): Mob | undefined;
+
+    /**
      * 该方法获取一个CommandSender作为Player。
      *
      * @return Player，如果不是Player，则返回null

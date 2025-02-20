@@ -3,7 +3,6 @@
 #include "api/PlayerAPI.h"
 #include "api/form/FormAPI.h"
 #include "converter/Convert.h"
-#include "endstone/endstone.h"
 #include "endstone/message.h"
 #include "utils/ResourceSafety.h"
 #include "utils/Using.h"

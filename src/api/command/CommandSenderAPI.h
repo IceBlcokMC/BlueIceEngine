@@ -31,6 +31,7 @@ public:
     METHODS(asCommandSender);
     METHODS(asConsole);
     METHODS(asActor);
+    METHODS(asMob);
     METHODS(asPlayer);
     METHODS(sendMessage);
     METHODS(sendErrorMessage);

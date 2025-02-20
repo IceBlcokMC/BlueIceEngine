@@ -1,4 +1,5 @@
 #include "api/actor/MobAPI.h"
+#include "api/APIHelper.h"
 #include "converter/Convert.h"
 #include "utils/Using.h"
 
@@ -8,6 +9,7 @@ ClassDefine<MobAPI> MobAPI::builder =
     defineClass<MobAPI>("Mob")
         .constructor(nullptr)
         .instanceFunction("toString", &MobAPI::toString)
+        .instanceFunction("asMob", &MobAPI::asMob) // MobAPI::asMob override CommandSender::asMob
         .instanceFunction("isGliding", &MobAPI::isGliding)
 
         // MobAPI extends ActorAPI
@@ -63,6 +65,16 @@ ClassDefine<MobAPI> MobAPI::builder =
 
 
 Local<Value> MobAPI::toString(Arguments const& /* args */) { return ConvertToScript("<Mob>"); }
+
+Local<Value> MobAPI::asMob(Arguments const& /* args */) {
+    try {
+        if (auto mob = get()->asMob(); mob) {
+            return MobAPI::newInstance(mob);
+        }
+        return {};
+    }
+    Catch;
+}
 
 Local<Value> MobAPI::isGliding(Arguments const& /* args */) { return ConvertToScript(get()->isGliding()); }
 

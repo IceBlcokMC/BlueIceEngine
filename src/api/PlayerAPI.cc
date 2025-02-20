@@ -11,7 +11,6 @@
 #include "utils/Using.h"
 
 
-
 namespace jse {
 
 ClassDefine<PlayerAPI> PlayerAPI::builder =
@@ -62,6 +61,7 @@ ClassDefine<PlayerAPI> PlayerAPI::builder =
         .instanceFunction("sendPacket", &PlayerAPI::sendPacket)
 
         // PlayerAPI extends MobAPI
+        .instanceFunction("asMob", &MobAPI::asMob) // MobAPI::asMob override CommandSender::asMob
         .instanceFunction("isGliding", &MobAPI::isGliding)
 
         // MobAPI extends ActorAPI
