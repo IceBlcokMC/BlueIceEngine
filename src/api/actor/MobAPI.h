@@ -23,6 +23,7 @@ public:
 
 public:
     METHODS(toString);
+    METHODS(asMob);
     METHODS(isGliding);
 
 public:

@@ -17,6 +17,7 @@ ClassDefine<CommandSenderAPI> CommandSenderAPI::builder =
         .instanceFunction("asCommandSender", &CommandSenderAPI::asCommandSender)
         .instanceFunction("asConsole", &CommandSenderAPI::asConsole)
         .instanceFunction("asActor", &CommandSenderAPI::asActor)
+        .instanceFunction("asMob", &CommandSenderAPI::asMob)
         .instanceFunction("asPlayer", &CommandSenderAPI::asPlayer)
         .instanceFunction("sendMessage", &CommandSenderAPI::sendMessage)
         .instanceFunction("sendErrorMessage", &CommandSenderAPI::sendErrorMessage)
@@ -47,6 +48,16 @@ Local<Value> CommandSenderAPI::asConsole(Arguments const& /* args */) { return L
 Local<Value> CommandSenderAPI::asActor(Arguments const& /* args */) {
     if (mSender->asActor() == nullptr) return Local<Value>();
     return ActorAPI::newInstance(mSender->asActor());
+}
+
+Local<Value> CommandSenderAPI::asMob(Arguments const& /* args */) {
+    try {
+        if (auto mob = mSender->asMob(); mob) {
+            return MobAPI::newInstance(mob);
+        }
+        return {};
+    }
+    Catch;
 }
 
 Local<Value> CommandSenderAPI::asPlayer(Arguments const& /* args */) {

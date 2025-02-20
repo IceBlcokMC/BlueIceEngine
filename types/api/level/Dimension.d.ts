@@ -44,5 +44,32 @@ declare class Dimension {
      * @param location 块的位置
      * @return 包含给定坐标的块
      */
-    // getBlocks(location: Location): Block; // TODO: BlockAPI、LocationAPI
+    // getBlocks(location: Location): Block; // TODO: BlockAPI
+
+    /**
+     * 获取给定坐标的最高块。
+     * @param x 方块的 X 坐标
+     * @param z 方块的 Z 坐标
+     */
+    getHighestBlockYAt(x: number, z: number): number;
+
+    /**
+     * 获取给定位置的最高块。
+     * @param location 方块的位置
+     */
+    // getHighestBlockAt(location: Location): Block;
+
+    /**
+     * 获取给定坐标的最高块。
+     * @param x 方块的 X 坐标
+     * @param z 方块的 Z 坐标
+     * @return 包含给定坐标的最高块的块
+     */
+    // getHighestBlockAt(x: number, z: number): Block;
+
+    /**
+     * 获取此维度中已加载的块。
+     * @return 此维度中已加载的块
+     */
+    // getLoadedChunks(): Chunk[];
 }

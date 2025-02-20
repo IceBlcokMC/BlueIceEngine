@@ -4,7 +4,6 @@
 #include "api/form/FormAPI.h"
 #include "api/lang/TranslatableAPI.h"
 #include "converter/Convert.h"
-#include "endstone/endstone.h"
 #include "endstone/message.h"
 #include "endstone/player.h"
 #include "utils/ResourceSafety.h"
