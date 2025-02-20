@@ -1,6 +1,8 @@
 /// <reference path="../index.d.ts"/>
 
 declare interface OfflinePlayer {
+    toString(): string | "OfflinePlayer";
+
     /**
      * Returns the name of this player
      * 返回玩家的名字
