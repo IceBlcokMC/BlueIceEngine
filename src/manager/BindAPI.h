@@ -1,6 +1,7 @@
 #pragma once
 #include "api/ColorFormatAPI.h"
 #include "api/LoggerAPI.h"
+#include "api/OfflinePlayerAPI.h"
 #include "api/PlayerAPI.h"
 #include "api/ServerAPI.h"
 #include "api/SkinAPI.h"
@@ -82,6 +83,7 @@ inline void BindAPI(ScriptEngine* engine) {
     INSTANCE_CLASS(LoggerAPI);
     INSTANCE_CLASS(PlayerAPI);
     INSTANCE_CLASS(ServerAPI);
+    INSTANCE_CLASS(OfflinePlayerAPI);
     INSTANCE_CLASS(SkinAPI);
     INSTANCE_CLASS(SkinImageDataAPI);
     STATIC_CLASS(ColorFormatAPI);

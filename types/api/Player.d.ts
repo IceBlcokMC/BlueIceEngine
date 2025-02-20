@@ -4,7 +4,7 @@
  * 玩家类
  * @hideconstructor
  */
-declare class Player extends Mob {
+declare class Player extends Mob implements OfflinePlayer {
     toString(): "<Player>" | string;
 
     /**
