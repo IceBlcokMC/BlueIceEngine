@@ -1,4 +1,5 @@
 #pragma once
+#include "EngineWrapper.h"
 #include "utils/Using.h"
 #include <atomic>
 #include <endstone/scheduler/task.h>
@@ -9,28 +10,9 @@
 #include <unordered_map>
 #include <vector>
 
+
 namespace jse {
 
-
-struct EngineWrapper {
-    EngineID                                      mID; // 引擎ID
-    ScriptEngine*                                 mEngine;
-    std::unique_ptr<node::CommonEnvironmentSetup> mEnvSetup;
-    // std::shared_ptr<endstone::Task>               mUvLoopTask{nullptr};
-    bool mIsRunning{false};
-    bool mIsDestroying{false};
-
-public:
-    EngineWrapper() = default;
-    EngineWrapper(EngineID id, ScriptEngine* engine, std::unique_ptr<node::CommonEnvironmentSetup> envs)
-    : mID(id),
-      mEngine(engine),
-      mEnvSetup(std::move(envs)) {}
-
-    operator ScriptEngine*() const { return mEngine; }
-};
-
-using EngineWrapperPtr = std::unique_ptr<EngineWrapper>;
 
 class NodeManager final {
 private:

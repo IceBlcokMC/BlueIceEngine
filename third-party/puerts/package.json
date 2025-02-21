@@ -1,0 +1,22 @@
+{
+  "name": "puerts",
+  "version": "0.3.1",
+  "license": "BSD 3-Clause 'New' or 'Revised' License",
+  "author": "chexiongsheng <chexiongsheng@gmail.com>",
+  "description": "puerts for Node.js, C++ bindings for node",
+  "keywords": [ "native", "addon", "module", "bindings" ],
+  "main": "./lib/puerts_node.js",
+  "typings": "./lib/index.d.ts",
+  "bin": "./bin/puerts_node.js",
+  "dependencies": {
+    "node-gyp-build": "^4.2.1",
+    "commander": "^7.1.0"
+  },
+  "scripts": {
+    "install": "node-gyp-build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/puerts/puerts_node.git"
+  }
+}

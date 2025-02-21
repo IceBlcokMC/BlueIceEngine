@@ -1,16 +1,10 @@
 {
-    "include": [
-        "./**/*.d.ts"
-    ],
-    "exclude": [
-        "node_modules/**/*",
-        "../types/api/_/**"
-    ],
     "compilerOptions": {
         "lib": [
-            "ES2020",
+            "ES2023"
         ],
-        "types": [],
-        "target": "ES6"
+        "target": "ES6",
+        "module": "ESNext",
+        "skipLibCheck": false
     }
 }

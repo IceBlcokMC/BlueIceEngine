@@ -4,7 +4,6 @@ add_repositories("iceblcokmc https://github.com/IceBlcokMC/xmake-repo.git")
 
 -- iceblockmc
 add_requires("endstone 0.6.0")
-add_requires("scriptx jse", { configs = { backend = "V8" } })
 add_requires("nodejs 22.12.0")
 
 -- xmake-repo
@@ -44,7 +43,7 @@ target("Js_Engine")
     )
     add_files("src/**.cc")
     add_includedirs("src")
-    add_packages("scriptx", "nodejs")
+    add_packages("nodejs")
     add_packages(
         "fmt",
         "expected-lite",
@@ -65,6 +64,31 @@ target("Js_Engine")
     -- EndStone Entt
     add_defines("ENTT_SPARSE_PAGE=2048")
     add_defines("ENTT_PACKED_PAGE=128")
+
+
+    -- PuerTs
+    add_files(
+        "./third-party/puerts/src/CppObjectMapper.cpp",
+        "./third-party/puerts/src/DataTransfer.cpp",
+        "./third-party/puerts/src/JSClassRegister.cpp"
+        -- "./third-party/puerts/src/PesapiAddonLoad.cpp",
+        -- "./third-party/puerts/src/PesapiV8Impl.cpp"
+    )
+
+    add_includedirs("./third-party/puerts/src")
+    add_includedirs("./third-party/puerts/puerts_libs/include")
+    add_files("./third-party/puerts/puerts_libs/src/pesapi_adpt.c")
+
+    add_defines("MAPPER_ISOLATE_DATA_POS=2", "PES_EXTENSION_WITH_V8_API")
+
+    if is_plat("windows") then
+        add_defines("WIN32")
+    elseif is_plat("linux") then
+
+    end
+
+
+
 
     if is_plat("windows") then
         add_cxxflags("/Zc:__cplusplus")

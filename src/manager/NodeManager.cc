@@ -1,15 +1,19 @@
-#include "v8-exception.h"
+#include "CppObjectMapper.h"
+#include "ObjectMapper.h"
+#include "manager/RegisterNativeClasses.h"
+#include "v8-isolate.h"
 #pragma warning(disable : 4996)
 #include "Entry.h"
-#include "api/APIHelper.h"
-#include "manager/BindAPI.h"
-#include "manager/EngineData.h"
 #include "manager/NodeManager.h"
 #include "utils/Using.h"
 #include "utils/Util.h"
+#include "v8-context.h"
+#include "v8-exception.h"
+#include "v8-locker.h"
 #include <endstone/scheduler/scheduler.h>
 #include <filesystem>
 #include <fmt/core.h>
+#include <fstream>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <node.h>
@@ -122,18 +126,16 @@ void NodeManager::initUvLoopThread() {
                     }
 
                     try {
-                        EngineScope enter(wrapper->mEngine);
-                        if (EngineScope::currentEngine() == wrapper->mEngine) {
-                            uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_NOWAIT);
-                        } else {
-                            EngineScope scope(wrapper->mEngine);
-                            uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_NOWAIT);
-                        }
-                    }
-                    CatchNotReturn;
+                        v8::Locker         locker(wrapper->isolate());
+                        v8::Isolate::Scope isolate_scope(wrapper->isolate());
+                        v8::HandleScope    handle_scope(wrapper->isolate());
+                        v8::Context::Scope context_scope(wrapper->context());
+                        v8::TryCatch       vtry{wrapper->isolate()};
+
+                        uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_NOWAIT);
+                    } catch (...) {};
                 }
-            }
-            CatchNotReturn;
+            } catch (...) {};
         }
     }).detach();
 }
@@ -172,24 +174,37 @@ EngineWrapper* NodeManager::newScriptEngine() {
     v8::Locker         locker(isolate);
     v8::Isolate::Scope isolateScope(isolate);
     v8::HandleScope    handleScope(isolate);
-    v8::Context::Scope contextScope(envSetup->context());
 
-    ScriptEngine* engine = new ScriptEngineImpl({}, isolate, envSetup->context(), false);
-    EngineScope   scope(engine);
+    auto               context = envSetup->context();
+    v8::Context::Scope contextScope(context);
 
-    engine->setData(std::make_shared<EngineData>(id)); // 设置引擎数据
-    BindAPI(engine);                                   // 绑定API
+    context->Global()
+        ->Set(
+            context,
+            v8::String::NewFromUtf8(isolate, "__ENGINE_ID__").ToLocalChecked(),
+            v8::Number::New(isolate, static_cast<double>(id))
+        )
+        .Check();
 
-    EngineWrapperPtr ptr = std::make_unique<EngineWrapper>(id, engine, std::move(envSetup));
+    auto ptr = std::make_unique<EngineWrapper>(id, std::move(envSetup));
+
+    auto mapper = new puerts::FCppObjectMapper();
+    mapper->Initialize(isolate, context);
+    isolate->SetData(MAPPER_ISOLATE_DATA_POS, static_cast<puerts::ICppObjectMapper*>(mapper));
+
+    ptr->mMapper = mapper;
+
+    RegisterNativeClasses(ptr.get());
+
     mEngines.emplace(id, std::move(ptr));
 
     node::AddEnvironmentCleanupHook(
         isolate,
         [](void* arg) {
-            static_cast<ScriptEngine*>(arg)->destroy();
-            Entry::getInstance()->getLogger().debug("[EnvironmentCleanupHook] Destroyed engine: {}", arg);
+            auto id = reinterpret_cast<EngineID>(arg);
+            Entry::getInstance()->getLogger().debug("[EnvironmentCleanupHook] Destroyed engine: {}", id);
         },
-        engine
+        (void*)id
     );
 
     return mEngines[id].get();
@@ -317,9 +332,9 @@ bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool es
     Entry::getInstance()->getLogger().debug("filename: {}", filename);
 
     try {
-        string compiler;
+        string loader;
         if (esm) {
-            compiler = fmt::format(
+            loader = fmt::format(
                 R"(
                     import('url').then(url => {{
                         const moduleUrl = url.pathToFileURL('{1}').href;
@@ -336,7 +351,7 @@ bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool es
                 filename
             );
         } else {
-            compiler = fmt::format(
+            loader = fmt::format(
                 R"(
                     const __Path = require("path");
                     const __PluginPath = __Path.join("{0}");
@@ -364,11 +379,15 @@ bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool es
             );
         }
 
-        auto* env     = wrapper->mEnvSetup->env();
-        auto* isolate = wrapper->mEnvSetup->isolate();
+        auto* env     = wrapper->env();
+        auto* isolate = wrapper->isolate();
 
         {
-            EngineScope enter(wrapper->mEngine);
+            v8::Locker         lock(isolate);
+            v8::Isolate::Scope isolate_scope(isolate);
+            v8::HandleScope    handle_scope(isolate);
+            v8::Context::Scope context_scope(wrapper->context());
+            v8::TryCatch       vtry(isolate);
             node::SetProcessExitHandler(env, [id{wrapper->mID}, isolate](node::Environment*, int exit_code) {
                 isolate->Exit();
                 Entry::getInstance()->getLogger().debug("Node.js process exit with code: {}, id: {}", exit_code, id);
@@ -377,9 +396,12 @@ bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool es
         }
 
         {
-            EngineScope               enter(wrapper->mEngine);
+            v8::Locker                lock(isolate);
+            v8::Isolate::Scope        isolate_scope(isolate);
+            v8::HandleScope           handle_scope(isolate);
+            v8::Context::Scope        context_scope(wrapper->context());
             v8::TryCatch              vtry(isolate);
-            v8::MaybeLocal<v8::Value> loadValue = node::LoadEnvironment(env, compiler.c_str());
+            v8::MaybeLocal<v8::Value> loadValue = node::LoadEnvironment(env, loader);
             if (loadValue.IsEmpty() || vtry.HasCaught()) {
                 v8::String::Utf8Value error(isolate, vtry.Exception());
                 v8::String::Utf8Value stack(isolate, vtry.StackTrace(wrapper->mEnvSetup->context()).ToLocalChecked());
@@ -389,20 +411,6 @@ bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool es
                 return false;
             }
         }
-
-        // TODO: 检查 Scheduler 为什么不执行
-        // wrapper->mUvLoopTask = Entry::getInstance()->getServer().getScheduler().runTaskTimer(
-        //     *Entry::getInstance(),
-        //     [wrapper, loop{wrapper->mEnvSetup->event_loop()}]() {
-        //         EngineScope enter(wrapper->mEngine);
-        //         try {
-        //             uv_run(loop, UV_RUN_NOWAIT);
-        //         }
-        //         CatchNotReturn;
-        //     },
-        //     0,
-        //     1
-        // );
 
         wrapper->mIsRunning = true;
         return true;
