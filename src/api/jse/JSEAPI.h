@@ -12,40 +12,9 @@
 #include "v8-isolate.h"
 #include "v8-local-handle.h"
 #include "v8-primitive.h"
+#include "v8/Converter.h"
 #include <utility>
 #include <vector>
-
-
-template <typename T, typename Enable = void>
-struct Converter {
-    // toCpp
-    static T toCpp(v8::Isolate* isolate, v8::Local<v8::Context> ctx, v8::Local<v8::Value> value) { return {}; }
-
-    // toV8
-    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, T value) { return {}; }
-};
-
-// string
-template <>
-struct Converter<std::string> {
-    static std::string toCpp(v8::Isolate* isolate, v8::Local<v8::Context> ctx, v8::Local<v8::Value> value) {
-        v8::HandleScope scope(isolate);
-        v8::TryCatch    tryCatch(isolate);
-
-        if (value->IsString()) {
-            return *v8::String::Utf8Value(isolate, value);
-        }
-        return {};
-    }
-    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, std::string value) {
-        v8::EscapableHandleScope scope(isolate);
-        v8::TryCatch             tryCatch(isolate);
-
-        return scope.Escape(v8::String::NewFromUtf8(isolate, value.c_str()).ToLocalChecked());
-    }
-};
-
-
 
 
 class PluginRegister {
@@ -111,7 +80,7 @@ public:
                     continue;
                 }
 
-                auto key     = Converter<std::string>::toCpp(isolate, ctx, maybe_key.ToLocalChecked());
+                auto key     = jse::detail::Converter<std::string>::toCpp(isolate, ctx, maybe_key.ToLocalChecked());
                 auto builder = endstone::detail::PermissionBuilder(key);
             }
         } catch (...) {}

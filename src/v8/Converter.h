@@ -1,0 +1,245 @@
+#pragma once
+#include "boost/pfr.hpp"
+#include "boost/pfr/core.hpp"
+#include "boost/pfr/core_name.hpp"
+#include "v8-context.h"
+#include "v8-exception.h"
+#include "v8-initialization.h"
+#include "v8-isolate.h"
+#include "v8-local-handle.h"
+#include "v8-object.h"
+#include "v8-primitive.h"
+#include "v8-value.h"
+#include "v8/V8Scope.h"
+#include <cstddef>
+#include <stdexcept>
+#include <string>
+#include <sys/stat.h>
+#include <type_traits>
+
+
+namespace jse {
+
+
+namespace detail {
+
+//-----------------------------------------------
+// Converter
+//-----------------------------------------------
+template <typename T, typename Enable = void>
+struct Converter;
+
+
+//-----------------------------------------------
+// Basic types
+//-----------------------------------------------
+template <size_t N>
+struct Converter<char[N]> {
+    static std::string toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value) {
+        EnterV8Scope scope(isolate, context);
+        if (value->IsString()) {
+            v8::String::Utf8Value utf8(isolate, value);
+            return *utf8;
+        }
+        return {};
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate);
+        return hscope.Escape(
+            v8::String::NewFromUtf8(isolate, value, v8::NewStringType::kNormal, static_cast<int>(strlen(value)))
+                .ToLocalChecked()
+        );
+    }
+};
+
+template <size_t N>
+struct Converter<const char[N]> {
+    static std::string toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value) {
+        EnterV8Scope scope(isolate, context);
+        if (value->IsString()) {
+            v8::String::Utf8Value utf8(isolate, value);
+            return *utf8;
+        }
+        return {};
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate);
+        return hscope.Escape(
+            v8::String::NewFromUtf8(isolate, value, v8::NewStringType::kNormal, static_cast<int>(strlen(value)))
+                .ToLocalChecked()
+        );
+    }
+};
+
+template <>
+struct Converter<const char*> {
+    static std::string toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value) {
+        EnterV8Scope scope(isolate, context);
+        if (value->IsString()) {
+            v8::String::Utf8Value utf8(isolate, value);
+            return *utf8;
+        }
+        return {};
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate);
+        return hscope.Escape(
+            v8::String::NewFromUtf8(isolate, value, v8::NewStringType::kNormal, static_cast<int>(strlen(value)))
+                .ToLocalChecked()
+        );
+    }
+};
+
+template <>
+struct Converter<std::string> {
+    static std::string toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value) {
+        EnterV8Scope scope(isolate, context);
+        if (value->IsString()) {
+            v8::String::Utf8Value utf8(isolate, value);
+            return *utf8;
+        }
+        return {};
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, const std::string& value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate); // 使用EscapableHandleScope确保值可以跨作用域
+        return hscope.Escape(
+            v8::String::NewFromUtf8(isolate, value.c_str(), v8::NewStringType::kNormal, static_cast<int>(value.size()))
+                .ToLocalChecked()
+        );
+    }
+};
+
+template <std::integral T>
+struct Converter<T> {
+    static T toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value) {
+        EnterV8Scope scope(isolate, context);
+        if (value->IsNumber()) {
+            return static_cast<T>(value->NumberValue(context));
+        }
+        return 0;
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, T value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate);
+        return hscope.Escape(v8::Number::New(isolate, static_cast<double>(value)));
+    }
+};
+
+template <std::floating_point T>
+struct Converter<T> {
+    static T toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value) {
+        EnterV8Scope scope(isolate, context);
+        if (value->IsNumber()) {
+            return static_cast<T>(value->NumberValue(context));
+        }
+        return 0;
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, T value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate);
+        return hscope.Escape(v8::Number::New(isolate, static_cast<double>(value)));
+    }
+};
+
+template <>
+struct Converter<bool> {
+    static bool toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value) {
+        EnterV8Scope scope(isolate, context);
+        if (value->IsBoolean()) {
+            return value->BooleanValue(isolate);
+        }
+        return false;
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, bool value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate);
+        return hscope.Escape(v8::Boolean::New(isolate, value));
+    }
+};
+
+template <typename T>
+struct Converter<T, std::enable_if_t<std::is_enum_v<T>>> {
+    static T toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value) {
+        EnterV8Scope scope(isolate, context);
+        if (value->IsNumber()) {
+            return static_cast<T>(value->NumberValue(context));
+        }
+        throw std::runtime_error("Invalid enum value");
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, T value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate);
+        return hscope.Escape(v8::Number::New(isolate, static_cast<int>(value)));
+    }
+};
+
+
+//-----------------------------------------------
+// Pfr Converter
+//-----------------------------------------------
+template <typename T>
+constexpr bool IsReflectable = std::is_class_v<T> &&                  // 只处理类
+                               std::is_aggregate_v<T> &&              // 可聚合初始化
+                               !std::is_array_v<T> &&                 // 不是数组
+                               !requires(T& a) { a.operator[]; } &&   // 没有重载 operator[]
+                               !requires { typename T::value_type; }; // 不是容器类型
+
+template <typename T>
+struct Converter<T, std::enable_if_t<IsReflectable<T>>> {
+    static T toCpp(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> val, T res = {}) {
+        auto obj = val->ToObject(context).ToLocalChecked();
+        boost::pfr::for_each_field(res, [&](auto& field, std::size_t index) {
+            using FieldType = std::remove_cvref_t<decltype(field)>;
+
+            field = Converter<FieldType>::toCpp(
+                isolate,
+                context,
+                obj->Get(
+                       context,
+                       v8::String::NewFromUtf8(isolate, boost::pfr::names_as_array<T>()[index]).ToLocalChecked()
+                )
+                    .ToLocalChecked()
+            );
+        });
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> context, T value) {
+        EnterV8Scope  scope(isolate, context);
+        HandleV8Scope hscope(isolate);
+
+        auto obj = v8::Object::New(isolate);
+        boost::pfr::for_each_field(value, [&](auto const& field, std::size_t index) {
+            using FieldType = std::remove_cvref_t<decltype(field)>;
+            obj->Set(
+                context,
+                v8::String::NewFromUtf8(isolate, boost::pfr::names_as_array<T>()[index]).ToLocalChecked(),
+                Converter<FieldType>::toV8(isolate, context, field)
+            );
+        });
+        return hscope.Escape(obj);
+    }
+};
+
+
+//-----------------------------------------------
+// Stl Converter
+//-----------------------------------------------
+
+} // namespace detail
+
+
+template <typename T>
+[[nodiscard]] inline T ConvertToCpp(v8::Isolate* isolate, v8::Local<v8::Context> ctx, v8::Local<v8::Value> val) {
+    return detail::Converter<T>::toCpp(isolate, ctx, val);
+}
+
+template <typename T>
+[[nodiscard]] inline v8::Local<v8::Value> ConvertToV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, T value) {
+    return detail::Converter<T>::toV8(isolate, ctx, value);
+}
+
+
+} // namespace jse
