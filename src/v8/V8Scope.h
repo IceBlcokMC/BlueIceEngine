@@ -5,6 +5,7 @@
 #include "v8-local-handle.h"
 #include "v8-locker.h"
 #include <exception>
+#include <stdexcept>
 #include <string>
 
 
@@ -45,24 +46,11 @@ public:
 };
 
 
-class v8_exception : public std::exception {
-    std::string message_;
-
-public:
-    explicit v8_exception(std::string message) : message_(std::move(message)) {}
-
-public:
-    [[nodiscard]] const char* what() const noexcept override {}
-
-    [[nodiscard]] std::string message() const noexcept {}
-
-    [[nodiscard]] std::string stackTrace() const noexcept {}
-};
-
-
-inline void CheckTryCatch(v8::TryCatch& tryCatch) {
-    if (tryCatch.HasCaught()) {
-        // 抛出异常
+inline void HandleV8Exception(v8::Isolate* isolate, v8::Local<v8::Context> ctx, v8::TryCatch& vtry) {
+    if (vtry.HasCaught()) {
+        v8::String::Utf8Value exception(isolate, vtry.Exception());
+        v8::String::Utf8Value stack(isolate, vtry.StackTrace(ctx).ToLocalChecked());
+        throw std::runtime_error(std::string(*exception) + "\n" + std::string(*stack));
     }
 }
 
