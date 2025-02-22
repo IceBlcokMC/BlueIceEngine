@@ -65,7 +65,7 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
                 // }
             }
 
-            JsPluginDescriptionBuilder builder{};
+            // JsPluginDescriptionBuilder builder{};
             // builder.description        = data->tryParseDescription();
             // builder.load               = data->tryParseLoad();
             // builder.authors            = data->tryParseAuthors();

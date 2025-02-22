@@ -1,5 +1,6 @@
 #pragma once
 #include "DataTransfer.h"
+#include "DeclarationGenerator.h"
 #include "JSClassRegister.h"
 #include "TypeInfo.hpp"
 #include "api/jse/JSEAPI.h"
@@ -14,6 +15,8 @@
 #include "v8-primitive.h"
 #include "v8-template.h"
 #include "v8-value.h"
+#include <set>
+#include <sstream>
 #include <string>
 
 
@@ -68,6 +71,31 @@ inline void RegisterGlobalFunc(EngineWrapper* wrapper) {
         )
         .Check();
 
+    global
+        ->Set(
+            context,
+            v8::String::NewFromUtf8(isolate, "__declaration__").ToLocalChecked(),
+            v8::FunctionTemplate::New(
+                isolate,
+                [](const v8::FunctionCallbackInfo<v8::Value>& info) {
+                    puerts::DeclarationGenerator dg;
+
+                    puerts::ForeachRegisterClass([&](const puerts::JSClassDefinition* classDefinition) {
+                        if (classDefinition->TypeId && classDefinition->ScriptName) {
+                            dg.GenClass(classDefinition);
+                        }
+                    });
+
+                    info.GetReturnValue().Set(
+                        v8::String::NewFromUtf8(info.GetIsolate(), dg.GetOutput().c_str(), v8::NewStringType::kNormal)
+                            .ToLocalChecked()
+                    );
+                }
+            )
+                ->GetFunction(context)
+                .ToLocalChecked()
+        )
+        .Check();
 }
 
 inline void RegisterNativeClasses(EngineWrapper* wrapper) {

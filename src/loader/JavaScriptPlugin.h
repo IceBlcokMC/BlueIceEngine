@@ -8,11 +8,6 @@
 
 namespace jse {
 
-class JsPluginDescriptionBuilder : public endstone::detail::PluginDescriptionBuilder {
-public:
-    JsPluginDescriptionBuilder() = default;
-};
-
 class JavaScriptPlugin : public endstone::Plugin {
 public:
     JavaScriptPlugin(uint64_t engineId, endstone::PluginDescription description)
