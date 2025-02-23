@@ -7,14 +7,13 @@
 namespace jse {
 
 
-struct EngineWrapper {
+struct V8Engine {
     EngineID                                      mID{};
     std::unique_ptr<node::CommonEnvironmentSetup> mEnvSetup;
     bool                                          mIsRunning{false};
     bool                                          mIsDestroying{false};
-
-    string                    mEntryPoint;
-    puerts::FCppObjectMapper* mMapper{};
+    string                                        mEntryPoint; // 入口文件 package main
+    puerts::FCppObjectMapper*                     mCppMapper{};
 
 public:
     [[nodiscard]] v8::Isolate*           isolate() const { return mEnvSetup->isolate(); }
@@ -23,12 +22,17 @@ public:
     [[nodiscard]] node::Environment*     env() const { return mEnvSetup->env(); }
 
 public:
-    explicit EngineWrapper(EngineID id, std::unique_ptr<node::CommonEnvironmentSetup> envs)
+    explicit V8Engine(EngineID id, std::unique_ptr<node::CommonEnvironmentSetup> envs)
     : mID(id),
       mEnvSetup(std::move(envs)) {}
+
+    V8Engine(const V8Engine&)            = delete;
+    V8Engine& operator=(const V8Engine&) = delete;
+    V8Engine(V8Engine&&)                 = delete;
+    V8Engine& operator=(V8Engine&&)      = delete;
 };
 
-using EngineWrapperPtr = std::unique_ptr<EngineWrapper>;
+using V8EnginePtr = std::unique_ptr<V8Engine>;
 
 
 } // namespace jse

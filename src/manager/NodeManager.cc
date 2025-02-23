@@ -146,7 +146,7 @@ void NodeManager::shutdownUvLoopThread() { mUvLoopThreadRunning = false; }
 bool NodeManager::hasEngine(EngineID id) const { return mEngines.contains(id); }
 
 
-EngineWrapper* NodeManager::newScriptEngine() {
+V8Engine* NodeManager::newScriptEngine() {
     static EngineID NextEngineID = 0;
     if (!mIsInitialized) {
         return nullptr;
@@ -179,13 +179,13 @@ EngineWrapper* NodeManager::newScriptEngine() {
     auto               context = envSetup->context();
     v8::Context::Scope contextScope(context);
 
-    auto ptr = std::make_unique<EngineWrapper>(id, std::move(envSetup));
+    auto ptr = std::make_unique<V8Engine>(id, std::move(envSetup));
 
     auto mapper = new puerts::FCppObjectMapper();
     mapper->Initialize(isolate, context);
     isolate->SetData(MAPPER_ISOLATE_DATA_POS, static_cast<puerts::ICppObjectMapper*>(mapper));
 
-    ptr->mMapper = mapper;
+    ptr->mCppMapper = mapper;
 
     RegisterNativeClasses(ptr.get());
 
@@ -203,7 +203,7 @@ EngineWrapper* NodeManager::newScriptEngine() {
     return mEngines[id].get();
 }
 
-EngineWrapper* NodeManager::getEngine(EngineID id) {
+V8Engine* NodeManager::getEngine(EngineID id) {
     if (mEngines.contains(id)) {
         return mEngines[id].get();
     }
@@ -309,7 +309,7 @@ bool NodeManager::NpmInstall(string npmExecuteDir) {
 }
 
 
-bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool esm) {
+bool NodeManager::loadFile(V8Engine* wrapper, fs::path const& path, bool esm) {
     if (!wrapper) {
         return false;
     }

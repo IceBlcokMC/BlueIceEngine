@@ -1,5 +1,5 @@
 #pragma once
-#include "EngineWrapper.h"
+#include "V8Engine.h"
 #include "utils/Using.h"
 #include <atomic>
 #include <endstone/scheduler/task.h>
@@ -20,11 +20,11 @@ private:
     NodeManager(const NodeManager&)            = delete;
     NodeManager& operator=(const NodeManager&) = delete;
 
-    bool                                           mIsInitialized{false}; // 是否初始化
-    std::vector<string>                            mArgs;                 // 参数
-    std::vector<string>                            mExecArgs;             // 执行参数
-    std::unique_ptr<node::MultiIsolatePlatform>    mPlatform;             // v8 平台
-    std::unordered_map<EngineID, EngineWrapperPtr> mEngines;              // 引擎列表
+    bool                                        mIsInitialized{false}; // 是否初始化
+    std::vector<string>                         mArgs;                 // 参数
+    std::vector<string>                         mExecArgs;             // 执行参数
+    std::unique_ptr<node::MultiIsolatePlatform> mPlatform;             // v8 平台
+    std::unordered_map<EngineID, V8EnginePtr>   mEngines;              // 引擎列表
 
     std::atomic<bool> mUvLoopThreadRunning{true}; // uv loop 线程是否在运行
 
@@ -41,16 +41,16 @@ public:
 public:
     bool hasEngine(EngineID id) const;
 
-    EngineWrapper* newScriptEngine();
+    V8Engine* newScriptEngine();
 
-    EngineWrapper* getEngine(EngineID id);
+    V8Engine* getEngine(EngineID id);
 
     bool destroyEngine(EngineID id);
 
     bool NpmInstall(string npmExecuteDir);
 
 public:
-    static bool loadFile(EngineWrapper* wrapper, fs::path const& file, bool esm = false);
+    static bool loadFile(V8Engine* wrapper, fs::path const& file, bool esm = false);
 
     static std::optional<string> readFileContent(const fs::path& file);
 

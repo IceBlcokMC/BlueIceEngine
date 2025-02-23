@@ -4,7 +4,7 @@
 #include "JSClassRegister.h"
 #include "TypeInfo.hpp"
 #include "api/jse/JSEAPI.h"
-#include "manager/EngineWrapper.h"
+#include "manager/V8Engine.h"
 #include "pesapi.h"
 #include "utils/Using.h"
 #include "v8-context.h"
@@ -24,7 +24,7 @@
 namespace jse {
 
 // template <typename T>
-// inline v8::Local<v8::Value> ConvertNativeInstToJsInst(EngineWrapper* wrapper, T* nativeInst) {
+// inline v8::Local<v8::Value> ConvertNativeInstToJsInst(V8Engine* wrapper, T* nativeInst) {
 //     auto isolate = wrapper->isolate();
 //     v8::Locker             lock(isolate);
 //     v8::Isolate::Scope     isolate_scope(isolate);
@@ -43,7 +43,7 @@ namespace jse {
 //     );
 // }
 
-inline void RegisterGlobalFunc(EngineWrapper* wrapper) {
+inline void RegisterGlobalFunc(V8Engine* wrapper) {
     auto isolate = wrapper->isolate();
     auto ctx     = wrapper->context();
     auto global  = ctx->Global();
@@ -59,7 +59,7 @@ inline void RegisterGlobalFunc(EngineWrapper* wrapper) {
                         static_cast<puerts::FCppObjectMapper*>((v8::Local<v8::External>::Cast(info.Data()))->Value());
                     pom->LoadCppType(info);
                 },
-                v8::External::New(isolate, wrapper->mMapper)
+                v8::External::New(isolate, wrapper->mCppMapper)
             )
                 ->GetFunction(ctx)
                 .ToLocalChecked()
@@ -101,7 +101,7 @@ inline void RegisterGlobalFunc(EngineWrapper* wrapper) {
         .Check();
 }
 
-inline void RegisterNativeClasses(EngineWrapper* wrapper) {
+inline void RegisterNativeClasses(V8Engine* wrapper) {
     RegisterGlobalFunc(wrapper);
 
     RegisterJSEAPI();
