@@ -1,5 +1,7 @@
 #pragma once
 #include "endstone/plugin/plugin.h"
+#include "utils/Using.h"
+#include <string>
 
 namespace jse {
 
@@ -7,8 +9,8 @@ class PluginDescriptionBuilderImpl : public endstone::detail::PluginDescriptionB
 public:
     PluginDescriptionBuilderImpl() {
         description  = "JavaScript Engine";
-        contributors = {"engsr6982", "zimuya4153", "killcerr"}; // Github Username
         website      = "https://github.com/engsr6982/Js_Engine";
+        contributors = {"https://github.com/IceBlcokMC/Js_Engine/graphs/contributors"};
     }
 };
 
@@ -22,10 +24,13 @@ public:
 
     void onDisable() override;
 
-    endstone::PluginDescription const& getDescription() const override;
+    [[nodiscard]] endstone::PluginDescription const& getDescription() const override;
 
 private:
     PluginDescriptionBuilderImpl builder;
-    endstone::PluginDescription  description_ = builder.build("js_engine", "0.1.0");
+    endstone::PluginDescription  description_ = builder.build(
+        "js_engine",
+        fmt::format("v{}.{}.{}", JSENGINE_VERSION_MAJOR, JSENGINE_VERSION_MINOR, JSENGINE_VERSION_PATCH)
+    );
 };
 } // namespace jse

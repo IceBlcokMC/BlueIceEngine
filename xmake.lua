@@ -33,9 +33,29 @@ if is_plat("windows") then
     end
 end
 
+rule("internal/version-define")
+    on_load(function (target)
+        local tag = os.iorun("git describe --tags --abbrev=0")
+        if tag == nil then
+            tag = "v0.0.0"
+        end
+
+        local major, minor, patch = tag:match("v(%d+).(%d+).(%d+)")
+        if major == nil then
+            major = 0
+            minor = 0
+            patch = 0
+        end
+
+        target:add("defines", "JSENGINE_VERSION_MAJOR=" .. major)
+        target:add("defines", "JSENGINE_VERSION_MINOR=" .. minor)
+        target:add("defines", "JSENGINE_VERSION_PATCH=" .. patch)
+    end)
+
 
 target("Js_Engine")
     set_license("GPL-3.0")
+    add_rules("internal/version-define")
     add_defines(
         "NOMINMAX",
         "UNICODE",
@@ -86,9 +106,6 @@ target("Js_Engine")
     elseif is_plat("linux") then
 
     end
-
-
-
 
     if is_plat("windows") then
         add_cxxflags("/Zc:__cplusplus")
