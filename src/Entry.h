@@ -30,7 +30,9 @@ private:
     PluginDescriptionBuilderImpl builder;
     endstone::PluginDescription  description_ = builder.build(
         "js_engine",
-        fmt::format("v{}.{}.{}", JSENGINE_VERSION_MAJOR, JSENGINE_VERSION_MINOR, JSENGINE_VERSION_PATCH)
+        fmt::format("{}.{}.{}", JSENGINE_VERSION_MAJOR, JSENGINE_VERSION_MINOR, JSENGINE_VERSION_PATCH)
     );
 };
+
+
 } // namespace jse
