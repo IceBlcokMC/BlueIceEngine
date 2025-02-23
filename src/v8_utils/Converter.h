@@ -10,7 +10,7 @@
 #include "v8-object.h"
 #include "v8-primitive.h"
 #include "v8-value.h"
-#include "v8/V8Scope.h"
+#include "V8Scope.h"
 #include <cstddef>
 #include <stdexcept>
 #include <string>

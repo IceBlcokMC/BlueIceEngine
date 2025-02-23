@@ -4,17 +4,14 @@
 #include "endstone/plugin/plugin.h"
 #include "endstone/plugin/plugin_description.h"
 #include "endstone/plugin/plugin_load_order.h"
-#include "loader/JavaScriptPlugin.h"
 #include "utils/Using.h"
 #include "v8-context.h"
 #include "v8-exception.h"
-#include "v8-initialization.h"
 #include "v8-isolate.h"
 #include "v8-local-handle.h"
 #include "v8-primitive.h"
-#include "v8/Converter.h"
+#include "v8_utils/Converter.h"
 #include <utility>
-#include <vector>
 
 
 class PluginRegister {
@@ -62,26 +59,39 @@ public:
      *     }
      * }
      */
-    void registerPermissions(v8::Isolate* isolate, v8::Local<v8::Context> ctx, v8::Local<v8::Object> permissions) {
+    void registerPermissions(v8::Local<v8::Object> permissions) {
+        auto isolate = v8::Isolate::GetCurrent();
+
         v8::HandleScope scope(isolate);
         v8::TryCatch    tryCatch(isolate);
 
+        auto ctx = isolate->GetCurrentContext();
+
         try {
-            auto maybe_keys = permissions->GetOwnPropertyNames(ctx);
-            if (maybe_keys.IsEmpty()) {
+            auto MaybeKeys = permissions->GetOwnPropertyNames(ctx);
+            if (MaybeKeys.IsEmpty()) {
                 return;
             }
-            auto keys   = maybe_keys.ToLocalChecked();
-            int  length = keys->Length();
 
-            for (int i = 0; i < length; i++) {
-                auto maybe_key = keys->Get(ctx, i);
-                if (maybe_key.IsEmpty()) {
+            auto     keys   = MaybeKeys.ToLocalChecked();
+            uint32_t length = keys->Length();
+
+            for (uint32_t i = 0; i < length; i++) {
+                auto MaybeKey = keys->Get(ctx, i);
+                if (MaybeKey.IsEmpty()) {
                     continue;
                 }
 
-                auto key     = jse::detail::Converter<std::string>::toCpp(isolate, ctx, maybe_key.ToLocalChecked());
+                auto MaybeValue = permissions->Get(ctx, MaybeKey.ToLocalChecked());
+                if (MaybeValue.IsEmpty()) {
+                    continue;
+                }
+
+
+                auto key     = jse::ConvertToCpp<string>(isolate, ctx, MaybeKey.ToLocalChecked());
                 auto builder = endstone::detail::PermissionBuilder(key);
+
+                // description
             }
         } catch (...) {}
     }

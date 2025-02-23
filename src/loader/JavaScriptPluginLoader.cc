@@ -7,7 +7,7 @@
 #include "v8-isolate.h"
 #include "v8-local-handle.h"
 #include "v8-locker.h"
-#include "v8/V8Scope.h"
+#include "v8_utils/V8Scope.h"
 #include <cstddef>
 #include <filesystem>
 #include <memory>
