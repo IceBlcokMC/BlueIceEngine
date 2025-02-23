@@ -7,6 +7,7 @@
 #include "v8-isolate.h"
 #include "v8-local-handle.h"
 #include "v8-locker.h"
+#include "v8/V8Scope.h"
 #include <cstddef>
 #include <filesystem>
 #include <memory>
@@ -44,11 +45,7 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
         {
             auto isolate = wrapper->isolate();
 
-            v8::Locker             locker{isolate};
-            v8::Isolate::Scope     isolate_scope{isolate};
-            v8::HandleScope        handle_scope{isolate};
-            v8::Local<v8::Context> context = wrapper->context();
-            v8::Context::Scope     context_scope{context};
+            EnterV8Scope scope{isolate, wrapper->context()};
 
             if (esm) {
                 size_t max   = 12; // 一般情况下, ESM 模块插件在第4个事件循环就会执行全局完全局代码

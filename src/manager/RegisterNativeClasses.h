@@ -7,6 +7,7 @@
 #include "manager/EngineWrapper.h"
 #include "pesapi.h"
 #include "utils/Using.h"
+#include "v8-context.h"
 #include "v8-external.h"
 #include "v8-function-callback.h"
 #include "v8-isolate.h"
@@ -44,18 +45,12 @@ namespace jse {
 
 inline void RegisterGlobalFunc(EngineWrapper* wrapper) {
     auto isolate = wrapper->isolate();
-
-    v8::Locker             lock(isolate);
-    v8::Isolate::Scope     isolate_scope(isolate);
-    v8::HandleScope        handle_scope(isolate);
-    v8::Local<v8::Context> context = wrapper->context();
-    v8::Context::Scope     context_scope(context);
-
-    auto global = context->Global();
+    auto ctx     = wrapper->context();
+    auto global  = ctx->Global();
 
     global
         ->Set(
-            context,
+            ctx,
             v8::String::NewFromUtf8(isolate, "loadNativeClass").ToLocalChecked(),
             v8::FunctionTemplate::New(
                 isolate,
@@ -66,14 +61,14 @@ inline void RegisterGlobalFunc(EngineWrapper* wrapper) {
                 },
                 v8::External::New(isolate, wrapper->mMapper)
             )
-                ->GetFunction(context)
+                ->GetFunction(ctx)
                 .ToLocalChecked()
         )
         .Check();
 
     global
         ->Set(
-            context,
+            ctx,
             v8::String::NewFromUtf8(isolate, "__declaration__").ToLocalChecked(),
             v8::FunctionTemplate::New(
                 isolate,
@@ -92,23 +87,21 @@ inline void RegisterGlobalFunc(EngineWrapper* wrapper) {
                     );
                 }
             )
-                ->GetFunction(context)
+                ->GetFunction(ctx)
                 .ToLocalChecked()
+        )
+        .Check();
+
+    global
+        ->Set(
+            ctx,
+            v8::String::NewFromUtf8(isolate, "__ENGINE_ID__").ToLocalChecked(),
+            v8::Number::New(isolate, static_cast<double>(wrapper->mID))
         )
         .Check();
 }
 
 inline void RegisterNativeClasses(EngineWrapper* wrapper) {
-    auto isolate = wrapper->isolate();
-    auto env     = wrapper->env();
-
-    v8::Locker             lock(isolate);
-    v8::Isolate::Scope     isolate_scope(isolate);
-    v8::HandleScope        handle_scope(isolate);
-    v8::Local<v8::Context> context = wrapper->context();
-    v8::Context::Scope     context_scope(context);
-
-
     RegisterGlobalFunc(wrapper);
 
     RegisterJSEAPI();

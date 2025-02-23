@@ -2,6 +2,8 @@
 #include "ObjectMapper.h"
 #include "manager/RegisterNativeClasses.h"
 #include "v8-isolate.h"
+#include "v8/V8Exception.h"
+#include "v8/V8Scope.h"
 #pragma warning(disable : 4996)
 #include "Entry.h"
 #include "manager/NodeManager.h"
@@ -125,15 +127,14 @@ void NodeManager::initUvLoopThread() {
                         continue;
                     }
 
+                    EnterV8Scope scope(wrapper->isolate(), wrapper->context());
                     try {
-                        v8::Locker         locker(wrapper->isolate());
-                        v8::Isolate::Scope isolate_scope(wrapper->isolate());
-                        v8::HandleScope    handle_scope(wrapper->isolate());
-                        v8::Context::Scope context_scope(wrapper->context());
-                        v8::TryCatch       vtry{wrapper->isolate()};
-
+                        v8::TryCatch vtry{wrapper->isolate()};
                         uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_NOWAIT);
-                    } catch (...) {};
+                        v8_exception::checkTryCatch(vtry);
+                    } catch (v8_exception const& except) {
+                        // TODO: handle v8 exception
+                    };
                 }
             } catch (...) {};
         }
@@ -177,14 +178,6 @@ EngineWrapper* NodeManager::newScriptEngine() {
 
     auto               context = envSetup->context();
     v8::Context::Scope contextScope(context);
-
-    context->Global()
-        ->Set(
-            context,
-            v8::String::NewFromUtf8(isolate, "__ENGINE_ID__").ToLocalChecked(),
-            v8::Number::New(isolate, static_cast<double>(id))
-        )
-        .Check();
 
     auto ptr = std::make_unique<EngineWrapper>(id, std::move(envSetup));
 
@@ -383,37 +376,33 @@ bool NodeManager::loadFile(EngineWrapper* wrapper, fs::path const& path, bool es
         auto* isolate = wrapper->isolate();
 
         {
-            v8::Locker         lock(isolate);
-            v8::Isolate::Scope isolate_scope(isolate);
-            v8::HandleScope    handle_scope(isolate);
-            v8::Context::Scope context_scope(wrapper->context());
-            v8::TryCatch       vtry(isolate);
+            EnterV8Scope enter{isolate, wrapper->context()};
+            v8::TryCatch vtry(isolate);
             node::SetProcessExitHandler(env, [id{wrapper->mID}, isolate](node::Environment*, int exit_code) {
                 isolate->Exit();
                 Entry::getInstance()->getLogger().debug("Node.js process exit with code: {}, id: {}", exit_code, id);
                 if (exit_code == 0) NodeManager::getInstance().destroyEngine(id);
             });
+            v8_exception::checkTryCatch(vtry);
         }
 
         {
-            v8::Locker                lock(isolate);
-            v8::Isolate::Scope        isolate_scope(isolate);
-            v8::HandleScope           handle_scope(isolate);
-            v8::Context::Scope        context_scope(wrapper->context());
-            v8::TryCatch              vtry(isolate);
+            EnterV8Scope enter{isolate, wrapper->context()};
+            v8::TryCatch vtry(isolate);
+
             v8::MaybeLocal<v8::Value> loadValue = node::LoadEnvironment(env, loader);
-            if (loadValue.IsEmpty() || vtry.HasCaught()) {
-                v8::String::Utf8Value error(isolate, vtry.Exception());
-                v8::String::Utf8Value stack(isolate, vtry.StackTrace(wrapper->mEnvSetup->context()).ToLocalChecked());
-                Entry::getInstance()->getLogger().error("{}\n{}", *error, *stack);
-                // ExitEngineScope exit;
-                // isolate->Exit();
+            if (loadValue.IsEmpty()) {
+                v8_exception::checkTryCatch(vtry);
                 return false;
             }
+            v8_exception::checkTryCatch(vtry);
         }
 
         wrapper->mIsRunning = true;
         return true;
+    } catch (v8_exception const& exc) {
+        // TODO: handle v8 exception
+        return false;
     } catch (...) {
         return false;
     }
