@@ -1,4 +1,5 @@
 #pragma once
+#include "manager/V8Engine.h"
 #include "v8-context.h"
 #include "v8-exception.h"
 #include "v8-isolate.h"
@@ -16,11 +17,11 @@ class EnterV8Scope final {
     v8::Context::Scope contextScope_;
 
 public:
-    explicit EnterV8Scope(v8::Isolate* isolate, v8::Local<v8::Context> context)
-    : locker_(isolate),
-      isolateScope_(isolate),
-      handleScope_(isolate),
-      contextScope_(context) {}
+    explicit EnterV8Scope(V8Engine* engine)
+    : locker_(engine->isolate()),
+      isolateScope_(engine->isolate()),
+      handleScope_(engine->isolate()),
+      contextScope_(engine->context()) {}
 
     EnterV8Scope(const EnterV8Scope&)            = delete;
     EnterV8Scope& operator=(const EnterV8Scope&) = delete;

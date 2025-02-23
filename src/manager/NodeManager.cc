@@ -127,7 +127,7 @@ void NodeManager::initUvLoopThread() {
                         continue;
                     }
 
-                    EnterV8Scope scope(wrapper->isolate(), wrapper->context());
+                    EnterV8Scope scope(wrapper.get());
                     try {
                         v8::TryCatch vtry{wrapper->isolate()};
                         uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_NOWAIT);
@@ -376,7 +376,7 @@ bool NodeManager::loadFile(V8Engine* wrapper, fs::path const& path, bool esm) {
         auto* isolate = wrapper->isolate();
 
         {
-            EnterV8Scope enter{isolate, wrapper->context()};
+            EnterV8Scope enter{wrapper};
             v8::TryCatch vtry(isolate);
             node::SetProcessExitHandler(env, [id{wrapper->mID}, isolate](node::Environment*, int exit_code) {
                 isolate->Exit();
@@ -387,7 +387,7 @@ bool NodeManager::loadFile(V8Engine* wrapper, fs::path const& path, bool esm) {
         }
 
         {
-            EnterV8Scope enter{isolate, wrapper->context()};
+            EnterV8Scope enter{wrapper};
             v8::TryCatch vtry(isolate);
 
             v8::MaybeLocal<v8::Value> loadValue = node::LoadEnvironment(env, loader);

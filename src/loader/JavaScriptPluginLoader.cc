@@ -43,9 +43,7 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
         }
 
         {
-            auto isolate = wrapper->isolate();
-
-            EnterV8Scope scope{isolate, wrapper->context()};
+            EnterV8Scope scope{wrapper};
 
             if (esm) {
                 size_t max   = 12; // 一般情况下, ESM 模块插件在第4个事件循环就会执行全局完全局代码
