@@ -400,7 +400,8 @@ bool NodeManager::loadFile(V8Engine* wrapper, std::filesystem::path const& path,
         wrapper->mIsRunning = true;
         return true;
     } catch (v8_exception const& exc) {
-        // TODO: handle v8 exception
+        EnterV8Scope enter{wrapper};
+        Entry::getInstance()->getLogger().error("Uncaught v8_exception: {}\n{}", exc.message(), exc.stacktrace());
         return false;
     } catch (...) {
         return false;
