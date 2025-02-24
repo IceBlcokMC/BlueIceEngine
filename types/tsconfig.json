@@ -1,4 +1,10 @@
 {
+    "include": [
+        "./**/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+    ],
     "compilerOptions": {
         "lib": [
             "ES2023"
