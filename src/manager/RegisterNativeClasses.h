@@ -104,6 +104,7 @@ inline void RegisterGlobalFunc(V8Engine* wrapper) {
 inline void RegisterNativeClasses(V8Engine* wrapper) {
     RegisterGlobalFunc(wrapper);
 
+    RegisterNativeBuilder();
     RegisterJSEAPI();
 }
 

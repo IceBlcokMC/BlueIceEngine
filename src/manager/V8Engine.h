@@ -1,7 +1,9 @@
 #pragma once
 #include "CppObjectMapper.h"
 #include "utils/Using.h"
+#include "v8-function.h"
 #include "v8-isolate.h"
+#include "v8-persistent-handle.h"
 #include <node.h>
 
 namespace jse {
@@ -14,6 +16,10 @@ struct V8Engine {
     bool                                          mIsDestroying{false};
     string                                        mEntryPoint; // 入口文件 package main
     puerts::FCppObjectMapper*                     mCppMapper{};
+
+    v8::Global<v8::Function> mOnLoad;
+    v8::Global<v8::Function> mOnEnable;
+    v8::Global<v8::Function> mDisable;
 
 public:
     [[nodiscard]] v8::Isolate*           isolate() const { return mEnvSetup->isolate(); }

@@ -1,4 +1,5 @@
 #pragma once
+#include "V8Scope.h"
 #include "boost/pfr.hpp"
 #include "boost/pfr/core.hpp"
 #include "boost/pfr/core_name.hpp"
@@ -10,12 +11,13 @@
 #include "v8-object.h"
 #include "v8-primitive.h"
 #include "v8-value.h"
-#include "V8Scope.h"
 #include <cstddef>
 #include <stdexcept>
 #include <string>
 #include <sys/stat.h>
 #include <type_traits>
+#include <unordered_map>
+#include <vector>
 
 
 namespace jse {
@@ -155,7 +157,7 @@ struct Converter<T, std::enable_if_t<std::is_enum_v<T>>> {
         }
         throw std::runtime_error("Invalid enum value");
     }
-    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> /* ctx */, T value) {
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> /* ctx */, T const& value) {
         HandleV8Scope hscope(isolate);
         return hscope.Escape(v8::Number::New(isolate, static_cast<int>(value)));
     }
@@ -187,7 +189,7 @@ struct Converter<T, std::enable_if_t<IsReflectable<T>>> {
             );
         });
     }
-    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, T value) {
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, T const& value) {
         HandleV8Scope hscope(isolate);
 
         auto obj = v8::Object::New(isolate);
@@ -207,6 +209,65 @@ struct Converter<T, std::enable_if_t<IsReflectable<T>>> {
 //-----------------------------------------------
 // Stl Converter
 //-----------------------------------------------
+template <typename T>
+struct Converter<std::vector<T>> {
+    static std::vector<T> toCpp(v8::Isolate* isolate, v8::Local<v8::Context> ctx, v8::Local<v8::Value> val) {
+        std::vector<T> res;
+        if (val->IsArray()) {
+            auto arr = val.As<v8::Array>();
+            for (uint32_t i = 0; i < arr->Length(); ++i) {
+                res.push_back(ConvertToCpp<T>(isolate, ctx, arr->Get(ctx, i).ToLocalChecked()));
+            }
+        }
+        return res;
+    }
+    static v8::Local<v8::Value> toV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, std::vector<T> const& value) {
+        HandleV8Scope hscope(isolate);
+        auto          arr = v8::Array::New(isolate, value.size());
+        for (uint32_t i = 0; i < value.size(); ++i) {
+            arr->Set(ctx, i, ConvertToV8(isolate, ctx, value[i]));
+        }
+    }
+};
+
+
+template <typename V>
+struct Converter<std::unordered_map<std::string, V>> {
+    static std::unordered_map<std::string, V>
+    toCpp(v8::Isolate* isolate, v8::Local<v8::Context> ctx, v8::Local<v8::Value> val) {
+        std::unordered_map<std::string, V> res;
+        if (val->IsObject()) {
+            v8::Local<v8::Object> obj           = val.As<v8::Object>();
+            v8::Local<v8::Array>  propertyNames = obj->GetPropertyNames(ctx).ToLocalChecked();
+
+            for (uint32_t i = 0; i < propertyNames->Length(); ++i) {
+                v8::Local<v8::Value>  key = propertyNames->Get(ctx, i).ToLocalChecked();
+                v8::String::Utf8Value utf8Key(isolate, key);
+
+                std::string keyStr(*utf8Key);
+
+                auto value = obj->Get(ctx, key).ToLocalChecked();
+
+                res[keyStr] = ConvertToCpp<V>(isolate, ctx, value);
+            }
+        }
+        return res;
+    }
+    static v8::Local<v8::Value>
+    toV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, std::unordered_map<std::string, V> const& value) {
+        HandleV8Scope hscope(isolate);
+        auto          obj = v8::Object::New(isolate);
+        for (auto const& [key, val] : value) {
+            obj->Set(
+                ctx,
+                v8::String::NewFromUtf8(isolate, key.c_str()).ToLocalChecked(),
+                ConvertToV8(isolate, ctx, val)
+            );
+        }
+        return hscope.Escape(obj);
+    }
+};
+
 
 } // namespace detail
 
@@ -217,7 +278,8 @@ template <typename T>
 }
 
 template <typename T>
-[[nodiscard]] inline v8::Local<v8::Value> ConvertToV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, T value) {
+[[nodiscard]] inline v8::Local<v8::Value>
+ConvertToV8(v8::Isolate* isolate, v8::Local<v8::Context> ctx, T const& value) {
     return detail::Converter<T>::toV8(isolate, ctx, value);
 }
 

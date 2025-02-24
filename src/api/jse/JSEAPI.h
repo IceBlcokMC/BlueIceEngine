@@ -4,128 +4,50 @@
 #include "endstone/plugin/plugin.h"
 #include "endstone/plugin/plugin_description.h"
 #include "endstone/plugin/plugin_load_order.h"
+#include "puerts_impl/ConverterImpl.h"
+#include "puerts_impl/EnumImpl.h"
 #include "utils/Using.h"
 #include "v8-context.h"
 #include "v8-exception.h"
+#include "v8-function.h"
 #include "v8-isolate.h"
 #include "v8-local-handle.h"
+#include "v8-object.h"
 #include "v8-primitive.h"
+#include "v8-value.h"
 #include "v8_utils/Converter.h"
+#include "v8_utils/V8Object.h"
+#include <functional>
+#include <string>
 #include <utility>
 
 
-class PluginRegister {
+class NativeBuilder : public endstone::detail::PluginDescriptionBuilder {
 public:
-    endstone::detail::PluginDescriptionBuilder builder;
-    string                                     name;
-    string                                     version;
+    std::string name;
+    std::string version;
 
-    explicit PluginRegister(
-        string                      name,
-        string                      version,
-        string                      description,
-        endstone::PluginLoadOrder   loadOrder         = endstone::PluginLoadOrder::PostWorld,
-        std::vector<string>         author            = {},
-        std::vector<string>         contributors      = {},
-        string                      website           = "",
-        string                      prefix            = "",
-        std::vector<string>         provides          = {},
-        std::vector<string>         depends           = {},
-        std::vector<string>         softDepends       = {},
-        std::vector<string>         loadBefore        = {},
-        endstone::PermissionDefault permissionDefault = endstone::PermissionDefault::Operator
-    )
+    using Function = std::function<void()>;
+    Function             onLoad;
+    Function             onEnable;
+    Function             onDisable;
+    v8::Local<v8::Value> commands_;
+    v8::Local<v8::Value> permissions_;
+
+    explicit NativeBuilder(std::string name, std::string version)
     : name(std::move(name)),
-      version(std::move(version)) {
-        builder.description        = std::move(description);
-        builder.load               = loadOrder;
-        builder.authors            = std::move(author);
-        builder.contributors       = std::move(contributors);
-        builder.website            = std::move(website);
-        builder.prefix             = std::move(prefix);
-        builder.provides           = std::move(provides);
-        builder.depend             = std::move(depends);
-        builder.soft_depend        = std::move(softDepends);
-        builder.load_before        = std::move(loadBefore);
-        builder.default_permission = permissionDefault;
+      version(std::move(version)) {}
+
+    endstone::PluginDescription build() {
+        return endstone::detail::PluginDescriptionBuilder::build(std::move(name), std::move(version));
     }
-
-    /**
-     * 注册权限
-     * {
-     *     "权限名": {
-     *         "description": "权限描述",
-     *         "default": "权限默认值" // endstone::PermissionDefault
-     *     }
-     * }
-     */
-    void registerPermissions(v8::Local<v8::Object> permissions) {
-        auto isolate = v8::Isolate::GetCurrent();
-
-        v8::HandleScope scope(isolate);
-        v8::TryCatch    tryCatch(isolate);
-
-        auto ctx = isolate->GetCurrentContext();
-
-        try {
-            auto MaybeKeys = permissions->GetOwnPropertyNames(ctx);
-            if (MaybeKeys.IsEmpty()) {
-                return;
-            }
-
-            auto     keys   = MaybeKeys.ToLocalChecked();
-            uint32_t length = keys->Length();
-
-            for (uint32_t i = 0; i < length; i++) {
-                auto MaybeKey = keys->Get(ctx, i);
-                if (MaybeKey.IsEmpty()) {
-                    continue;
-                }
-
-                auto MaybeValue = permissions->Get(ctx, MaybeKey.ToLocalChecked());
-                if (MaybeValue.IsEmpty()) {
-                    continue;
-                }
-
-
-                auto key     = jse::ConvertToCpp<string>(isolate, ctx, MaybeKey.ToLocalChecked());
-                auto builder = endstone::detail::PermissionBuilder(key);
-
-                // description
-            }
-        } catch (...) {}
-    }
-
-    /**
-     * 注册命令
-     * {
-     *     "cmd": {
-     *         "description": "命令描述",
-     *         "usages": ["/cmd"],
-     *         "permission": ["权限名"],
-     *     }
-     * }
-     */
-    void registerCommands(v8::Local<v8::Object> commands) {}
-
-
-    [[nodiscard]] endstone::PluginDescription build() { return builder.build(std::move(name), std::move(version)); }
 };
-
 
 class JSEAPI {
 public:
-    bool registerPlugin() { return false; }
+    bool registerPlugin(NativeBuilder* builder) { return false; }
 
-    // Local<Value> JSEAPI::getSelf(Arguments const&) {
-    //     try {
-    //         if (!ENGINE_DATA()->mPlugin) {
-    //             return Local<Value>();
-    //         }
-    //         return PluginAPI::newInstance(ENGINE_DATA()->mPlugin);
-    //     }
-    //     Catch;
-    // }
+    // endstone::Plugin* getSelf() { return nullptr; }
 
     static bool isWindows() {
 #if defined(_WIN32) || defined(WIN32)
@@ -145,11 +67,46 @@ public:
 };
 
 
+// 为 std::vector<T> 特化转换器
+
 UsingCppType(JSEAPI);
+UsingCppType(NativeBuilder);
+UsingNamedCppType(endstone::detail::PluginDescriptionBuilder, "PluginDescriptionBuilder");
+// UsingNamedCppType(endstone::PluginDescription, "PluginDescription");
+UsingNamedCppEnum(endstone::PermissionDefault, "PermissionDefault");
+UsingNamedCppEnum(endstone::PluginLoadOrder, "PluginLoadOrder");
+
+
+void RegisterNativeBuilder() {
+    puerts::DefineClass<endstone::detail::PluginDescriptionBuilder>()
+        .Property("description", MakeProperty(&endstone::detail::PluginDescriptionBuilder::description))
+        .Property("load", MakeProperty(&endstone::detail::PluginDescriptionBuilder::load))
+        .Property("authors", MakeProperty(&endstone::detail::PluginDescriptionBuilder::authors))
+        .Property("contributors", MakeProperty(&endstone::detail::PluginDescriptionBuilder::contributors))
+        .Property("website", MakeProperty(&endstone::detail::PluginDescriptionBuilder::website))
+        .Property("prefix", MakeProperty(&endstone::detail::PluginDescriptionBuilder::prefix))
+        .Property("provides", MakeProperty(&endstone::detail::PluginDescriptionBuilder::provides))
+        .Property("depend", MakeProperty(&endstone::detail::PluginDescriptionBuilder::depend))
+        .Property("soft_depend", MakeProperty(&endstone::detail::PluginDescriptionBuilder::soft_depend))
+        .Property("load_before", MakeProperty(&endstone::detail::PluginDescriptionBuilder::load_before))
+        // .Property("default_permission",
+        // MakeProperty(&endstone::detail::PluginDescriptionBuilder::default_permission))
+        .Register();
+
+    puerts::DefineClass<NativeBuilder>()
+        .Constructor<string, string>()
+        .Extends<endstone::detail::PluginDescriptionBuilder>()
+        .Property("name", MakeProperty(&NativeBuilder::name))
+        .Property("version", MakeProperty(&NativeBuilder::version))
+        // .Property("commands", MakeProperty(&NativeBuilder::commands_))
+        // .Property("permissions", MakeProperty(&NativeBuilder::permissions_))
+        .Register();
+}
 
 void RegisterJSEAPI() {
     puerts::DefineClass<JSEAPI>()
         .Function("registerPlugin", MakeCheckFunction(&JSEAPI::registerPlugin))
+        // .Function("getSelf", MakeCheckFunction(&JSEAPI::getSelf))
         .Function("isWindows", MakeCheckFunction(&JSEAPI::isWindows))
         .Function("isLinux", MakeCheckFunction(&JSEAPI::isLinux))
         .Register();

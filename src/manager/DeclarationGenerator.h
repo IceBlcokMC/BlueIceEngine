@@ -1,6 +1,7 @@
 #pragma once
 #include "JSClassRegister.h"
 #include "TypeInfo.hpp"
+#include <cstdint>
 #include <map>
 #include <set>
 #include <sstream>
@@ -105,7 +106,7 @@ struct DeclarationGenerator {
 
         puerts::NamedPropertyInfo* VariableInfo = ClassDefinition->VariableInfos;
         while (VariableInfo && VariableInfo->Name && VariableInfo->Type) {
-            int Pos = VariableInfo - ClassDefinition->VariableInfos;
+            uint64_t Pos = VariableInfo - ClassDefinition->VariableInfos;
             Output << "        static " << (ClassDefinition->Variables[Pos].Setter ? "" : "readonly ")
                    << VariableInfo->Name << ": " << VariableInfo->Type->Name() << ";\n";
             ++VariableInfo;
