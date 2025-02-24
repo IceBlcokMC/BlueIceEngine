@@ -1,6 +1,5 @@
 #pragma once
 #include "V8Engine.h"
-#include "utils/Using.h"
 #include <atomic>
 #include <endstone/scheduler/task.h>
 #include <filesystem>
@@ -16,19 +15,21 @@ namespace jse {
 
 class NodeManager final {
 private:
-    NodeManager()                              = default;
-    NodeManager(const NodeManager&)            = delete;
-    NodeManager& operator=(const NodeManager&) = delete;
-
     bool                                        mIsInitialized{false}; // 是否初始化
-    std::vector<string>                         mArgs;                 // 参数
-    std::vector<string>                         mExecArgs;             // 执行参数
+    std::vector<std::string>                    mArgs;                 // 参数
+    std::vector<std::string>                    mExecArgs;             // 执行参数
     std::unique_ptr<node::MultiIsolatePlatform> mPlatform;             // v8 平台
     std::unordered_map<EngineID, V8EnginePtr>   mEngines;              // 引擎列表
 
     std::atomic<bool> mUvLoopThreadRunning{true}; // uv loop 线程是否在运行
 
 public:
+    NodeManager()                              = default;
+    NodeManager(const NodeManager&)            = delete;
+    NodeManager& operator=(const NodeManager&) = delete;
+    NodeManager(NodeManager&&)                 = delete;
+    NodeManager& operator=(NodeManager&&)      = delete;
+
     static NodeManager& getInstance();
 
     void initNodeJs();
@@ -47,16 +48,16 @@ public:
 
     bool destroyEngine(EngineID id);
 
-    bool NpmInstall(string npmExecuteDir);
+    bool NpmInstall(std::string npmExecuteDir);
 
 public:
-    static bool loadFile(V8Engine* wrapper, fs::path const& file, bool esm = false);
+    static bool loadFile(V8Engine* wrapper, std::filesystem::path const& file, bool esm = false);
 
-    static std::optional<string> readFileContent(const fs::path& file);
+    static std::optional<std::string> readFileContent(const std::filesystem::path& file);
 
-    static std::optional<string> findMainScript(const fs::path& packagePath);
-    static bool                  packageHasDependency(const fs::path& packagePath);
-    static bool                  packageIsEsm(const fs::path& packagePath);
+    static std::optional<std::string> findMainScript(const std::filesystem::path& packagePath);
+    static bool                       packageHasDependency(const std::filesystem::path& packagePath);
+    static bool                       packageIsEsm(const std::filesystem::path& packagePath);
 };
 
 

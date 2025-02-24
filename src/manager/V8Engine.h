@@ -1,6 +1,5 @@
 #pragma once
 #include "CppObjectMapper.h"
-#include "utils/Using.h"
 #include "v8-function.h"
 #include "v8-isolate.h"
 #include "v8-persistent-handle.h"
@@ -8,13 +7,14 @@
 
 namespace jse {
 
+using EngineID = uint64_t;
 
 struct V8Engine {
     EngineID                                      mID{};
     std::unique_ptr<node::CommonEnvironmentSetup> mEnvSetup;
     bool                                          mIsRunning{false};
     bool                                          mIsDestroying{false};
-    string                                        mEntryPoint; // 入口文件 package main
+    std::string                                   mEntryPoint; // 入口文件 package main
     puerts::FCppObjectMapper*                     mCppMapper{};
 
     v8::Global<v8::Function> mOnLoad;

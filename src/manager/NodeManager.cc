@@ -4,8 +4,7 @@
 #include "Entry.h"
 #include "ObjectMapper.h"
 #include "manager/RegisterGlobalFunc.h"
-#include "utils/Using.h"
-#include "utils/Util.h"
+#include "utils/StringUtils.h"
 #include "v8-context.h"
 #include "v8-exception.h"
 #include "v8-isolate.h"
@@ -153,7 +152,7 @@ V8Engine* NodeManager::newScriptEngine() {
     }
     EngineID id = NextEngineID++;
 
-    std::vector<string>                           errors;
+    std::vector<std::string>                      errors;
     std::unique_ptr<node::CommonEnvironmentSetup> envSetup = node::CommonEnvironmentSetup::Create(
         mPlatform.get(),
         &errors,
@@ -239,7 +238,7 @@ bool NodeManager::destroyEngine(EngineID id) {
 }
 
 
-bool NodeManager::NpmInstall(string npmExecuteDir) {
+bool NodeManager::NpmInstall(std::string npmExecuteDir) {
     if (!mIsInitialized) {
         return false;
     }
@@ -257,7 +256,7 @@ bool NodeManager::NpmInstall(string npmExecuteDir) {
             Entry::getInstance()->getLogger().error("CommonEnvironmentSetup Error: {}", err.c_str());
         return false;
     }
-    npmExecuteDir = ReplaceStr(npmExecuteDir, "\\", "/");
+    npmExecuteDir = ll::string_utils::replaceAll(npmExecuteDir, "\\", "/");
 
     v8::Isolate*       isolate = setup->isolate();
     node::Environment* env     = setup->env();
@@ -269,7 +268,7 @@ bool NodeManager::NpmInstall(string npmExecuteDir) {
 
     Entry::getInstance()->getLogger().debug("Running npm install in {}", npmExecuteDir);
     // clang-format off
-    string compiler = R"(
+    std::string compiler = R"(
         try {
             const path = require("path");
             const cwd = path.join(process.cwd());
@@ -295,7 +294,7 @@ bool NodeManager::NpmInstall(string npmExecuteDir) {
     bool success = false;
     try {
         node::SetProcessExitHandler(env, [&](node::Environment* /* env_ */, int /* exit_code */) { node::Stop(env); });
-        v8::MaybeLocal<v8::Value> loadValue = node::LoadEnvironment(env, compiler.c_str());
+        v8::MaybeLocal<v8::Value> loadValue = node::LoadEnvironment(env, compiler);
         if (loadValue.IsEmpty()) {
             throw std::runtime_error("Failed to load environment");
         }
@@ -309,14 +308,14 @@ bool NodeManager::NpmInstall(string npmExecuteDir) {
 }
 
 
-bool NodeManager::loadFile(V8Engine* wrapper, fs::path const& path, bool esm) {
+bool NodeManager::loadFile(V8Engine* wrapper, std::filesystem::path const& path, bool esm) {
     if (!wrapper) {
         return false;
     }
 
 #if defined(WIN32) || defined(_WIN32)
-    string dirname  = ReplaceStr(path.parent_path().string(), "\\", "\\\\");
-    string filename = ReplaceStr(path.string(), "\\", "\\\\");
+    std::string dirname  = ll::string_utils::replaceAll(path.parent_path().string(), "\\", "\\\\");
+    std::string filename = ll::string_utils::replaceAll(path.string(), "\\", "\\\\");
 #elif defined(__linux__)
     string dirname  = path.parent_path().string();
     string filename = path.string();
@@ -325,7 +324,7 @@ bool NodeManager::loadFile(V8Engine* wrapper, fs::path const& path, bool esm) {
     Entry::getInstance()->getLogger().debug("filename: {}", filename);
 
     try {
-        string loader;
+        std::string loader;
         if (esm) {
             loader = fmt::format(
                 R"(
@@ -409,21 +408,21 @@ bool NodeManager::loadFile(V8Engine* wrapper, fs::path const& path, bool esm) {
 }
 
 
-std::optional<string> NodeManager::readFileContent(const fs::path& path) {
+std::optional<std::string> NodeManager::readFileContent(const std::filesystem::path& path) {
     std::ifstream file(path);
     if (!file.is_open()) {
         Entry::getInstance()->getLogger().error("Cannot open file: {}", path.string());
         return std::nullopt;
     }
-    string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
     return std::move(content);
 }
 
 
-std::optional<string> NodeManager::findMainScript(const fs::path& packagePath) {
+std::optional<std::string> NodeManager::findMainScript(const std::filesystem::path& packagePath) {
     try {
-        if (!fs::exists(packagePath)) {
+        if (!std::filesystem::exists(packagePath)) {
             return std::nullopt;
         }
 
@@ -439,9 +438,9 @@ std::optional<string> NodeManager::findMainScript(const fs::path& packagePath) {
     }
 }
 
-bool NodeManager::packageHasDependency(const fs::path& packagePath) {
+bool NodeManager::packageHasDependency(const std::filesystem::path& packagePath) {
     try {
-        if (!fs::exists(packagePath)) {
+        if (!std::filesystem::exists(packagePath)) {
             return false;
         }
 
@@ -457,9 +456,9 @@ bool NodeManager::packageHasDependency(const fs::path& packagePath) {
     }
 }
 
-bool NodeManager::packageIsEsm(const fs::path& packagePath) {
+bool NodeManager::packageIsEsm(const std::filesystem::path& packagePath) {
     try {
-        if (!fs::exists(packagePath)) {
+        if (!std::filesystem::exists(packagePath)) {
             return false;
         }
 

@@ -6,7 +6,6 @@
 #include "endstone/plugin/plugin_load_order.h"
 #include "puerts_impl/ConverterImpl.h"
 #include "puerts_impl/EnumImpl.h"
-#include "utils/Using.h"
 #include "v8-context.h"
 #include "v8-exception.h"
 #include "v8-function.h"
@@ -92,7 +91,7 @@ struct AutoRegisterJSEAPI {
             .Register();
 
         puerts::DefineClass<NativeBuilder>()
-            .Constructor<string, string>()
+            .Constructor<std::string, std::string>()
             .Extends<endstone::detail::PluginDescriptionBuilder>()
             .Property("name", MakeProperty(&NativeBuilder::name))
             .Property("version", MakeProperty(&NativeBuilder::version))

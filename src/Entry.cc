@@ -2,7 +2,6 @@
 #include "endstone/plugin/plugin_manager.h"
 #include "loader/JavaScriptPluginLoader.h"
 #include "manager/NodeManager.h"
-#include "utils/Using.h"
 
 
 #include <filesystem>
@@ -34,7 +33,7 @@ void Entry::onLoad() {
     auto& server        = getServer();
     auto& pluginManager = server.getPluginManager();
     pluginManager.registerLoader(std::make_unique<jse::JavaScriptPluginLoader>(server));
-    pluginManager.loadPlugins(jse::JavaScriptPluginLoader::filterPlugins(fs::current_path() / "plugins"));
+    pluginManager.loadPlugins(jse::JavaScriptPluginLoader::filterPlugins(std::filesystem::current_path() / "plugins"));
 }
 
 void Entry::onEnable() { NodeManager::getInstance().initUvLoopThread(); }

@@ -2,7 +2,6 @@
 #include "Entry.h"
 #include "loader/JavaScriptPlugin.h"
 #include "manager/NodeManager.h"
-#include "utils/Using.h"
 #include "uv.h"
 #include "v8-isolate.h"
 #include "v8-local-handle.h"
@@ -26,11 +25,12 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
     EngineID id = wrapper->mID;
 
     try {
-        auto path            = fs::path(file);
+        auto path            = std::filesystem::path(file);
         wrapper->mEntryPoint = path.filename().string();
 
-        fs::path package = path.parent_path() / "package.json";
-        if (NodeManager::packageHasDependency(package) && !fs::exists(path.parent_path() / "node_modules")) {
+        std::filesystem::path package = path.parent_path() / "package.json";
+        if (NodeManager::packageHasDependency(package)
+            && !std::filesystem::exists(path.parent_path() / "node_modules")) {
             Entry::getInstance()->getLogger().info("Installing dependencies for plugin: {}", path.filename().string());
             manager.NpmInstall(path.parent_path().string());
         }
@@ -94,19 +94,19 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
 }
 
 
-std::vector<std::string> JavaScriptPluginLoader::filterPlugins(const fs::path& directory) {
+std::vector<std::string> JavaScriptPluginLoader::filterPlugins(const std::filesystem::path& directory) {
     std::vector<std::string> plugins;
-    if (!fs::exists(directory)) {
+    if (!std::filesystem::exists(directory)) {
         return plugins;
     }
 
-    for (const auto& entry : fs::directory_iterator(directory)) {
+    for (const auto& entry : std::filesystem::directory_iterator(directory)) {
         if (!entry.is_directory()) {
             continue;
         }
 
-        fs::path package = entry.path() / "package.json";
-        if (!fs::exists(package)) {
+        std::filesystem::path package = entry.path() / "package.json";
+        if (!std::filesystem::exists(package)) {
             continue;
         }
 

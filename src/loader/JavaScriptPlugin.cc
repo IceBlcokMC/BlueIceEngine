@@ -1,7 +1,6 @@
 #include "loader/JavaScriptPlugin.h"
 #include "Entry.h"
 #include "manager/NodeManager.h"
-#include "utils/Using.h"
 #include <endstone/command/command.h>
 #include <endstone/logger.h>
 #include <iostream>
