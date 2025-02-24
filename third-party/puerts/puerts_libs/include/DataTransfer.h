@@ -34,12 +34,12 @@ namespace PUERTS_NAMESPACE
 template <typename T, typename FT, typename = void>
 struct TOuterLinker
 {
-    V8_INLINE static void Link(v8::Local<v8::Context> Context, v8::Local<v8::Value> Outer, v8::Local<v8::Value> Inner)
+    V8_INLINE static void Link([[maybe_unused]]v8::Local<v8::Context> Context, [[maybe_unused]]v8::Local<v8::Value> Outer, [[maybe_unused]]v8::Local<v8::Value> Inner)
     {
     }
 };
 
-V8_INLINE void LinkOuterImpl(v8::Local<v8::Context> Context, v8::Local<v8::Value> Outer, v8::Local<v8::Value> Inner)
+V8_INLINE void LinkOuterImpl([[maybe_unused]]v8::Local<v8::Context> Context, [[maybe_unused]]v8::Local<v8::Value> Outer, [[maybe_unused]]v8::Local<v8::Value> Inner)
 {
 #ifdef WITH_OUTER_LINK
     Inner.As<v8::Object>()->Set(Context, 0, Outer);
@@ -249,7 +249,7 @@ public:
     }
 
     //替代 Object->SetAlignedPointerInInternalField(Index, Ptr);
-    FORCEINLINE static void SetPointer(v8::Isolate* Isolate, v8::Local<v8::Object> Object, const void* Ptr, int Index)
+    FORCEINLINE static void SetPointer([[maybe_unused]]v8::Isolate* Isolate, v8::Local<v8::Object> Object, const void* Ptr, int Index)
     {
         // Object->SetInternalField(Index, v8::External::New(Isolate, Ptr));
         // Object->SetAlignedPointerInInternalField(Index, Ptr);

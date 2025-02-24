@@ -57,7 +57,7 @@ public:
     }
 
     template <std::size_t... Indexes>
-    constexpr StringLiteral(const char (&value)[N + 1], std::index_sequence<Indexes...> dummy) : StringLiteral(value[Indexes]...)
+    constexpr StringLiteral(const char (&value)[N + 1], [[maybe_unused]]std::index_sequence<Indexes...> dummy) : StringLiteral(value[Indexes]...)
     {
     }
 
@@ -93,7 +93,7 @@ private:
 
 template <typename Left, typename Right, std::size_t... IndexesLeft, std::size_t... IndexesRight>
 constexpr StringLiteral<sizeof...(IndexesLeft) + sizeof...(IndexesRight)> ConcatStrings(
-    const Left& lhs, const Right& rhs, std::index_sequence<IndexesLeft...> dummy1, std::index_sequence<IndexesRight...> dummy2)
+    const Left& lhs, const Right& rhs, [[maybe_unused]]std::index_sequence<IndexesLeft...> dummy1, [[maybe_unused]]std::index_sequence<IndexesRight...> dummy2)
 {
     return StringLiteral<sizeof...(IndexesLeft) + sizeof...(IndexesRight)>(lhs[IndexesLeft]..., rhs[IndexesRight]...);
 }
@@ -230,7 +230,7 @@ struct StaticTypeId
 template <typename T, typename Enable = void>
 struct DynamicTypeId
 {
-    static void* get(T* Obj)
+    static void* get([[maybe_unused]]T* Obj)
     {
         return StaticTypeId<T>::get();
     }
@@ -506,7 +506,7 @@ public:
     {
         return 0;
     }
-    virtual const CTypeInfo* Argument(unsigned int index) const override
+    virtual const CTypeInfo* Argument([[maybe_unused]]unsigned int index) const override
     {
         return nullptr;
     }

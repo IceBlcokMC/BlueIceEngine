@@ -50,7 +50,7 @@ void FCppObjectMapper::LoadCppType(const v8::FunctionCallbackInfo<v8::Value>& In
     }
 }
 
-static void PointerNew(const v8::FunctionCallbackInfo<v8::Value>& Info)
+static void PointerNew([[maybe_unused]]const v8::FunctionCallbackInfo<v8::Value>& Info)
 {
     // do nothing
 }
@@ -300,7 +300,7 @@ void FCppObjectMapper::UnBindCppObject(JSClassDefinition* ClassDefinition, void*
     auto Iter = CDataCache.find(Ptr);
     if (Iter != CDataCache.end())
     {
-        auto Removed = Iter->second.Remove(ClassDefinition->TypeId, true);
+        [[maybe_unused]] auto Removed = Iter->second.Remove(ClassDefinition->TypeId, true);
         if (!Iter->second.TypeId)    // last one
         {
             CDataCache.erase(Ptr);
@@ -308,7 +308,7 @@ void FCppObjectMapper::UnBindCppObject(JSClassDefinition* ClassDefinition, void*
     }
 }
 
-void FCppObjectMapper::UnInitialize(v8::Isolate* InIsolate)
+void FCppObjectMapper::UnInitialize([[maybe_unused]]v8::Isolate* InIsolate)
 {
     for (auto Iter = CDataFinalizeMap.begin(); Iter != CDataFinalizeMap.end(); Iter++)
     {

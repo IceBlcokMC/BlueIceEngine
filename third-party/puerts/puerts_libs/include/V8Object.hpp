@@ -305,7 +305,7 @@ struct Converter<Object>
         return Object(context, value.As<v8::Object>());
     }
 
-    static bool accept(v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
+    static bool accept([[maybe_unused]]v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
     {
         return value->IsObject();
     }
@@ -324,7 +324,7 @@ struct Converter<Function>
         return Function(context, value.As<v8::Object>());
     }
 
-    static bool accept(v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
+    static bool accept([[maybe_unused]]v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
     {
         return value->IsFunction();
     }

@@ -142,7 +142,7 @@ struct API
         return v8::Undefined(context->GetIsolate());
     }
 
-    V8_INLINE static bool IsNullOrUndefined(v8::Local<v8::Context> context, v8::Local<v8::Value> val)
+    V8_INLINE static bool IsNullOrUndefined([[maybe_unused]]v8::Local<v8::Context> context, v8::Local<v8::Value> val)
     {
         return val->IsNullOrUndefined();
     }
@@ -414,7 +414,7 @@ struct Converter<std::string>
         return *v8::String::Utf8Value(context->GetIsolate(), value);
     }
 
-    static bool accept(v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
+    static bool accept([[maybe_unused]]v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
     {
         return value->IsString();
     }
@@ -428,7 +428,7 @@ struct Converter<const char*>
         return v8::String::NewFromUtf8(context->GetIsolate(), value, v8::NewStringType::kNormal).ToLocalChecked();
     }
 
-    static bool accept(v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
+    static bool accept([[maybe_unused]]v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
     {
         return value->IsString();
     }
@@ -442,7 +442,7 @@ struct Converter<void*>
         return DataTransfer::NewArrayBuffer(context, value, 0);
     }
 
-    static void* toCpp(v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
+    static void* toCpp([[maybe_unused]]v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
     {
         if (value->IsArrayBufferView())
         {
@@ -463,7 +463,7 @@ struct Converter<void*>
         return nullptr;
     }
 
-    static bool accept(v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
+    static bool accept([[maybe_unused]]v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
     {
         return value->IsArrayBuffer() || value->IsArrayBufferView();
     }
@@ -482,7 +482,7 @@ struct Converter<bool>
         return value->BooleanValue(context->GetIsolate());
     }
 
-    static bool accept(v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
+    static bool accept([[maybe_unused]] v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)
     {
         return value->IsBoolean();
     }

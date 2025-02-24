@@ -142,7 +142,7 @@ struct FunctionTrait<Func, typename std::enable_if<!std::is_same<Func, typename 
 template <typename API, std::size_t, std::size_t, typename...>
 struct ArgumentChecker
 {
-    static bool Check(typename API::CallbackInfoType Info, typename API::ContextType Context)
+    static bool Check([[maybe_unused]]typename API::CallbackInfoType Info, [[maybe_unused]]typename API::ContextType Context)
     {
         return true;
     }
@@ -158,6 +158,7 @@ struct ArgumentChecker<API, Pos, StopPos, ArgType, Rest...>
 
     static bool Check(typename API::CallbackInfoType Info, typename API::ContextType Context)
     {
+        #pragma warning(disable: 4127)
         if (Pos >= StopPos)
             return true;
         if (!DecayTypeConverter<ArgType>::accept(Context, API::GetArg(Info, Pos)))
@@ -165,6 +166,7 @@ struct ArgumentChecker<API, Pos, StopPos, ArgType, Rest...>
             return false;
         }
         return ArgumentChecker<API, NextPos, StopPos, Rest...>::Check(Info, Context);
+        #pragma warning(default: 4127)
     }
 };
 
@@ -239,7 +241,7 @@ struct ExceptionHandle<API, typename std::enable_if<!std::is_pointer<typename AP
     }
 #endif
 
-    static void Throw(const char* error_msg)
+    static void Throw([[maybe_unused]]const char* error_msg)
     {
 #if defined(WITH_JS_THROW_IN_CPP) && defined(THREAD_LOCAL_JS_THROW)
         std::decay<typename API::CallbackInfoType>::type* pinfo = nullptr;
@@ -349,7 +351,7 @@ private:
             return Arg;
         }
 
-        void SetRef(typename API::ContextType context, typename API::ValueType holder)
+        void SetRef([[maybe_unused]]typename API::ContextType context, [[maybe_unused]]typename API::ValueType holder)
         {
         }
     };
@@ -552,7 +554,7 @@ private:
     template <int, typename...>
     struct RefValuesSync
     {
-        static void Sync(typename API::ContextType context, typename API::CallbackInfoType info, ArgumentsHolder& cppArgHolders)
+        static void Sync([[maybe_unused]]typename API::ContextType context, [[maybe_unused]]typename API::CallbackInfoType info, [[maybe_unused]]ArgumentsHolder& cppArgHolders)
         {
         }
     };
@@ -592,7 +594,7 @@ private:
     template <int Pos>
     struct DefaultValueSetter<0, Pos>
     {
-        static void Set(ArgumentsHolder& cppArgHolders, int argCount)
+        static void Set([[maybe_unused]]ArgumentsHolder& cppArgHolders, [[maybe_unused]]int argCount)
         {
         }
     };
