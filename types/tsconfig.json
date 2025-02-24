@@ -1,6 +1,6 @@
 {
     "include": [
-        "./**/*.d.ts"
+        "**/*.d.ts"
     ],
     "exclude": [
         "node_modules",
@@ -9,7 +9,8 @@
         "lib": [
             "ES2023"
         ],
-        "target": "ES6",
+        "types": [],
+        "target": "ES2023",
         "module": "ESNext",
         "skipLibCheck": false
     }

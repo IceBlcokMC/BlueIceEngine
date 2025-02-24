@@ -1,3 +1,7 @@
 {
-    "extends": "../types/tsconfig.json"
+    "extends": "../types/tsconfig.json",
+    "include": [
+        "*.js",
+        "../types/**/*.d.ts"
+    ]
 }
