@@ -5,7 +5,7 @@
     namespace PUERTS_NAMESPACE {                                                                                       \
     template <>                                                                                                        \
     struct ScriptTypeName<ENUM> {                                                                                      \
-        static constexpr auto value() { return internal ::Literal(#NAME); }                                            \
+        static constexpr auto value() { return internal ::Literal(NAME); }                                            \
     };                                                                                                                 \
     }                                                                                                                  \
     /*     namespace PUERTS_NAMESPACE {                                                                                \

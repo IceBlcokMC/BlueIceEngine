@@ -1,47 +1,17 @@
 #pragma once
-#include "DataTransfer.h"
 #include "DeclarationGenerator.h"
 #include "JSClassRegister.h"
-#include "TypeInfo.hpp"
-#include "api/jse/JSEAPI.h"
 #include "manager/V8Engine.h"
-#include "pesapi.h"
-#include "utils/Using.h"
 #include "v8-context.h"
 #include "v8-external.h"
 #include "v8-function-callback.h"
-#include "v8-isolate.h"
 #include "v8-local-handle.h"
-#include "v8-locker.h"
 #include "v8-primitive.h"
 #include "v8-template.h"
 #include "v8-value.h"
-#include <set>
-#include <sstream>
 #include <string>
 
-
 namespace jse {
-
-// template <typename T>
-// inline v8::Local<v8::Value> ConvertNativeInstToJsInst(V8Engine* wrapper, T* nativeInst) {
-//     auto isolate = wrapper->isolate();
-//     v8::Locker             lock(isolate);
-//     v8::Isolate::Scope     isolate_scope(isolate);
-//     v8::HandleScope        handle_scope(isolate);
-//     v8::Local<v8::Context> context = wrapper->context();
-//     v8::Context::Scope     context_scope(context);
-//     if (!nativeInst) {
-//         return v8::Null(isolate);
-//     }
-//     return puerts::DataTransfer::FindOrAddCData(
-//         isolate,
-//         context,
-//         puerts::StaticTypeId<T>::get(), // 获取类型id
-//         nativeInst,                     // Native实例
-//         true                            // PassByPointer=true, 表示已存在的实例
-//     );
-// }
 
 inline void RegisterGlobalFunc(V8Engine* wrapper) {
     auto isolate = wrapper->isolate();
@@ -99,13 +69,6 @@ inline void RegisterGlobalFunc(V8Engine* wrapper) {
             v8::Number::New(isolate, static_cast<double>(wrapper->mID))
         )
         .Check();
-}
-
-inline void RegisterNativeClasses(V8Engine* wrapper) {
-    RegisterGlobalFunc(wrapper);
-
-    RegisterNativeBuilder();
-    RegisterJSEAPI();
 }
 
 

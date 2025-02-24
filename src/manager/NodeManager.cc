@@ -3,7 +3,7 @@
 #include "CppObjectMapper.h"
 #include "Entry.h"
 #include "ObjectMapper.h"
-#include "manager/RegisterNativeClasses.h"
+#include "manager/RegisterGlobalFunc.h"
 #include "utils/Using.h"
 #include "utils/Util.h"
 #include "v8-context.h"
@@ -187,7 +187,7 @@ V8Engine* NodeManager::newScriptEngine() {
 
     ptr->mCppMapper = mapper;
 
-    RegisterNativeClasses(ptr.get());
+    RegisterGlobalFunc(ptr.get());
 
     mEngines.emplace(id, std::move(ptr));
 

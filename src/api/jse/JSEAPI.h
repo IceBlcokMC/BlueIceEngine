@@ -67,8 +67,6 @@ public:
 };
 
 
-// 为 std::vector<T> 特化转换器
-
 UsingCppType(JSEAPI);
 UsingCppType(NativeBuilder);
 UsingNamedCppType(endstone::detail::PluginDescriptionBuilder, "PluginDescriptionBuilder");
@@ -76,38 +74,38 @@ UsingNamedCppType(endstone::detail::PluginDescriptionBuilder, "PluginDescription
 UsingNamedCppEnum(endstone::PermissionDefault, "PermissionDefault");
 UsingNamedCppEnum(endstone::PluginLoadOrder, "PluginLoadOrder");
 
+struct AutoRegisterJSEAPI {
+    AutoRegisterJSEAPI() {
+        puerts::DefineClass<endstone::detail::PluginDescriptionBuilder>()
+            .Property("description", MakeProperty(&endstone::detail::PluginDescriptionBuilder::description))
+            .Property("load", MakeProperty(&endstone::detail::PluginDescriptionBuilder::load))
+            .Property("authors", MakeProperty(&endstone::detail::PluginDescriptionBuilder::authors))
+            .Property("contributors", MakeProperty(&endstone::detail::PluginDescriptionBuilder::contributors))
+            .Property("website", MakeProperty(&endstone::detail::PluginDescriptionBuilder::website))
+            .Property("prefix", MakeProperty(&endstone::detail::PluginDescriptionBuilder::prefix))
+            .Property("provides", MakeProperty(&endstone::detail::PluginDescriptionBuilder::provides))
+            .Property("depend", MakeProperty(&endstone::detail::PluginDescriptionBuilder::depend))
+            .Property("soft_depend", MakeProperty(&endstone::detail::PluginDescriptionBuilder::soft_depend))
+            .Property("load_before", MakeProperty(&endstone::detail::PluginDescriptionBuilder::load_before))
+            // .Property("default_permission",
+            // MakeProperty(&endstone::detail::PluginDescriptionBuilder::default_permission))
+            .Register();
 
-void RegisterNativeBuilder() {
-    puerts::DefineClass<endstone::detail::PluginDescriptionBuilder>()
-        .Property("description", MakeProperty(&endstone::detail::PluginDescriptionBuilder::description))
-        .Property("load", MakeProperty(&endstone::detail::PluginDescriptionBuilder::load))
-        .Property("authors", MakeProperty(&endstone::detail::PluginDescriptionBuilder::authors))
-        .Property("contributors", MakeProperty(&endstone::detail::PluginDescriptionBuilder::contributors))
-        .Property("website", MakeProperty(&endstone::detail::PluginDescriptionBuilder::website))
-        .Property("prefix", MakeProperty(&endstone::detail::PluginDescriptionBuilder::prefix))
-        .Property("provides", MakeProperty(&endstone::detail::PluginDescriptionBuilder::provides))
-        .Property("depend", MakeProperty(&endstone::detail::PluginDescriptionBuilder::depend))
-        .Property("soft_depend", MakeProperty(&endstone::detail::PluginDescriptionBuilder::soft_depend))
-        .Property("load_before", MakeProperty(&endstone::detail::PluginDescriptionBuilder::load_before))
-        // .Property("default_permission",
-        // MakeProperty(&endstone::detail::PluginDescriptionBuilder::default_permission))
-        .Register();
+        puerts::DefineClass<NativeBuilder>()
+            .Constructor<string, string>()
+            .Extends<endstone::detail::PluginDescriptionBuilder>()
+            .Property("name", MakeProperty(&NativeBuilder::name))
+            .Property("version", MakeProperty(&NativeBuilder::version))
+            // .Property("commands", MakeProperty(&NativeBuilder::commands_))
+            // .Property("permissions", MakeProperty(&NativeBuilder::permissions_))
+            .Register();
 
-    puerts::DefineClass<NativeBuilder>()
-        .Constructor<string, string>()
-        .Extends<endstone::detail::PluginDescriptionBuilder>()
-        .Property("name", MakeProperty(&NativeBuilder::name))
-        .Property("version", MakeProperty(&NativeBuilder::version))
-        // .Property("commands", MakeProperty(&NativeBuilder::commands_))
-        // .Property("permissions", MakeProperty(&NativeBuilder::permissions_))
-        .Register();
-}
-
-void RegisterJSEAPI() {
-    puerts::DefineClass<JSEAPI>()
-        .Function("registerPlugin", MakeCheckFunction(&JSEAPI::registerPlugin))
-        // .Function("getSelf", MakeCheckFunction(&JSEAPI::getSelf))
-        .Function("isWindows", MakeCheckFunction(&JSEAPI::isWindows))
-        .Function("isLinux", MakeCheckFunction(&JSEAPI::isLinux))
-        .Register();
-}
+        puerts::DefineClass<JSEAPI>()
+            .Function("registerPlugin", MakeCheckFunction(&JSEAPI::registerPlugin))
+            // .Function("getSelf", MakeCheckFunction(&JSEAPI::getSelf))
+            .Function("isWindows", MakeCheckFunction(&JSEAPI::isWindows))
+            .Function("isLinux", MakeCheckFunction(&JSEAPI::isLinux))
+            .Register();
+    }
+};
+AutoRegisterJSEAPI __AutoRegisterJSEAPI__;
