@@ -64,9 +64,9 @@ struct AutoRegisterJSEAPI {
             .Property("name", MakeProperty(&TestBuilder::name))
             .Property("version", MakeProperty(&TestBuilder::version))
             .Property("description", MakeProperty(&TestBuilder::description))
-            .Property("onLoad", MakeVariable(&TestBuilder::onLoad))
-            .Property("onEnable", MakeVariable(&TestBuilder::onEnable))
-            .Property("onDisable", MakeVariable(&TestBuilder::onDisable))
+            .Property("onLoad", MakeProperty(&TestBuilder::onLoad))
+            .Property("onEnable", MakeProperty(&TestBuilder::onEnable))
+            .Property("onDisable", MakeProperty(&TestBuilder::onDisable))
             .Register();
 
         puerts::DefineClass<JSEAPI>()
