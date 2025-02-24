@@ -10,6 +10,10 @@
             "ES2023"
         ],
         "types": [],
+        "typeRoots": [
+            "./AutoGen.d.ts",
+            "./Global.d.ts"
+        ],
         "target": "ES2023",
         "module": "ESNext",
         "skipLibCheck": false
