@@ -15,3 +15,5 @@ node_modules
 docs/reference
 docs/.vitepress/cache
 docs/.vitepress/dist
+
+vsxmake2022
