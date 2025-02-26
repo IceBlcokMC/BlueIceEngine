@@ -34,7 +34,7 @@ public:
         }
 
         auto obj    = value_.As<v8::Object>();
-        auto result = obj->Get(context_, ConvertToV8(isolate_, context_, key));
+        auto result = obj->Get(context_, ConvertToV8(context_, key));
         if (result.IsEmpty()) {
             throw v8_exception(
                 isolate_,
@@ -78,8 +78,7 @@ public:
         }
 
         auto obj = value_.As<v8::Object>();
-        return !obj->Set(context_, ConvertToV8(isolate_, context_, key), ConvertToV8(isolate_, context_, value))
-                    .IsNothing();
+        return !obj->Set(context_, ConvertToV8(context_, key), ConvertToV8(context_, value)).IsNothing();
     }
 
     template <typename T>
@@ -93,7 +92,7 @@ public:
         }
 
         auto obj    = value_.As<v8::Object>();
-        auto result = obj->Get(context_, ConvertToV8(isolate_, context_, key));
+        auto result = obj->Get(context_, ConvertToV8(context_, key));
         if (result.IsEmpty()) {
             throw v8_exception(
                 isolate_,
@@ -134,7 +133,7 @@ public:
         }
 
         auto obj   = value_.As<v8::Object>();
-        auto value = obj->Get(context_, ConvertToV8(isolate_, context_, key));
+        auto value = obj->Get(context_, ConvertToV8(context_, key));
         return !value.IsEmpty() && !value.ToLocalChecked()->IsUndefined();
     }
 
