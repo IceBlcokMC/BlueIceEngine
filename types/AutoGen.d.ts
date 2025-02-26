@@ -1,24 +1,18 @@
-declare module "JSEAPI" {
+declare module "endstone::CommandExecutor" {
     import {$Ref, $Nullable, cstring} from "puerts"
 
-    class JSEAPI {
-        static registerPlugin(p0: TestBuilder) :boolean;
-        static isWindows() :boolean;
-        static isLinux() :boolean;
+    class endstone::CommandExecutor {
     }
 
 }
-declare module "TestBuilder" {
+declare module "endstone::Plugin" {
     import {$Ref, $Nullable, cstring} from "puerts"
 
-    class TestBuilder {
-        constructor();
-        name: string;
-        version: string;
-        description: string;
-        onLoad: () => void;
-        onEnable: () => void;
-        onDisable: () => void;
+    class endstone::Plugin extends endstone::CommandExecutor {
+        onLoad() :void;
+        onEnable() :void;
+        onDisable() :void;
+        getName() :string;
     }
 
 }
