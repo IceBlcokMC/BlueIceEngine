@@ -18,6 +18,10 @@ function onLoad() {
 }
 function onEnable() {
   console.log("onEnable");
+
+  const self = Engine.getSelf();
+  console.log("self: ", self);
+  console.log("self.name: ", self.getName());
 }
 function onDisable() {
   console.log("onDisable");
@@ -33,7 +37,3 @@ Engine.registerPlugin({
   onEnable: onEnable,
   onDisable: onDisable,
 });
-
-const self = Engine.getSelf();
-console.log("self: ", self);
-console.log("self.name: ", self.getName());

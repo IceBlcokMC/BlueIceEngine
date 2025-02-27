@@ -179,17 +179,26 @@ inline void Js_GetSelf(const v8::FunctionCallbackInfo<v8::Value>& args) {
         return;
     }
 
+    auto pluginPtr = engine->mPluginInstance;
+    Entry::getInstance()->getLogger().debug("pluginPtr: {}", (void*)pluginPtr);
+    if (!pluginPtr) {
+        Entry::getInstance()->getLogger().error("Plugin instance is null");
+        args.GetReturnValue().Set(v8::Null(isolate));
+        return;
+    }
+
     auto class_ = puerts::FindClassByID(puerts::StaticTypeId<endstone::Plugin>::get());
     if (!class_) {
         Entry::getInstance()->getLogger().error("endstone::Plugin class not found");
         args.GetReturnValue().Set(v8::Null(isolate));
         return;
     }
-    auto pluginPtr = engine->mPluginInstance;
+
+    auto res = engine->mCppMapper
+                   ->FindOrAddCppObject(isolate, ctx, puerts::StaticTypeId<endstone::Plugin>::get(), pluginPtr, true);
 
     v8_exception::checkTryCatch(vtry);
-    args.GetReturnValue().Set(engine->mCppMapper->GetTemplateOfClass(isolate, class_)->GetFunction(ctx).ToLocalChecked()
-    );
+    args.GetReturnValue().Set(res);
 }
 
 inline void RegisterEngineApi() {

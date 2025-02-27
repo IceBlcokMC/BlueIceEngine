@@ -60,12 +60,11 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
                 }
             }
 
-            auto plugin = wrapper->mPluginInstance;
+            auto& plugin = wrapper->mPluginInstance;
             if (wrapper->mPluginDescriptionBuilder) {
                 plugin = new JavaScriptPlugin(wrapper->mID, wrapper->mPluginDescriptionBuilder->build());
                 wrapper->mPluginDescriptionBuilder.reset(); // 释放资源
             }
-
             return plugin;
         }
     } catch (std::exception& e) {
