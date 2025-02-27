@@ -4,7 +4,6 @@
     ],
     "exclude": [
         "node_modules/**/*",
-        "../types/api/_/**",
         "../types/tsconfig.json"
     ],
     "compilerOptions": {
