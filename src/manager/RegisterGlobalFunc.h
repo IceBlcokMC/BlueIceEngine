@@ -191,7 +191,12 @@ inline void Js_GetDeclaration(v8::FunctionCallbackInfo<v8::Value> const& args) {
     );
 }
 
-inline void RegisterEngineApi() {
+inline void Js_LoadNativeClass(v8::FunctionCallbackInfo<v8::Value> const& args) {
+    auto pom = static_cast<puerts::FCppObjectMapper*>((v8::Local<v8::External>::Cast(args.Data()))->Value());
+    pom->LoadCppType(args);
+}
+
+inline void RegisterEngineApi(V8Engine* engine) {
     auto isolate = v8::Isolate::GetCurrent();
 
     v8::Locker         locker(isolate);
@@ -202,16 +207,26 @@ inline void RegisterEngineApi() {
     v8::Context::Scope context_scope(ctx);
 
     auto tpl = v8::ObjectTemplate::New(isolate);
+
+    // Engine.registerPlugin
     tpl->Set(
         v8::String::NewFromUtf8Literal(isolate, "registerPlugin"),
         v8::FunctionTemplate::New(isolate, Js_RegisterPlugin)
     );
 
+    // Engine.getSelf
     tpl->Set(v8::String::NewFromUtf8Literal(isolate, "getSelf"), v8::FunctionTemplate::New(isolate, Js_GetSelf));
 
+    // Engine.loadNativeClass
     tpl->Set(
         v8::String::NewFromUtf8Literal(isolate, "getDeclaration"),
         v8::FunctionTemplate::New(isolate, Js_GetDeclaration)
+    );
+
+    // Engine.loadNativeClass
+    tpl->Set(
+        v8::String::NewFromUtf8Literal(isolate, "loadNativeClass"),
+        v8::FunctionTemplate::New(isolate, Js_LoadNativeClass, v8::External::New(isolate, engine->cppMapper_))
     );
 
     ctx->Global()
@@ -221,30 +236,10 @@ inline void RegisterEngineApi() {
 
 inline void RegisterGlobalFunc(V8Engine* engine) {
     auto isolate = engine->isolate();
-    auto ctx     = engine->context();
-    auto global  = ctx->Global();
-
-    global
-        ->Set(
-            ctx,
-            v8::String::NewFromUtf8(isolate, "loadNativeClass").ToLocalChecked(),
-            v8::FunctionTemplate::New(
-                isolate,
-                [](const v8::FunctionCallbackInfo<v8::Value>& info) {
-                    auto pom =
-                        static_cast<puerts::FCppObjectMapper*>((v8::Local<v8::External>::Cast(info.Data()))->Value());
-                    pom->LoadCppType(info);
-                },
-                v8::External::New(isolate, engine->cppMapper_)
-            )
-                ->GetFunction(ctx)
-                .ToLocalChecked()
-        )
-        .Check();
 
     v8_util::DefineReadOnlyGlobal(isolate, "__ENGINE_ID__", v8::Number::New(isolate, static_cast<double>(engine->id_)));
 
-    RegisterEngineApi();
+    RegisterEngineApi(engine);
 }
 
 

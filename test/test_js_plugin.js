@@ -1,7 +1,7 @@
 "use strict";
 console.log("Engine: ", typeof Engine);
 console.log("__ENGINE_ID__: ", __ENGINE_ID__);
-console.log("loadNativeClass: ", loadNativeClass);
+console.log("loadNativeClass: ", Engine.loadNativeClass);
 
 //----------------------------------------------------------------
 // Dts 生成
