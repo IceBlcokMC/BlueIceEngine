@@ -2,7 +2,9 @@
  * 导入一个 Native 类(类似于 import、require)
  * @param NativeClass Native 类名
  */
-declare function loadNativeClass<T>(NativeClass: string): T;
+declare function loadNativeClass<T extends NativeClasses>(
+  class_: T
+): NativeTypeMap[T];
 
 /**
  * 当前引擎的ID(仅读)

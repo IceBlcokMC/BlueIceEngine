@@ -52,7 +52,14 @@ struct DeclarationGenerator {
         }
     }
 
-    // void GenClassName(const char* name, std::stringstream& ss) {
+    std::string RemoveNamespace(const std::string& name) {
+        size_t lastColonPos = name.rfind("::");
+        if (lastColonPos != std::string::npos) {
+            return name.substr(lastColonPos + 2);
+        }
+        return name;
+    }
+
     void GenClassName(const char* name, std::ostringstream& ss) {
         const char* pp = strchr(name, '.');
         while (pp) {
@@ -67,12 +74,11 @@ struct DeclarationGenerator {
         if (pp) {
             ss << (pp + 1);
         } else {
-            ss << name;
+            ss << RemoveNamespace(name); // 去除命名空间
         }
     }
 
     void GenClass(const puerts::JSClassDefinition* ClassDefinition) {
-        // std::stringstream Output;
         std::ostringstream Output;
 
         Output << "    class ";
@@ -171,16 +177,43 @@ struct DeclarationGenerator {
         // std::cout << moudle_name << "_" << Output.str();
     }
 
-    std::string GetOutput() {
-        std::stringstream Output;
-        for (const auto& pair : module_to_classes) {
-            Output << "declare module \"" << pair.first << "\" {\n";
-            Output << "    import {$Ref, $Nullable, cstring} from \"puerts\"\n\n";
-            for (int i = 0; i < pair.second.size(); i++) {
-                Output << pair.second[i];
-            }
-            Output << "}\n";
+    std::string GetFirstNamepace(const std::string& input) {
+        size_t pos = input.find("::");
+        if (pos != std::string::npos) {
+            return input.substr(0, pos);
         }
+        return input;
+    }
+
+    std::string GetOutput() {
+        std::ostringstream NativeTypeMap; // 类型映射表 C++ FullName -> Js declare type
+        std::ostringstream DeclareTypes;  // 声明类型
+        std::string        RootNamespace; // 根命名空间
+
+        NativeTypeMap << "declare type NativeTypeMap = {\n";
+        DeclareTypes << "declare namespace ";
+
+        for (const auto& pair : module_to_classes) {
+            if (RootNamespace.empty()) {
+                RootNamespace = GetFirstNamepace(pair.first);
+
+                DeclareTypes << RootNamespace << " {\n"; // 全局命名空间
+                DeclareTypes << "    import {$Ref, $Nullable, cstring} from \"puerts\"\n\n";
+            }
+            NativeTypeMap << "    \"" << pair.first << "\": ";                             // Key
+            NativeTypeMap << RootNamespace << "." << RemoveNamespace(pair.first) << ",\n"; // Value
+
+            for (const auto& i : pair.second) {
+                DeclareTypes << i;
+            }
+        }
+        NativeTypeMap << "}\n";
+        DeclareTypes << "}\n";
+
+        NativeTypeMap << "\n" << "declare type NativeClasses = keyof NativeTypeMap;" << "\n";
+
+        std::ostringstream Output;
+        Output << NativeTypeMap.str() << "\n" << DeclareTypes.str();
         return Output.str();
     }
 };

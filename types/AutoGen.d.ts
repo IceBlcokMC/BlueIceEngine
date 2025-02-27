@@ -1,14 +1,17 @@
-declare module "endstone::CommandExecutor" {
+declare type NativeTypeMap = {
+    "endstone::CommandExecutor": endstone.CommandExecutor,
+    "endstone::Plugin": endstone.Plugin,
+}
+
+declare type NativeClasses = keyof NativeTypeMap;
+
+declare namespace endstone {
     import {$Ref, $Nullable, cstring} from "puerts"
 
-    class endstone::CommandExecutor {
+    class CommandExecutor {
     }
 
-}
-declare module "endstone::Plugin" {
-    import {$Ref, $Nullable, cstring} from "puerts"
-
-    class endstone::Plugin extends endstone::CommandExecutor {
+    class Plugin extends CommandExecutor {
         onLoad() :void;
         onEnable() :void;
         onDisable() :void;
