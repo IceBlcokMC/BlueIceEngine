@@ -198,7 +198,7 @@ struct DeclarationGenerator {
                 RootNamespace = GetFirstNamepace(pair.first);
 
                 DeclareTypes << RootNamespace << " {\n"; // 全局命名空间
-                DeclareTypes << "    import {$Ref, $Nullable, cstring} from \"puerts\"\n\n";
+                // DeclareTypes << "    import {$Ref, $Nullable, cstring} from \"puerts\"\n\n";
             }
             NativeTypeMap << "    \"" << pair.first << "\": ";                             // Key
             NativeTypeMap << RootNamespace << "." << RemoveNamespace(pair.first) << ",\n"; // Value

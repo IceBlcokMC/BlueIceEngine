@@ -3,7 +3,10 @@
 #include "v8-exception.h"
 #include "v8-external.h"
 #include "v8-local-handle.h"
+#include "v8-primitive.h"
+#include "v8-script.h"
 #include "v8-value.h"
+#include "v8_utils/V8Exception.h"
 
 namespace v8_util {
 
@@ -29,6 +32,18 @@ inline void DefineReadOnlyGlobal(v8::Isolate* isolate, const char* name, v8::Loc
     v8::Local<v8::String> key = v8::String::NewFromUtf8(isolate, name).ToLocalChecked();
 
     return handle_scope.Escape(global->Get(context, key).ToLocalChecked());
+}
+
+inline v8::Local<v8::Value> EvalJsCode(v8::Isolate* isoalte, const char* code) {
+    v8::TryCatch vtry(isoalte);
+
+    auto ctx = isoalte->GetCurrentContext();
+
+    auto codeString = v8::String::NewFromUtf8(isoalte, code).ToLocalChecked();
+    auto script     = v8::Script::Compile(ctx, codeString);
+    auto result     = script.ToLocalChecked()->Run(ctx).ToLocalChecked();
+    jse::v8_exception::check(vtry);
+    return result;
 }
 
 

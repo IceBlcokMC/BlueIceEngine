@@ -6,8 +6,6 @@ declare type NativeTypeMap = {
 declare type NativeClasses = keyof NativeTypeMap;
 
 declare namespace endstone {
-    import {$Ref, $Nullable, cstring} from "puerts"
-
     class CommandExecutor {
     }
 

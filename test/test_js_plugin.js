@@ -51,3 +51,7 @@ Engine.registerPlugin({
     console.log("onDisable called");
   },
 });
+
+const ref = $ref(114514);
+console.log("$ref: ", ref);
+console.log("$unref: ", $unref(ref));

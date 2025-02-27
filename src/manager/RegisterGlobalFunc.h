@@ -239,6 +239,11 @@ inline void RegisterGlobalFunc(V8Engine* engine) {
     v8_util::DefineReadOnlyGlobal(isolate, "__ENGINE_ID__", v8::Number::New(isolate, static_cast<double>(engine->id_)));
 
     RegisterEngineApi(engine);
+
+    v8_util::EvalJsCode(isolate, R"(
+        globalThis.$ref = (x) => [x];
+        globalThis.$unref = (box) => box[0];
+    )");
 }
 
 
