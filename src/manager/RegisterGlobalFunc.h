@@ -156,7 +156,6 @@ inline void Js_GetSelf(const v8::FunctionCallbackInfo<v8::Value>& args) {
     }
 
     auto pluginPtr = engine->pluginPtr_;
-    Entry::getInstance()->getLogger().debug("pluginPtr: {}", (void*)pluginPtr);
     if (!pluginPtr) {
         Entry::getInstance()->getLogger().error("Plugin instance is null");
         args.GetReturnValue().Set(v8::Null(isolate));
