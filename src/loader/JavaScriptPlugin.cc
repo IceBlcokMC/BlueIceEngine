@@ -23,33 +23,33 @@ void JavaScriptPlugin::onLoad() {
     auto         engine = NodeManager::getInstance().getEngine(this->engineId_);
     EnterV8Scope enter{engine};
     v8::TryCatch vtry{engine->isolate()};
-    if (!engine->mOnLoadFunc.IsEmpty()) {
-        [[maybe_unused]] auto v = engine->mOnLoadFunc.Get(engine->isolate())
-                                      ->Call(engine->context(), engine->context()->Global(), 0, nullptr);
+    if (!engine->onLoad_.IsEmpty()) {
+        [[maybe_unused]] auto v =
+            engine->onLoad_.Get(engine->isolate())->Call(engine->context(), engine->context()->Global(), 0, nullptr);
     }
-    v8_exception::checkTryCatch(vtry);
+    v8_exception::check(vtry);
 }
 
 void JavaScriptPlugin::onEnable() {
     auto         engine = NodeManager::getInstance().getEngine(this->engineId_);
     EnterV8Scope enter{engine};
     v8::TryCatch vtry{engine->isolate()};
-    if (!engine->mOnEnableFunc.IsEmpty()) {
-        [[maybe_unused]] auto v = engine->mOnEnableFunc.Get(engine->isolate())
-                                      ->Call(engine->context(), engine->context()->Global(), 0, nullptr);
+    if (!engine->onEnable_.IsEmpty()) {
+        [[maybe_unused]] auto v =
+            engine->onEnable_.Get(engine->isolate())->Call(engine->context(), engine->context()->Global(), 0, nullptr);
     }
-    v8_exception::checkTryCatch(vtry);
+    v8_exception::check(vtry);
 }
 
 void JavaScriptPlugin::onDisable() {
     auto         engine = NodeManager::getInstance().getEngine(this->engineId_);
     EnterV8Scope enter{engine};
     v8::TryCatch vtry{engine->isolate()};
-    if (!engine->mDisableFunc.IsEmpty()) {
-        [[maybe_unused]] auto v = engine->mDisableFunc.Get(engine->isolate())
-                                      ->Call(engine->context(), engine->context()->Global(), 0, nullptr);
+    if (!engine->onDisable_.IsEmpty()) {
+        [[maybe_unused]] auto v =
+            engine->onDisable_.Get(engine->isolate())->Call(engine->context(), engine->context()->Global(), 0, nullptr);
     }
-    v8_exception::checkTryCatch(vtry);
+    v8_exception::check(vtry);
 }
 
 bool JavaScriptPlugin::onCommand(

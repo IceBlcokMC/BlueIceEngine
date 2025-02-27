@@ -1,5 +1,4 @@
 #pragma once
-#include "DeclarationGenerator.h"
 #include "Entry.h"
 #include "JSClassRegister.h"
 #include "ScriptBackend.hpp"
@@ -12,6 +11,7 @@
 #include "loader/JavaScriptPluginBuilder.h"
 #include "manager/NodeManager.h"
 #include "manager/V8Engine.h"
+#include "puerts_impl/DeclarationGenerator.h"
 #include "v8-context.h"
 #include "v8-exception.h"
 #include "v8-external.h"
@@ -129,31 +129,31 @@ inline void Js_RegisterPlugin(const v8::FunctionCallbackInfo<v8::Value>& args) {
         if (!onLoad->IsFunction()) {
             Entry::getInstance()->getLogger().error("onLoad is not a function");
         }
-        engine->mOnLoadFunc = v8::Global<v8::Function>{isolate, onLoad.As<v8::Function>()};
+        engine->onLoad_ = v8::Global<v8::Function>{isolate, onLoad.As<v8::Function>()};
     }
     if (vObj.HasKey("onEnable")) {
         auto onEnable = vObj["onEnable"].GetValue();
         if (!onEnable->IsFunction()) {
             Entry::getInstance()->getLogger().error("onEnable is not a function");
         }
-        engine->mOnEnableFunc = v8::Global<v8::Function>{isolate, onEnable.As<v8::Function>()};
+        engine->onEnable_ = v8::Global<v8::Function>{isolate, onEnable.As<v8::Function>()};
     }
     if (vObj.HasKey("onDisable")) {
         auto onDisable = vObj["onDisable"].GetValue();
         if (!onDisable->IsFunction()) {
             Entry::getInstance()->getLogger().error("onDisable is not a function");
         }
-        engine->mDisableFunc = v8::Global<v8::Function>{isolate, onDisable.As<v8::Function>()};
+        engine->onDisable_ = v8::Global<v8::Function>{isolate, onDisable.As<v8::Function>()};
     }
     if (vObj.HasKey("onCommand")) {
         auto onCommand = vObj["onCommand"].GetValue();
         if (!onCommand->IsFunction()) {
             Entry::getInstance()->getLogger().error("onCommand is not a function");
         }
-        engine->mOnCommandFunc = v8::Global<v8::Function>{isolate, onCommand.As<v8::Function>()};
+        engine->onCommand_ = v8::Global<v8::Function>{isolate, onCommand.As<v8::Function>()};
     }
 
-    engine->mPluginDescriptionBuilder = std::move(builder);
+    engine->pluginDescriptionBuilder_ = std::move(builder);
 }
 
 inline void Js_GetSelf(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -171,7 +171,7 @@ inline void Js_GetSelf(const v8::FunctionCallbackInfo<v8::Value>& args) {
     auto id      = static_cast<EngineID>(IDValue->ToNumber(ctx).ToLocalChecked()->Value());
 
     auto engine = NodeManager::getInstance().getEngine(id);
-    v8_exception::checkTryCatch(vtry);
+    v8_exception::check(vtry);
 
     if (!engine) {
         Entry::getInstance()->getLogger().error("Engine not found");
@@ -179,7 +179,7 @@ inline void Js_GetSelf(const v8::FunctionCallbackInfo<v8::Value>& args) {
         return;
     }
 
-    auto pluginPtr = engine->mPluginInstance;
+    auto pluginPtr = engine->pluginPtr_;
     Entry::getInstance()->getLogger().debug("pluginPtr: {}", (void*)pluginPtr);
     if (!pluginPtr) {
         Entry::getInstance()->getLogger().error("Plugin instance is null");
@@ -194,10 +194,10 @@ inline void Js_GetSelf(const v8::FunctionCallbackInfo<v8::Value>& args) {
         return;
     }
 
-    auto res = engine->mCppMapper
+    auto res = engine->cppMapper_
                    ->FindOrAddCppObject(isolate, ctx, puerts::StaticTypeId<endstone::Plugin>::get(), pluginPtr, true);
 
-    v8_exception::checkTryCatch(vtry);
+    v8_exception::check(vtry);
     args.GetReturnValue().Set(res);
 }
 
@@ -242,7 +242,7 @@ inline void RegisterGlobalFunc(V8Engine* wrapper) {
                         static_cast<puerts::FCppObjectMapper*>((v8::Local<v8::External>::Cast(info.Data()))->Value());
                     pom->LoadCppType(info);
                 },
-                v8::External::New(isolate, wrapper->mCppMapper)
+                v8::External::New(isolate, wrapper->cppMapper_)
             )
                 ->GetFunction(ctx)
                 .ToLocalChecked()
@@ -278,7 +278,7 @@ inline void RegisterGlobalFunc(V8Engine* wrapper) {
     v8_util::DefineReadOnlyGlobal(
         isolate,
         "__ENGINE_ID__",
-        v8::Number::New(isolate, static_cast<double>(wrapper->mID))
+        v8::Number::New(isolate, static_cast<double>(wrapper->id_))
     );
 
     RegisterEngineApi();

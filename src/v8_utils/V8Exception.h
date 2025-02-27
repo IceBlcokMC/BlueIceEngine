@@ -10,7 +10,7 @@
 namespace jse {
 
 
-class v8_exception : public std::exception {
+class v8_exception final : public std::exception {
     v8::Isolate*           isolate_;
     v8::Local<v8::Context> ctx_;
     std::string            message_;
@@ -46,7 +46,7 @@ public:
      * @brief 检查 v8::TryCatch 是否有异常，如果有则抛出 v8_exception
      * @warning 必须在 v8 作用域内调用
      */
-    static void checkTryCatch(v8::TryCatch& vtry) {
+    static void check(v8::TryCatch& vtry) {
         if (vtry.HasCaught()) {
             auto isolate   = v8::Isolate::GetCurrent();
             auto ctx       = isolate->GetCurrentContext();

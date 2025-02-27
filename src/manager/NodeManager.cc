@@ -122,15 +122,15 @@ void NodeManager::initUvLoopThread() {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
             try {
                 for (auto& [id, wrapper] : mEngines) {
-                    if (!wrapper->mIsRunning || wrapper->mIsDestroying) {
+                    if (!wrapper->isRunning_ || wrapper->isDestroying_) {
                         continue;
                     }
 
                     EnterV8Scope scope(wrapper.get());
                     try {
                         v8::TryCatch vtry{wrapper->isolate()};
-                        uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_NOWAIT);
-                        v8_exception::checkTryCatch(vtry);
+                        uv_run(wrapper->commonEnvPtr_->event_loop(), UV_RUN_NOWAIT);
+                        v8_exception::check(vtry);
                     } catch (v8_exception const& except) {
                         // TODO: handle v8 exception
                     };
@@ -184,7 +184,7 @@ V8Engine* NodeManager::newScriptEngine() {
     mapper->Initialize(isolate, context);
     isolate->SetData(MAPPER_ISOLATE_DATA_POS, static_cast<puerts::ICppObjectMapper*>(mapper));
 
-    ptr->mCppMapper = mapper;
+    ptr->cppMapper_ = mapper;
 
     RegisterGlobalFunc(ptr.get());
 
@@ -219,12 +219,12 @@ bool NodeManager::destroyEngine(EngineID id) {
         auto& wrapper = mEngines[id];
 
         // Entry::getInstance()->getServer().getScheduler().cancelTask(wrapper.mUvLoopTask->getTaskId());
-        wrapper->mIsRunning    = false;
-        wrapper->mIsDestroying = true;
+        wrapper->isRunning_    = false;
+        wrapper->isDestroying_ = true;
 
         // uv_stop(wrapper.mEnvSetup->event_loop()); (事件循环会自动停止)
 
-        node::Stop(wrapper->mEnvSetup->env(), node::StopFlags::kDoNotTerminateIsolate);
+        node::Stop(wrapper->commonEnvPtr_->env(), node::StopFlags::kDoNotTerminateIsolate);
 
         // wrapper.mEngine->destroy(); // 销毁引擎 (EnvironmentCleanupHook 会自动销毁)
 
@@ -377,12 +377,12 @@ bool NodeManager::loadFile(V8Engine* wrapper, std::filesystem::path const& path,
         {
             EnterV8Scope enter{wrapper};
             v8::TryCatch vtry(isolate);
-            node::SetProcessExitHandler(env, [id{wrapper->mID}, isolate](node::Environment*, int exit_code) {
+            node::SetProcessExitHandler(env, [id{wrapper->id_}, isolate](node::Environment*, int exit_code) {
                 isolate->Exit();
                 Entry::getInstance()->getLogger().debug("Node.js process exit with code: {}, id: {}", exit_code, id);
                 if (exit_code == 0) NodeManager::getInstance().destroyEngine(id);
             });
-            v8_exception::checkTryCatch(vtry);
+            v8_exception::check(vtry);
         }
 
         {
@@ -391,13 +391,13 @@ bool NodeManager::loadFile(V8Engine* wrapper, std::filesystem::path const& path,
 
             v8::MaybeLocal<v8::Value> loadValue = node::LoadEnvironment(env, loader);
             if (loadValue.IsEmpty()) {
-                v8_exception::checkTryCatch(vtry);
+                v8_exception::check(vtry);
                 return false;
             }
-            v8_exception::checkTryCatch(vtry);
+            v8_exception::check(vtry);
         }
 
-        wrapper->mIsRunning = true;
+        wrapper->isRunning_ = true;
         return true;
     } catch (v8_exception const& exc) {
         EnterV8Scope enter{wrapper};

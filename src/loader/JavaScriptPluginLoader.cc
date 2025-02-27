@@ -9,10 +9,12 @@
 #include "v8-locker.h"
 #include "v8_utils/V8Scope.h"
 #include <cstddef>
+#include <endstone/plugin/plugin_loader.h>
 #include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
+
 
 namespace jse {
 
@@ -23,11 +25,11 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
     auto& manager = NodeManager::getInstance();
     auto  wrapper = manager.newScriptEngine();
 
-    EngineID id = wrapper->mID;
+    EngineID id = wrapper->id_;
 
     try {
         auto path            = std::filesystem::path(file);
-        wrapper->mEntryPoint = path.filename().string();
+        wrapper->entryPoint_ = path.filename().string();
 
         std::filesystem::path package = path.parent_path() / "package.json";
         if (NodeManager::packageHasDependency(package)
@@ -39,7 +41,7 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
         bool const esm = NodeManager::packageIsEsm(package);
         if (!NodeManager::loadFile(wrapper, file, esm)) {
             Entry::getInstance()->getLogger().error("Failed to load plugin: {}", file);
-            manager.destroyEngine(wrapper->mID);
+            manager.destroyEngine(wrapper->id_);
             return nullptr;
         }
 
@@ -49,21 +51,21 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
             if (esm) {
                 size_t max   = 12; // 一般情况下, ESM 模块插件在第4个事件循环就会执行全局完全局代码
                 size_t count = 0;
-                while (count < max && !wrapper->mPluginDescriptionBuilder) {
+                while (count < max && !wrapper->pluginDescriptionBuilder_) {
                     count++;
-                    uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_ONCE);
+                    uv_run(wrapper->commonEnvPtr_->event_loop(), UV_RUN_ONCE);
                 }
                 Entry::getInstance()->getLogger().debug("A total of {} event loops are executed", count);
-                if (count == max && !wrapper->mPluginDescriptionBuilder) {
+                if (count == max && !wrapper->pluginDescriptionBuilder_) {
                     Entry::getInstance()->getLogger().warning("Failed to get plugin registration data, and the plugin "
                                                               "may not have called JSE.registerPlugin()");
                 }
             }
 
-            auto& plugin = wrapper->mPluginInstance;
-            if (wrapper->mPluginDescriptionBuilder) {
-                plugin = new JavaScriptPlugin(wrapper->mID, wrapper->mPluginDescriptionBuilder->build());
-                wrapper->mPluginDescriptionBuilder.reset(); // 释放资源
+            auto& plugin = wrapper->pluginPtr_;
+            if (wrapper->pluginDescriptionBuilder_) {
+                plugin = new JavaScriptPlugin(wrapper->id_, wrapper->pluginDescriptionBuilder_->build());
+                wrapper->pluginDescriptionBuilder_.reset(); // 释放资源
             }
             return plugin;
         }
@@ -80,7 +82,7 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
 }
 
 
-std::vector<std::string> JavaScriptPluginLoader::filterPlugins(const std::filesystem::path& directory) {
+std::vector<std::string> JavaScriptPluginLoader::filterJsPlugins(const std::filesystem::path& directory) {
     std::vector<std::string> plugins;
     if (!std::filesystem::exists(directory)) {
         return plugins;

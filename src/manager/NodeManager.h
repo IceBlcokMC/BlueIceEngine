@@ -51,9 +51,9 @@ public:
     bool NpmInstall(std::string npmExecuteDir);
 
 public:
-    static bool loadFile(V8Engine* wrapper, std::filesystem::path const& file, bool esm = false);
+    static bool loadFile(V8Engine* wrapper, std::filesystem::path const& path, bool esm);
 
-    static std::optional<std::string> readFileContent(const std::filesystem::path& file);
+    static std::optional<std::string> readFileContent(const std::filesystem::path& path);
 
     static std::optional<std::string> findMainScript(const std::filesystem::path& packagePath);
     static bool                       packageHasDependency(const std::filesystem::path& packagePath);
