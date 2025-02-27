@@ -317,8 +317,8 @@ bool NodeManager::loadFile(V8Engine* wrapper, std::filesystem::path const& path,
     std::string dirname  = ll::string_utils::replaceAll(path.parent_path().string(), "\\", "\\\\");
     std::string filename = ll::string_utils::replaceAll(path.string(), "\\", "\\\\");
 #elif defined(__linux__)
-    string dirname  = path.parent_path().string();
-    string filename = path.string();
+    std::string dirname  = path.parent_path().string();
+    std::string filename = path.string();
 #endif
     Entry::getInstance()->getLogger().debug("dirname: {}", dirname);
     Entry::getInstance()->getLogger().debug("filename: {}", filename);
