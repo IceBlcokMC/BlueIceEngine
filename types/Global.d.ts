@@ -1,12 +1,28 @@
 declare const __ENGINE_ID__: number;
 
+declare enum PluginLoadOrder {}
+
+declare enum PermissionDefault {}
+
 declare interface JsPluginBuilder {
   name: string;
   version: string;
+  description: string;
+  load: PluginLoadOrder;
+  authors: string[];
+  contributors: string[];
+  website: string;
+  prefix: string;
+  provides: string[];
+  depends: string[];
+  soft_depend: string[];
+  load_before: string[];
+  default_permission: PermissionDefault;
 
   onLoad(fn: () => void): void;
   onEnable(fn: () => void): void;
   onDisable(fn: () => void): void;
+  onCommand(fn: () => void): boolean;
 }
 
 declare class Engine {
