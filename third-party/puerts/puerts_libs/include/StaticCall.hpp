@@ -290,7 +290,7 @@ private:
     {
         static constexpr auto ArgsLength = sizeof...(CArgs);
 
-        static bool Check(typename API::ContextType context, typename API::CallbackInfoType info)
+        static bool Check([[maybe_unused]]typename API::ContextType context, [[maybe_unused]]typename API::CallbackInfoType info)
         {
             return true;
         }

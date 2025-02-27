@@ -36,7 +36,7 @@
             return ::PUERTS_NAMESPACE::DataTransfer::FindOrAddCData(                              \
                 context->GetIsolate(), context, DynamicTypeId<CLS>::get(value), value, true);     \
         }                                                                                         \
-        static CLS* toCpp(v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)      \
+        static CLS* toCpp([[maybe_unused]]v8::Local<v8::Context> context, const v8::Local<v8::Value>& value)      \
         {                                                                                         \
             return ::PUERTS_NAMESPACE::DataTransfer::GetPointerFast<CLS>(value.As<v8::Object>()); \
         }                                                                                         \

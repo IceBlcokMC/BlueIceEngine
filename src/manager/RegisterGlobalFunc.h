@@ -33,7 +33,6 @@
 #include <string>
 #include <utility>
 
-
 UsingCppType(endstone::Plugin);
 UsingCppType(endstone::CommandExecutor);
 
