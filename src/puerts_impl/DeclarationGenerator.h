@@ -130,7 +130,7 @@ struct DeclarationGenerator {
                 Tmp << "(";
                 GenArguments(FunctionInfo->Type, Tmp);
                 const puerts::CTypeInfo* ReturnType = FunctionInfo->Type->Return();
-                Tmp << ") :" << ReturnType->Name() << ";\n";
+                Tmp << "): " << ReturnType->Name() << ";\n";
             } else {
                 Tmp << FunctionInfo->Type->CustomSignature() << ";\n";
             }
@@ -149,7 +149,7 @@ struct DeclarationGenerator {
                 Tmp << "(";
                 GenArguments(MethodInfo->Type, Tmp);
                 const puerts::CTypeInfo* ReturnType = MethodInfo->Type->Return();
-                Tmp << ") :" << ReturnType->Name() << ";\n";
+                Tmp << "): " << ReturnType->Name() << ";\n";
             } else {
                 Tmp << MethodInfo->Type->CustomSignature() << ";\n";
             }
