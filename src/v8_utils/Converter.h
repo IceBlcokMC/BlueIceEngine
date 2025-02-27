@@ -229,7 +229,7 @@ struct Converter<std::vector<T>> {
         if (val->IsArray()) {
             auto arr = val.As<v8::Array>();
             for (uint32_t i = 0; i < arr->Length(); ++i) {
-                res.push_back(ConvertToCpp<T>(ctx->GetIsolate(), ctx, arr->Get(ctx, i).ToLocalChecked()));
+                res.push_back(Converter<T>::toCpp(ctx, arr->Get(ctx, i).ToLocalChecked()));
             }
         }
         return res;
@@ -239,7 +239,7 @@ struct Converter<std::vector<T>> {
         HandleV8Scope hscope(isolate);
         auto          arr = v8::Array::New(isolate, value.size());
         for (uint32_t i = 0; i < value.size(); ++i) {
-            arr->Set(ctx, i, ConvertToV8(isolate, ctx, value[i]));
+            arr->Set(ctx, i, Converter<T>::toV8(isolate, ctx, value[i]));
         }
     }
 };
@@ -262,7 +262,7 @@ struct Converter<std::unordered_map<std::string, V>> {
 
                 auto value = obj->Get(ctx, key).ToLocalChecked();
 
-                res[keyStr] = ConvertToCpp<V>(isolate, ctx, value);
+                res[keyStr] = Converter<V>::toCpp(ctx, value);
             }
         }
         return res;
@@ -273,11 +273,7 @@ struct Converter<std::unordered_map<std::string, V>> {
         HandleV8Scope hscope(isolate);
         auto          obj = v8::Object::New(isolate);
         for (auto const& [key, val] : value) {
-            obj->Set(
-                ctx,
-                v8::String::NewFromUtf8(isolate, key.c_str()).ToLocalChecked(),
-                ConvertToV8(isolate, ctx, val)
-            );
+            obj->Set(ctx, v8::String::NewFromUtf8(isolate, key.c_str()).ToLocalChecked(), Converter<V>::toV8(ctx, val));
         }
         return hscope.Escape(obj);
     }

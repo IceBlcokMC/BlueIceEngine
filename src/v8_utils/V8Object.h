@@ -139,7 +139,7 @@ public:
 
     template <typename T>
     T As() const {
-        return ConvertToCpp<T>(isolate_, context_, value_);
+        return ConvertToCpp<T>(context_, value_);
     }
 
     [[nodiscard]] v8::Local<v8::Value> GetValue() const { return value_; }

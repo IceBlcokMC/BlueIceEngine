@@ -1,5 +1,6 @@
 #include "loader/JavaScriptPluginLoader.h"
 #include "Entry.h"
+#include "endstone/plugin/plugin.h"
 #include "loader/JavaScriptPlugin.h"
 #include "manager/NodeManager.h"
 #include "uv.h"
@@ -48,38 +49,24 @@ endstone::Plugin* JavaScriptPluginLoader::loadPlugin(std::string file) {
             if (esm) {
                 size_t max   = 12; // 一般情况下, ESM 模块插件在第4个事件循环就会执行全局完全局代码
                 size_t count = 0;
-                // while (count < max && data->mRegisterInfo.isEmpty()) {
-                //     count++;
-                //     uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_ONCE);
-                // }
-                // Entry::getInstance()->getLogger().debug("A total of {} event loops are executed", count);
-                // if (count == max && data->mRegisterInfo.isEmpty()) {
-                //     Entry::getInstance()->getLogger().warning("Failed to get plugin registration data, and the plugin
-                //     "
-                //                                               "may not have called JSE.registerPlugin()");
-                // }
+                while (count < max && !wrapper->mPluginDescriptionBuilder) {
+                    count++;
+                    uv_run(wrapper->mEnvSetup->event_loop(), UV_RUN_ONCE);
+                }
+                Entry::getInstance()->getLogger().debug("A total of {} event loops are executed", count);
+                if (count == max && !wrapper->mPluginDescriptionBuilder) {
+                    Entry::getInstance()->getLogger().warning("Failed to get plugin registration data, and the plugin "
+                                                              "may not have called JSE.registerPlugin()");
+                }
             }
 
-            // JsPluginDescriptionBuilder builder{};
-            // builder.description        = data->tryParseDescription();
-            // builder.load               = data->tryParseLoad();
-            // builder.authors            = data->tryParseAuthors();
-            // builder.contributors       = data->tryParseContributors();
-            // builder.website            = data->tryParseWebsite();
-            // builder.prefix             = data->tryParsePrefix();
-            // builder.provides           = data->tryParseProvides();
-            // builder.depend             = data->tryParseDepend();
-            // builder.soft_depend        = data->tryParseSoftDepend();
-            // builder.load_before        = data->tryParseLoadBefore();
-            // builder.default_permission = data->tryParseDefaultPermission();
-            // data->tryParseCommands(builder);
-            // data->tryParsePermissions(builder);
+            auto plugin = wrapper->mPluginInstance;
+            if (wrapper->mPluginDescriptionBuilder) {
+                plugin = new JavaScriptPlugin(wrapper->mID, wrapper->mPluginDescriptionBuilder->build());
+                wrapper->mPluginDescriptionBuilder.reset(); // 释放资源
+            }
 
-            // 创建插件实例
-            // auto plugin = new JavaScriptPlugin(data->mID, builder.build(data->tryParseName(),
-            // data->tryParseVersion())); data->mPlugin = plugin;
-
-            // return plugin;
+            return plugin;
         }
     } catch (std::exception& e) {
         Entry::getInstance()->getLogger().error("Failed to load plugin: {}", file);

@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 console.log("__ENGINE_ID__: ", __ENGINE_ID__);
 console.log("__declaration__: ", __declaration__);
 console.log("loadNativeClass: ", loadNativeClass);
@@ -23,7 +23,17 @@ function onDisable() {
   console.log("onDisable");
 }
 
-__ENGINE_ID__++;
-__ENGINE_ID__ = 10;
+console.log("Engine: ", typeof Engine);
 
-console.log("__ENGINE_ID__: ", __ENGINE_ID__);
+Engine.registerPlugin({
+  name: "test_js_plugin",
+  version: "1.0.0",
+
+  onLoad: onLoad,
+  onEnable: onEnable,
+  onDisable: onDisable,
+});
+
+const self = Engine.getSelf();
+console.log("self: ", self);
+console.log("self.name: ", self.getName());
