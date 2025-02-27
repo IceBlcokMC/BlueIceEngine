@@ -67,7 +67,7 @@ inline void Js_RegisterPlugin(const v8::FunctionCallbackInfo<v8::Value>& args) {
         builder->description = vObj["description"].As<std::string>();
     }
     if (vObj.HasKey("load")) {
-        // builder->load = vObj["load"].As<endstone::PluginLoadOrder>();
+        builder->load = vObj["load"].As<endstone::PluginLoadOrder>();
     }
     if (vObj.HasKey("authors")) {
         builder->authors = vObj["authors"].As<std::vector<std::string>>();
@@ -94,7 +94,7 @@ inline void Js_RegisterPlugin(const v8::FunctionCallbackInfo<v8::Value>& args) {
         builder->load_before = vObj["load_before"].As<std::vector<std::string>>();
     }
     if (vObj.HasKey("default_permission")) {
-        // builder->default_permission = vObj["default_permission"].As<endstone::PermissionDefault>();
+        builder->default_permission = vObj["default_permission"].As<endstone::PermissionDefault>();
     }
 
     // TODO: permission

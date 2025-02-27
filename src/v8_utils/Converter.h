@@ -165,13 +165,13 @@ template <typename T>
 struct Converter<T, std::enable_if_t<std::is_enum_v<T>>> {
     static T toCpp(v8::Local<v8::Context> ctx, v8::Local<v8::Value> value) {
         if (value->IsNumber()) {
-            return static_cast<T>(value->NumberValue(ctx));
+            return static_cast<T>(value->ToNumber(ctx).ToLocalChecked()->Value());
         }
         throw std::runtime_error("Invalid enum value");
     }
     static v8::Local<v8::Value> toV8(v8::Local<v8::Context> ctx, T const& value) {
         HandleV8Scope hscope(ctx->GetIsolate());
-        return hscope.Escape(v8::Number::New(ctx->GetIsolate(), static_cast<int>(value)));
+        return hscope.Escape(v8::Number::New(ctx->GetIsolate(), static_cast<double>(value)));
     }
 };
 
