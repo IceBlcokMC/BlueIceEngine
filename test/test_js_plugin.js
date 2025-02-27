@@ -19,7 +19,7 @@ function onLoad() {
 function onEnable() {
   console.log("onEnable");
 
-  const self = Engine.getSelf();
+  const self = Engine.getSelf(); // endstone::Plugin*
   console.log("self: ", self);
   console.log("self.name: ", self.getName());
 }
