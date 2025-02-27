@@ -6,9 +6,11 @@ declare type NativeTypeMap = {
 declare type NativeClasses = keyof NativeTypeMap;
 
 declare namespace endstone {
+    /** @hideconstructor */
     class CommandExecutor {
     }
 
+    /** @hideconstructor */
     class Plugin extends CommandExecutor {
         onLoad() :void;
         onEnable() :void;

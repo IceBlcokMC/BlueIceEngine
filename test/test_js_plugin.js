@@ -36,6 +36,19 @@ function Test_PluginBind() {
 Engine.registerPlugin({
   name: "test_js_plugin",
   version: "1.0.0",
+  permissions: {
+    test: {
+      description: "test permission",
+      default: 0,
+    },
+  },
+  commands: {
+    test: {
+      description: "test command",
+      permissions: ["test"],
+      usages: ["/test"],
+    },
+  },
 
   onLoad: () => {
     console.log("onLoad called");

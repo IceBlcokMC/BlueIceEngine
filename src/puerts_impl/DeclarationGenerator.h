@@ -81,6 +81,11 @@ struct DeclarationGenerator {
     void GenClass(const puerts::JSClassDefinition* ClassDefinition) {
         std::ostringstream Output;
 
+        puerts::NamedFunctionInfo* ConstructorInfo = ClassDefinition->ConstructorInfos;
+        if (!ConstructorInfo || !ConstructorInfo->Name || !ConstructorInfo->Type) {
+            Output << "    /** @hideconstructor */" << "\n"; // 如果没有构造函数，则隐藏构造函数
+        }
+
         Output << "    class ";
         GenClassName(ClassDefinition->ScriptName, Output);
         if (ClassDefinition->SuperTypeId) {
@@ -91,7 +96,6 @@ struct DeclarationGenerator {
 
         std::set<std::string> AddedFunctions;
 
-        puerts::NamedFunctionInfo* ConstructorInfo = ClassDefinition->ConstructorInfos;
         while (ConstructorInfo && ConstructorInfo->Name && ConstructorInfo->Type) {
             std::stringstream Tmp;
             Tmp << "        constructor(";

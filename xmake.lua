@@ -81,33 +81,25 @@ target("Js_Engine")
     set_symbols("debug")
     -- set_exceptions("none")
 
-    -- EndStone Entt
+    -- endstone entt
     add_defines("ENTT_SPARSE_PAGE=2048")
     add_defines("ENTT_PACKED_PAGE=128")
 
 
-    -- PuerTs
+    -- Puerts
     add_files(
         "./third-party/puerts/src/CppObjectMapper.cpp",
         "./third-party/puerts/src/DataTransfer.cpp",
         "./third-party/puerts/src/JSClassRegister.cpp"
-        -- "./third-party/puerts/src/PesapiAddonLoad.cpp",
-        -- "./third-party/puerts/src/PesapiV8Impl.cpp"
     )
-
     add_includedirs("./third-party/puerts/src")
     add_includedirs("./third-party/puerts/puerts_libs/include")
     add_files("./third-party/puerts/puerts_libs/src/pesapi_adpt.c")
-
     add_defines("MAPPER_ISOLATE_DATA_POS=2", "PES_EXTENSION_WITH_V8_API")
+
 
     if is_plat("windows") then
         add_defines("WIN32")
-    elseif is_plat("linux") then
-
-    end
-
-    if is_plat("windows") then
         add_cxxflags("/Zc:__cplusplus")
         add_cxflags(
             -- "/EHa",
@@ -130,18 +122,6 @@ target("Js_Engine")
         add_packages("libelf")
         add_syslinks("dl", "pthread", "c++", "c++abi")
     end
-
-    -- ScriptX test
-    -- local ScriptX_Dir = "D:/Codes/ScriptX"
-    -- add_includedirs(ScriptX_Dir.."/src/include")
-    -- add_files(
-    --     ScriptX_Dir.."/src/**.cc",
-    --     ScriptX_Dir.."/backend/V8/**.cc"
-    -- )
-    -- add_defines(
-    --     "SCRIPTX_BACKEND_V8",
-    --     "SCRIPTX_BACKEND_TRAIT_PREFIX="..ScriptX_Dir.."/backend/V8/trait/Trait"
-    -- )
 
     if is_mode("debug") then
         add_defines("DEBUG")

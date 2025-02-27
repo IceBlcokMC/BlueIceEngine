@@ -3,6 +3,7 @@
 #include "JSClassRegister.h"
 #include "ScriptBackend.hpp"
 #include "TypeInfo.hpp"
+#include "endstone/permissions/permission_default.h"
 #include "endstone/plugin/plugin.h"
 #include "loader/JavaScriptPluginBuilder.h"
 #include "manager/NodeManager.h"
@@ -28,9 +29,50 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <vector>
 
 
 namespace jse {
+
+
+inline void ParsePermissionImpl(JavaScriptPluginBuilder* builder, V8Object& vObj) {
+    auto keys = vObj.GetAllKeys();
+    for (auto const& key : keys) {
+        auto pbuild = endstone::detail::PermissionBuilder{key};
+        auto val    = vObj[key];
+        if (val.HasKey("description")) {
+            pbuild.description(val["description"].As<std::string>());
+        }
+        if (val.HasKey("default")) {
+            pbuild.default_(val["default"].As<endstone::PermissionDefault>());
+        }
+        builder->permissions.emplace(key, std::move(pbuild));
+    }
+}
+inline void ParseCommandsImpl(JavaScriptPluginBuilder* builder, V8Object& vObj) {
+    auto keys = vObj.GetAllKeys();
+    for (auto const& key : keys) {
+        auto cbuild = endstone::detail::CommandBuilder{key};
+        auto val    = vObj[key];
+
+        if (val.HasKey("description")) {
+            cbuild.description(val["description"].As<std::string>());
+        }
+        if (val.HasKey("usages")) {
+            auto arr = val["usages"].As<std::vector<std::string>>();
+            for (auto const& usage : arr) {
+                cbuild.usages(usage);
+            }
+        }
+        if (val.HasKey("permissions")) {
+            auto arr = val["permissions"].As<std::vector<std::string>>();
+            for (auto const& perm : arr) {
+                cbuild.permissions(perm);
+            }
+        }
+        builder->commands.emplace(key, std::move(cbuild));
+    }
+}
 
 
 inline void Js_RegisterPlugin(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -96,9 +138,14 @@ inline void Js_RegisterPlugin(const v8::FunctionCallbackInfo<v8::Value>& args) {
     if (vObj.HasKey("default_permission")) {
         builder->default_permission = vObj["default_permission"].As<endstone::PermissionDefault>();
     }
-
-    // TODO: permission
-    // TODO: commands
+    if (vObj.HasKey("permissions")) {
+        auto permissions = vObj["permissions"];
+        ParsePermissionImpl(builder.get(), permissions);
+    }
+    if (vObj.HasKey("commands")) {
+        auto commands = vObj["commands"];
+        ParseCommandsImpl(builder.get(), commands);
+    }
 
     if (vObj.HasKey("onLoad")) {
         auto onLoad = vObj["onLoad"].GetValue();
@@ -195,7 +242,7 @@ inline void Js_LoadNativeClass(v8::FunctionCallbackInfo<v8::Value> const& args) 
     pom->LoadCppType(args);
 }
 
-inline void RegisterEngineApi(V8Engine* engine) {
+inline void RegisterEngineApiImpl(V8Engine* engine) {
     auto isolate = v8::Isolate::GetCurrent();
 
     v8::Locker         locker(isolate);
@@ -238,7 +285,7 @@ inline void RegisterGlobalFunc(V8Engine* engine) {
 
     v8_util::DefineReadOnlyGlobal(isolate, "__ENGINE_ID__", v8::Number::New(isolate, static_cast<double>(engine->id_)));
 
-    RegisterEngineApi(engine);
+    RegisterEngineApiImpl(engine);
 
     v8_util::EvalJsCode(isolate, R"(
         globalThis.$ref = (x) => [x];
