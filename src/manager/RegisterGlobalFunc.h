@@ -3,11 +3,7 @@
 #include "JSClassRegister.h"
 #include "ScriptBackend.hpp"
 #include "TypeInfo.hpp"
-#include "V8Backend.hpp"
-#include "endstone/command/command_executor.h"
-#include "endstone/permissions/permission_default.h"
 #include "endstone/plugin/plugin.h"
-#include "endstone/plugin/plugin_load_order.h"
 #include "loader/JavaScriptPluginBuilder.h"
 #include "manager/NodeManager.h"
 #include "manager/V8Engine.h"
@@ -32,25 +28,6 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
-
-UsingCppType(endstone::Plugin);
-UsingCppType(endstone::CommandExecutor);
-
-struct AutoBinding {
-    AutoBinding() {
-        puerts::DefineClass<endstone::CommandExecutor>().Register();
-
-        puerts::DefineClass<endstone::Plugin>()
-            .Extends<endstone::CommandExecutor>()
-            // .Method("getDescription", &endstone::Plugin::getDescription)
-            .Method("onLoad", MakeFunction(&endstone::Plugin::onLoad))
-            .Method("onEnable", MakeFunction(&endstone::Plugin::onEnable))
-            .Method("onDisable", MakeFunction(&endstone::Plugin::onDisable))
-            .Method("getName", MakeFunction(&endstone::Plugin::getName))
-            .Register();
-    }
-};
-AutoBinding __AutoBinding__;
 
 
 namespace jse {
@@ -200,6 +177,20 @@ inline void Js_GetSelf(const v8::FunctionCallbackInfo<v8::Value>& args) {
     args.GetReturnValue().Set(res);
 }
 
+inline void Js_GetDeclaration(v8::FunctionCallbackInfo<v8::Value> const& args) {
+    puerts::DeclarationGenerator dg;
+
+    puerts::ForeachRegisterClass([&](const puerts::JSClassDefinition* classDefinition) {
+        if (classDefinition->TypeId && classDefinition->ScriptName) {
+            dg.GenClass(classDefinition);
+        }
+    });
+
+    args.GetReturnValue().Set(
+        v8::String::NewFromUtf8(args.GetIsolate(), dg.GetOutput().c_str(), v8::NewStringType::kNormal).ToLocalChecked()
+    );
+}
+
 inline void RegisterEngineApi() {
     auto isolate = v8::Isolate::GetCurrent();
 
@@ -210,8 +201,6 @@ inline void RegisterEngineApi() {
     auto               ctx = isolate->GetCurrentContext();
     v8::Context::Scope context_scope(ctx);
 
-    // Engine.registerPlugin()
-    // Engine.getSelf()
     auto tpl = v8::ObjectTemplate::New(isolate);
     tpl->Set(
         v8::String::NewFromUtf8Literal(isolate, "registerPlugin"),
@@ -220,14 +209,19 @@ inline void RegisterEngineApi() {
 
     tpl->Set(v8::String::NewFromUtf8Literal(isolate, "getSelf"), v8::FunctionTemplate::New(isolate, Js_GetSelf));
 
+    tpl->Set(
+        v8::String::NewFromUtf8Literal(isolate, "getDeclaration"),
+        v8::FunctionTemplate::New(isolate, Js_GetDeclaration)
+    );
+
     ctx->Global()
         ->Set(ctx, v8::String::NewFromUtf8Literal(isolate, "Engine"), tpl->NewInstance(ctx).ToLocalChecked())
         .Check();
 }
 
-inline void RegisterGlobalFunc(V8Engine* wrapper) {
-    auto isolate = wrapper->isolate();
-    auto ctx     = wrapper->context();
+inline void RegisterGlobalFunc(V8Engine* engine) {
+    auto isolate = engine->isolate();
+    auto ctx     = engine->context();
     auto global  = ctx->Global();
 
     global
@@ -241,44 +235,14 @@ inline void RegisterGlobalFunc(V8Engine* wrapper) {
                         static_cast<puerts::FCppObjectMapper*>((v8::Local<v8::External>::Cast(info.Data()))->Value());
                     pom->LoadCppType(info);
                 },
-                v8::External::New(isolate, wrapper->cppMapper_)
+                v8::External::New(isolate, engine->cppMapper_)
             )
                 ->GetFunction(ctx)
                 .ToLocalChecked()
         )
         .Check();
 
-    global
-        ->Set(
-            ctx,
-            v8::String::NewFromUtf8(isolate, "__declaration__").ToLocalChecked(),
-            v8::FunctionTemplate::New(
-                isolate,
-                [](const v8::FunctionCallbackInfo<v8::Value>& info) {
-                    puerts::DeclarationGenerator dg;
-
-                    puerts::ForeachRegisterClass([&](const puerts::JSClassDefinition* classDefinition) {
-                        if (classDefinition->TypeId && classDefinition->ScriptName) {
-                            dg.GenClass(classDefinition);
-                        }
-                    });
-
-                    info.GetReturnValue().Set(
-                        v8::String::NewFromUtf8(info.GetIsolate(), dg.GetOutput().c_str(), v8::NewStringType::kNormal)
-                            .ToLocalChecked()
-                    );
-                }
-            )
-                ->GetFunction(ctx)
-                .ToLocalChecked()
-        )
-        .Check();
-
-    v8_util::DefineReadOnlyGlobal(
-        isolate,
-        "__ENGINE_ID__",
-        v8::Number::New(isolate, static_cast<double>(wrapper->id_))
-    );
+    v8_util::DefineReadOnlyGlobal(isolate, "__ENGINE_ID__", v8::Number::New(isolate, static_cast<double>(engine->id_)));
 
     RegisterEngineApi();
 }
