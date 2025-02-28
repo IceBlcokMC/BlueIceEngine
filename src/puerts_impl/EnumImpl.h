@@ -1,33 +1,44 @@
 #pragma once
+#include <map>
+#include <string>
+#include <string_view>
+#include <type_traits>
 
 
-#define UsingNamedCppEnum(ENUM, NAME)                                                                                  \
-    namespace PUERTS_NAMESPACE {                                                                                       \
+namespace puerts {
+
+namespace enum_impl {
+std::map<std::string, std::map<std::string, int>> AllEnums;
+template <typename T>
+struct JsEnumImpl {
+    static_assert(std::is_enum<T>::value, "JsEnumImpl only support enum type");
+};
+} // namespace enum_impl
+
+
+#define UsingCppEnum(ENUM)                                                                                             \
+    namespace enum_impl {                                                                                              \
     template <>                                                                                                        \
-    struct ScriptTypeName<ENUM> {                                                                                      \
-        static constexpr auto value() { return internal ::Literal(#NAME); }                                            \
+    struct JsEnumImpl<ENUM> {                                                                                          \
+        constexpr static auto      value = #ENUM;                                                                      \
+        std::map<std::string, int> valueMap;                                                                           \
+                                                                                                                       \
+        inline JsEnumImpl<ENUM>& Variable(std::string name, ENUM val) {                                                \
+            valueMap[std::move(name)] = static_cast<int>(val);                                                         \
+            return *this;                                                                                              \
+        }                                                                                                              \
+        inline void Register() { enum_impl::AllEnums[value] = std::move(valueMap); }                                   \
     };                                                                                                                 \
-    }                                                                                                                  \
-    /*     namespace PUERTS_NAMESPACE {                                                                                \
-        template <>                                                                                                    \
-        struct is_objecttype<ENUM> : public std ::true_type {};                                                        \
-        }                                                                                                              \
-     */                                                                                                                \
-    namespace PUERTS_NAMESPACE {                                                                                       \
-    namespace v8_impl {                                                                                                \
-    template <>                                                                                                        \
-    struct Converter<ENUM> {                                                                                           \
-        static v8::Local<v8::Value> toScript(v8::Local<v8::Context> context, ENUM value) {                             \
-            return v8::Number::New(context->GetIsolate(), static_cast<int>(value));                                    \
-        }                                                                                                              \
-        static ENUM toCpp(v8::Local<v8::Context> context, v8::Local<v8::Value> const& value) {                         \
-            return static_cast<ENUM>(value->Int32Value(context).ToChecked());                                          \
-        }                                                                                                              \
-        static bool accept([[maybe_unused]] v8::Local<v8::Context> context, v8::Local<v8::Value> const& value) {       \
-            return value->IsNumber();                                                                                  \
-        }                                                                                                              \
-    };                                                                                                                 \
-    }                                                                                                                  \
     }
 
-#define UsingCppEnum(ENUM) UsingNamedCppEnum(ENUM, ENUM)
+#define DefineEnum(ENUM)                                                                                               \
+    enum_impl::JsEnumImpl<ENUM> {}
+
+
+template <typename T>
+[[nodiscard]] inline constexpr std::string_view GetEnumName() {
+    return enum_impl::JsEnumImpl<T>::value;
+}
+
+
+} // namespace puerts
