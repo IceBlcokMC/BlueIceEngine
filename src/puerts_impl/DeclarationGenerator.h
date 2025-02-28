@@ -1,11 +1,13 @@
 #pragma once
 #include "JSClassRegister.h"
 #include "TypeInfo.hpp"
+#include "puerts_impl/EnumImpl.h"
 #include <cstdint>
 #include <map>
 #include <set>
 #include <sstream>
 #include <string>
+
 
 namespace puerts {
 
@@ -30,6 +32,12 @@ struct DeclarationGenerator {
                 && argInfo->IsPointer()) {
                 ss << "ArrayBuffer";
             } else {
+                const puerts::CTypeInfo* TypeInfo = Type->Argument(i);
+                if (TypeInfo->IsEnum()) {
+                    ss << TypeInfo->EnumTypeName(); // enum
+                    continue;
+                }
+
                 bool IsReference = argInfo->IsRef();
                 bool IsNullable  = !IsReference && argInfo->IsPointer();
                 if (IsNullable) {
@@ -39,7 +47,6 @@ struct DeclarationGenerator {
                     ss << "$Ref<";
                 }
 
-                const puerts::CTypeInfo* TypeInfo = Type->Argument(i);
                 ss << TypeInfo->Name();
 
                 if (IsNullable) {
@@ -52,7 +59,7 @@ struct DeclarationGenerator {
         }
     }
 
-    std::string RemoveNamespace(const std::string& name) {
+    static std::string RemoveNamespace(const std::string& name) {
         size_t lastColonPos = name.rfind("::");
         if (lastColonPos != std::string::npos) {
             return name.substr(lastColonPos + 2);
@@ -181,12 +188,37 @@ struct DeclarationGenerator {
         // std::cout << moudle_name << "_" << Output.str();
     }
 
-    std::string GetFirstNamepace(const std::string& input) {
+    static std::string GetFirstNamepace(const std::string& input) {
         size_t pos = input.find("::");
         if (pos != std::string::npos) {
             return input.substr(0, pos);
         }
         return input;
+    }
+
+    static std::string GenerateEnumeration() {
+        auto& enums = enum_impl::getAllEnums();
+
+        std::ostringstream oss;
+        std::string        rootNamespace;
+
+        for (const auto& enum_full_name : enums) {
+            if (rootNamespace.empty()) {
+                rootNamespace = GetFirstNamepace(enum_full_name.first);
+                oss << "declare namespace " << rootNamespace << " {\n";
+            }
+
+            oss << "    enum " << RemoveNamespace(enum_full_name.first) << " {\n";
+
+            for (const auto& enum_value : enum_full_name.second) {
+                oss << "        " << enum_value.first << " = " << enum_value.second << ",\n";
+            }
+
+            oss << "    }\n\n";
+        }
+        oss << "}\n";
+
+        return oss.str();
     }
 
     std::string GetOutput() {
@@ -217,6 +249,7 @@ struct DeclarationGenerator {
         NativeTypeMap << "\n" << "declare type NativeClasses = keyof NativeTypeMap;" << "\n";
 
         std::ostringstream Output;
+        Output << GenerateEnumeration() << "\n";
         Output << NativeTypeMap.str() << "\n" << DeclareTypes.str();
         return Output.str();
     }
