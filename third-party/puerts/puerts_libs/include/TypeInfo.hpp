@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "puerts_impl/EnumImpl.h" // Js_Engine implementation
+
 #include <string>
 #ifdef WITH_V8_FAST_CALL
 #include "V8FastCall.hpp"
@@ -298,6 +300,8 @@ public:
     virtual bool IsConst() const = 0;
     virtual bool IsUEType() const = 0;
     virtual bool IsObjectType() const = 0;
+    virtual bool IsEnum() const = 0; // Js_Engine implementation
+    virtual const char* EnumTypeName() const = 0; // Js_Engine implementation
 };
 
 class CFunctionInfo
@@ -344,6 +348,17 @@ public:
         return is_objecttype<
             typename std::remove_const<typename std::remove_pointer<typename std::decay<T>::type>::type>::type>::value;
     };
+    virtual bool IsEnum() const override // Js_Engine implementation
+    {
+        return std::is_enum<T>::value;
+    }
+    virtual const char* EnumTypeName() const override // Js_Engine implementation
+    {
+        if constexpr (std::is_enum_v<T>) {
+            return GetEnumName<T>().data();
+        }
+        return nullptr;
+    }
 
     static const CTypeInfo* get()
     {
