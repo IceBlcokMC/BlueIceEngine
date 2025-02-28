@@ -8,18 +8,28 @@
 namespace puerts {
 
 namespace enum_impl {
-std::map<std::string, std::map<std::string, int>> AllEnums;
+
+extern std::map<std::string, std::map<std::string, int>> AllEnums;
+
 template <typename T>
-struct JsEnumImpl {
-    static_assert(std::is_enum<T>::value, "JsEnumImpl only support enum type");
-};
+struct JsEnumImpl;
+
 } // namespace enum_impl
+
+
+template <typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
+[[nodiscard]] inline constexpr std::string_view GetEnumName() {
+    return enum_impl::JsEnumImpl<T>::value;
+}
+
+} // namespace puerts
 
 
 #define UsingCppEnum(ENUM)                                                                                             \
     namespace puerts::enum_impl {                                                                                      \
     template <>                                                                                                        \
     struct JsEnumImpl<ENUM> {                                                                                          \
+        static_assert(std::is_enum_v<ENUM>);                                                                           \
         constexpr static auto      value = #ENUM;                                                                      \
         std::map<std::string, int> valueMap;                                                                           \
                                                                                                                        \
@@ -33,12 +43,3 @@ struct JsEnumImpl {
 
 #define DefineEnum(ENUM)                                                                                               \
     puerts::enum_impl::JsEnumImpl<ENUM> {}
-
-
-template <typename T>
-[[nodiscard]] inline constexpr std::string_view GetEnumName() {
-    return enum_impl::JsEnumImpl<T>::value;
-}
-
-
-} // namespace puerts
