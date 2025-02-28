@@ -17,7 +17,7 @@ struct JsEnumImpl {
 
 
 #define UsingCppEnum(ENUM)                                                                                             \
-    namespace enum_impl {                                                                                              \
+    namespace puerts::enum_impl {                                                                                      \
     template <>                                                                                                        \
     struct JsEnumImpl<ENUM> {                                                                                          \
         constexpr static auto      value = #ENUM;                                                                      \
@@ -32,7 +32,7 @@ struct JsEnumImpl {
     }
 
 #define DefineEnum(ENUM)                                                                                               \
-    enum_impl::JsEnumImpl<ENUM> {}
+    puerts::enum_impl::JsEnumImpl<ENUM> {}
 
 
 template <typename T>
