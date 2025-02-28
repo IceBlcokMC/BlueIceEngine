@@ -355,7 +355,12 @@ public:
     virtual const char* EnumTypeName() const override // Js_Engine implementation
     {
         if constexpr (std::is_enum_v<T>) {
-            return GetEnumName<T>().data();
+            auto name = GetEnumName<T>();
+            size_t lastColonPos = name.rfind("::");
+            if (lastColonPos != std::string::npos) {
+                return name.substr(lastColonPos + 2);
+            }
+            return name;
         }
         return nullptr;
     }

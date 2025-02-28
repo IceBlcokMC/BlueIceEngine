@@ -228,24 +228,16 @@ struct DeclarationGenerator {
         auto& enums = enum_impl::getAllEnums();
 
         std::ostringstream oss;
-        std::string        rootNamespace;
 
         for (const auto& enum_full_name : enums) {
-            if (rootNamespace.empty()) {
-                rootNamespace = generator_utils::GetFirstNamepace(enum_full_name.first);
-                oss << "declare namespace " << rootNamespace << " {\n";
-            }
-
-            oss << "    enum " << generator_utils::RemoveNamespace(enum_full_name.first) << " {\n";
+            oss << "declare enum " << generator_utils::RemoveNamespace(enum_full_name.first) << " {\n";
 
             for (const auto& enum_value : enum_full_name.second) {
-                oss << "        " << enum_value.first << " = " << enum_value.second << ",\n";
+                oss << "    " << enum_value.first << " = " << enum_value.second << ",\n";
             }
 
-            oss << "    }\n\n";
+            oss << "}\n\n";
         }
-        oss << "}\n";
-
         return oss.str();
     }
 
@@ -271,14 +263,37 @@ struct DeclarationGenerator {
                 DeclareTypes << i;
             }
         }
-        NativeTypeMap << "}\n";
         DeclareTypes << "}\n";
 
-        NativeTypeMap << "\n" << "declare type NativeClasses = keyof NativeTypeMap;" << "\n";
+        NativeTypeMap << "}\n";
+        NativeTypeMap << "declare type NativeClasses = keyof NativeTypeMap;" << "\n";
 
         std::ostringstream Output;
+        Output << "//----------------------------------------------------------\n";
+        Output << "// Version:  ";
+        Output << JSENGINE_VERSION_MAJOR << ".";
+        Output << JSENGINE_VERSION_MINOR << ".";
+        Output << JSENGINE_VERSION_PATCH << "\n";
+        Output << "//----------------------------------------------------------\n";
+
+        Output << "\n";
+        Output << "//----------------------------------------------------------\n";
+        Output << "// NativeTypeMap\n";
+        Output << "//----------------------------------------------------------\n";
+        Output << NativeTypeMap.str() << "\n";
+
+        Output << "\n";
+        Output << "//----------------------------------------------------------\n";
+        Output << "// Native Enums\n";
+        Output << "//----------------------------------------------------------\n";
         Output << GenerateEnumeration() << "\n";
-        Output << NativeTypeMap.str() << "\n" << DeclareTypes.str();
+
+        Output << "\n";
+        Output << "//----------------------------------------------------------\n";
+        Output << "// Native Classes\n";
+        Output << "//----------------------------------------------------------\n";
+        Output << DeclareTypes.str();
+
         return Output.str();
     }
 };
