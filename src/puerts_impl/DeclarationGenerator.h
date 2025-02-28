@@ -7,9 +7,53 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <vector>
 
 
 namespace puerts {
+
+
+namespace generator_utils {
+
+[[nodiscard]] inline std::string RemoveNamespace(const std::string& name) {
+    size_t lastColonPos = name.rfind("::");
+    if (lastColonPos != std::string::npos) {
+        return name.substr(lastColonPos + 2);
+    }
+    return name;
+}
+
+[[nodiscard]] inline std::string GetFirstNamepace(const std::string& input) {
+    size_t pos = input.find("::");
+    if (pos != std::string::npos) {
+        return input.substr(0, pos);
+    }
+    return input;
+}
+
+[[nodiscard]] inline std::vector<std::string> SplitNamespace(const std::string& input) {
+    std::vector<std::string> result;
+    size_t                   pos      = 0;
+    size_t                   last_pos = 0;
+
+    if (input.empty()) {
+        return result;
+    }
+
+    while (pos != std::string::npos) {
+        pos = input.find("::", last_pos);
+        if (pos != std::string::npos) {
+            result.push_back(input.substr(last_pos, pos - last_pos));
+            last_pos = pos + 2;
+        } else {
+            result.push_back(input.substr(last_pos));
+            break;
+        }
+    }
+    return result;
+}
+
+} // namespace generator_utils
 
 
 struct DeclarationGenerator {
@@ -59,14 +103,6 @@ struct DeclarationGenerator {
         }
     }
 
-    static std::string RemoveNamespace(const std::string& name) {
-        size_t lastColonPos = name.rfind("::");
-        if (lastColonPos != std::string::npos) {
-            return name.substr(lastColonPos + 2);
-        }
-        return name;
-    }
-
     void GenClassName(const char* name, std::ostringstream& ss) {
         const char* pp = strchr(name, '.');
         while (pp) {
@@ -81,7 +117,7 @@ struct DeclarationGenerator {
         if (pp) {
             ss << (pp + 1);
         } else {
-            ss << RemoveNamespace(name); // 去除命名空间
+            ss << generator_utils::RemoveNamespace(name); // 去除命名空间
         }
     }
 
@@ -188,14 +224,6 @@ struct DeclarationGenerator {
         // std::cout << moudle_name << "_" << Output.str();
     }
 
-    static std::string GetFirstNamepace(const std::string& input) {
-        size_t pos = input.find("::");
-        if (pos != std::string::npos) {
-            return input.substr(0, pos);
-        }
-        return input;
-    }
-
     static std::string GenerateEnumeration() {
         auto& enums = enum_impl::getAllEnums();
 
@@ -204,11 +232,11 @@ struct DeclarationGenerator {
 
         for (const auto& enum_full_name : enums) {
             if (rootNamespace.empty()) {
-                rootNamespace = GetFirstNamepace(enum_full_name.first);
+                rootNamespace = generator_utils::GetFirstNamepace(enum_full_name.first);
                 oss << "declare namespace " << rootNamespace << " {\n";
             }
 
-            oss << "    enum " << RemoveNamespace(enum_full_name.first) << " {\n";
+            oss << "    enum " << generator_utils::RemoveNamespace(enum_full_name.first) << " {\n";
 
             for (const auto& enum_value : enum_full_name.second) {
                 oss << "        " << enum_value.first << " = " << enum_value.second << ",\n";
@@ -231,13 +259,13 @@ struct DeclarationGenerator {
 
         for (const auto& pair : module_to_classes) {
             if (RootNamespace.empty()) {
-                RootNamespace = GetFirstNamepace(pair.first);
+                RootNamespace = generator_utils::GetFirstNamepace(pair.first);
 
                 DeclareTypes << RootNamespace << " {\n"; // 全局命名空间
                 // DeclareTypes << "    import {$Ref, $Nullable, cstring} from \"puerts\"\n\n";
             }
-            NativeTypeMap << "    \"" << pair.first << "\": ";                             // Key
-            NativeTypeMap << RootNamespace << "." << RemoveNamespace(pair.first) << ",\n"; // Value
+            NativeTypeMap << "    \"" << pair.first << "\": ";                                              // Key
+            NativeTypeMap << RootNamespace << "." << generator_utils::RemoveNamespace(pair.first) << ",\n"; // Value
 
             for (const auto& i : pair.second) {
                 DeclareTypes << i;
