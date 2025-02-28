@@ -9,7 +9,10 @@ namespace puerts {
 
 namespace enum_impl {
 
-extern std::map<std::string, std::map<std::string, int>> AllEnums;
+inline std::map<std::string, std::map<std::string, int>>& getAllEnums() {
+    static std::map<std::string, std::map<std::string, int>> instance;
+    return instance;
+}
 
 template <typename T>
 struct JsEnumImpl;
@@ -33,11 +36,11 @@ template <typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
         constexpr static auto      value = #ENUM;                                                                      \
         std::map<std::string, int> valueMap;                                                                           \
                                                                                                                        \
-        inline JsEnumImpl<ENUM>& Variable(std::string name, ENUM val) {                                                \
+        JsEnumImpl<ENUM>& Variable(std::string name, ENUM val) {                                                       \
             valueMap[std::move(name)] = static_cast<int>(val);                                                         \
             return *this;                                                                                              \
         }                                                                                                              \
-        inline void Register() { enum_impl::AllEnums[value] = std::move(valueMap); }                                   \
+        void Register() { getAllEnums()[value] = std::move(valueMap); }                                                \
     };                                                                                                                 \
     }
 
