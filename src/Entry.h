@@ -4,6 +4,7 @@
 
 namespace bie {
 
+class VMManager;
 
 class Entry : public endstone::Plugin {
     struct Impl;
@@ -11,6 +12,7 @@ class Entry : public endstone::Plugin {
 
 public:
     explicit Entry();
+    ~Entry() override;
 
     void onLoad() override;
 
@@ -19,6 +21,8 @@ public:
     void onDisable() override;
 
     endstone::PluginDescription const& getDescription() const override;
+
+    VMManager& getVMManager();
 
     [[nodiscard]] static Entry*& getInstance();
 };
