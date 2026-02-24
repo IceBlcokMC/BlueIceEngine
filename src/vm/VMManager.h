@@ -1,10 +1,15 @@
 #pragma once
+#include "vm/VM.h"
+
+#include <memory>
 
 
 namespace bie {
 
-
 class VMManager {
+    struct Impl;
+    std::unique_ptr<Impl> impl;
+
 public:
     VMManager();
     ~VMManager();
@@ -13,6 +18,23 @@ public:
     VMManager& operator=(VMManager const&) = delete;
     VMManager(VMManager&&)                 = delete;
     VMManager& operator=(VMManager&&)      = delete;
+
+    bool initNodeJs();
+
+    bool shutdownNodeJs();
+
+    bool isNodeJsInitialized() const;
+
+    void initUvLoopThread();
+    void shutdownUvLoopThread();
+
+    bool hasVM(VMID id) const;
+
+    VM* createVM();
+
+    void destroyVM(VMID id);
+
+    void _performDestroy(VM* vm);
 };
 
 

@@ -29,14 +29,21 @@ Entry::~Entry() { getInstance() = nullptr; }
 void Entry::onLoad() {
     impl->vmManager = std::make_unique<VMManager>();
 
+    if (!impl->vmManager->initNodeJs()) {
+        throw std::runtime_error("Failed to initialize Node.js");
+    }
+
     // TODO: load plugins
 }
 
-void Entry::onEnable() {}
+void Entry::onEnable() {
+    // init libuv loop thread
+    impl->vmManager->initUvLoopThread();
+}
 
 void Entry::onDisable() {
-    // TODO: free nodejs
-
+    impl->vmManager->shutdownUvLoopThread();
+    impl->vmManager->shutdownNodeJs();
     impl->vmManager.reset();
 }
 
