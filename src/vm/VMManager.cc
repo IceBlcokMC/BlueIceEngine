@@ -2,14 +2,6 @@
 #include "Entry.h"
 #include "vm/VM.h"
 
-#include "node.h"
-#include "uv.h"
-#include "v8-context.h"
-#include "v8-locker.h"
-#include "v8kit/core/Engine.h"
-#include "v8kit/core/EngineScope.h"
-#include "v8kit/core/Exception.h"
-#include "v8kit/core/Fwd.h"
 #include "vm/VMData.h"
 
 

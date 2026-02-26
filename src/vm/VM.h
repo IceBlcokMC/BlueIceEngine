@@ -1,7 +1,5 @@
 #pragma once
-#include "v8kit/core/Engine.h"
-
-#include "node.h"
+#include "pch.h"
 
 #include <memory>
 
@@ -26,6 +24,7 @@ struct VM {
       nodeEnv_(std::move(nodeEnv)) {}
 
     inline operator v8kit::Engine*() const { return engine_.get(); }
+    inline operator const v8kit::Engine*() const { return engine_.get(); }
 };
 
 

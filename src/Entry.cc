@@ -2,9 +2,14 @@
 #include "vm/VMManager.h"
 
 #include "endstone/plugin/plugin_description.h"
+#include "loader/JSPluginLoader.h"
 
 #include <memory>
+#include <thread>
 
+#ifdef _MSC_VER
+#include <debugapi.h>
+#endif
 
 namespace bie {
 
@@ -18,7 +23,7 @@ public:
 };
 
 struct Entry::Impl {
-    endstone::PluginDescription description = PluginDescriptionImpl{}.build("blue_ice_engine", "");
+    endstone::PluginDescription description = PluginDescriptionImpl{}.build("blue_ice_engine", "0.0.0");
 
     std::unique_ptr<VMManager> vmManager;
 };
@@ -29,11 +34,28 @@ Entry::~Entry() { getInstance() = nullptr; }
 void Entry::onLoad() {
     impl->vmManager = std::make_unique<VMManager>();
 
+    auto& logger = getLogger();
+    logger.setLevel(endstone::Logger::Debug);
+
+#ifdef _MSC_VER
+    logger.info("Waiting for VC debugger attach...");
+    while (!IsDebuggerPresent()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+#endif
+
+    logger.debug("Initializing Node.js");
     if (!impl->vmManager->initNodeJs()) {
         throw std::runtime_error("Failed to initialize Node.js");
     }
 
-    // TODO: load plugins
+    logger.debug("Registering JS plugin loader");
+    auto& server  = getServer();
+    auto& manager = server.getPluginManager();
+    manager.registerLoader(std::make_unique<JSPluginLoader>(server));
+
+    logger.debug("Searching and attempting to load JS plugin...");
+    manager.loadPlugins(JSPluginLoader::searchPlugins(std::filesystem::current_path() / "plugins"));
 }
 
 void Entry::onEnable() {
@@ -43,8 +65,8 @@ void Entry::onEnable() {
 
 void Entry::onDisable() {
     impl->vmManager->shutdownUvLoopThread();
-    impl->vmManager->shutdownNodeJs();
-    impl->vmManager.reset();
+    // impl->vmManager->shutdownNodeJs();
+    // impl->vmManager.reset();
 }
 
 endstone::PluginDescription const& Entry::getDescription() const { return impl->description; }
