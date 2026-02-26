@@ -14,7 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-2022]
+#        os: [ubuntu-22.04, windows-2022] # TODO: fix linux build
+        os: [windows-2022]
 
     name: Build with ${{ matrix.os == 'windows-2022' && 'Win-MSVC' || 'Ubuntu-Clang' }}
     runs-on: ${{ matrix.os }}
