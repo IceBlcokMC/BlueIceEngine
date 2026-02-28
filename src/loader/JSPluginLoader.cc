@@ -13,7 +13,21 @@ namespace fs = std::filesystem;
 
 
 JSPluginLoader::JSPluginLoader(endstone::Server& server) : PluginLoader(server) {}
-JSPluginLoader::~JSPluginLoader() { Entry::getInstance()->getLogger().debug("JSPluginLoader::~JSPluginLoader()"); }
+JSPluginLoader::~JSPluginLoader() {
+    auto entry = Entry::getInstance();
+    if (entry) {
+        auto& logger = entry->getLogger();
+        logger.debug("JSPluginLoader is being destructed. Tearing down Node.js ecosystem...");
+
+        auto& vmManager = entry->getVMManager();
+
+        logger.debug("Shutting down libuv threads...");
+        vmManager.shutdownUvLoopThread();
+
+        logger.debug("Shutting down Node.js...");
+        vmManager.shutdownNodeJs();
+    }
+}
 
 inline std::string ReplaceStr(const std::string& str, std::string const& from, std::string const& to) {
     std::string result    = str;
