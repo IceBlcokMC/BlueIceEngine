@@ -17,15 +17,15 @@ JSPluginLoader::~JSPluginLoader() {
     auto entry = Entry::getInstance();
     if (entry) {
         auto& logger = entry->getLogger();
-        logger.debug("JSPluginLoader is being destructed. Tearing down Node.js ecosystem...");
+        logger.debug("JSPluginLoader is being destructed.");
 
         auto& vmManager = entry->getVMManager();
 
         logger.debug("Shutting down libuv threads...");
-        vmManager.shutdownUvLoopThread();
+        vmManager.shutdownUvThread();
 
-        logger.debug("Shutting down Node.js...");
-        vmManager.shutdownNodeJs();
+        logger.debug("Shutting down VMs...");
+        vmManager.shutdownVMs();
     }
 }
 

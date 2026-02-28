@@ -19,14 +19,12 @@ public:
     VMManager(VMManager&&)                 = delete;
     VMManager& operator=(VMManager&&)      = delete;
 
-    bool initNodeJs();
+    bool initialize();
 
-    bool shutdownNodeJs();
+    bool shutdownVMs();
 
-    bool isNodeJsInitialized() const;
-
-    void initUvLoopThread();
-    void shutdownUvLoopThread();
+    void initUvThread();
+    void shutdownUvThread();
 
     bool hasVM(VMID id) const;
 

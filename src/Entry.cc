@@ -45,7 +45,7 @@ void Entry::onLoad() {
 #endif
 
     logger.debug("Initializing Node.js");
-    if (!impl->vmManager->initNodeJs()) {
+    if (!impl->vmManager->initialize()) {
         throw std::runtime_error("Failed to initialize Node.js");
     }
 
@@ -63,7 +63,7 @@ void Entry::onLoad() {
 void Entry::onEnable() {
     auto& logger = getLogger();
     logger.debug("Initializing libuv thread...");
-    impl->vmManager->initUvLoopThread();
+    impl->vmManager->initUvThread();
 }
 
 void Entry::onDisable() {
@@ -88,7 +88,33 @@ Entry*& Entry::getInstance() {
 
 } // namespace bie
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#elif defined(__linux__) || defined(__APPLE__)
+#include <dlfcn.h>
+#endif
 extern "C" [[maybe_unused]] ENDSTONE_EXPORT endstone::Plugin* init_endstone_plugin() {
+    // 由于为了解决 reload 问题，把 Node.js 设为了进程级资源，这里需要拦截 DLL 卸载（保证 Node.Js 是进程级资源）
+    static bool is_pinned = false;
+    if (!is_pinned) {
+        is_pinned = true;
+#ifdef _WIN32
+        HMODULE hModule = NULL;
+        GetModuleHandleExA(
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_PIN,
+            reinterpret_cast<LPCSTR>(&init_endstone_plugin),
+            &hModule
+        );
+#elif defined(__linux__) || defined(__APPLE__)
+        Dl_info info;
+        if (dladdr(reinterpret_cast<const void*>(&init_endstone_plugin), &info)) {
+            dlopen(info.dli_fname, RTLD_NOW | RTLD_NODELETE);
+        }
+#endif
+        fmt::print("BlueIceEngine DLL has been pinned in memory.");
+    }
+
     bie::Entry::getInstance() = new bie::Entry();
     return bie::Entry::getInstance();
 }
