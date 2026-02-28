@@ -8,7 +8,8 @@ namespace bie {
 using VMID = uint64_t;
 
 struct VM {
-    using V8Engine = std::unique_ptr<v8kit::Engine>;
+    // using V8Engine = std::unique_ptr<v8kit::Engine>;
+    using V8Engine = v8kit::Engine*;
     using NodeEnv  = std::unique_ptr<node::CommonEnvironmentSetup>;
 
     VMID const id_;
@@ -23,8 +24,8 @@ struct VM {
       engine_(std::move(engine)),
       nodeEnv_(std::move(nodeEnv)) {}
 
-    inline operator v8kit::Engine*() const { return engine_.get(); }
-    inline operator const v8kit::Engine*() const { return engine_.get(); }
+    inline operator v8kit::Engine*() const { return engine_; }
+    inline operator const v8kit::Engine*() const { return engine_; }
 };
 
 

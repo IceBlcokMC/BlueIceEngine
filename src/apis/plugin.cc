@@ -112,7 +112,7 @@ void init_plugin(VM* vm) {
                               .build();
 
 
-    auto engine = vm->engine_.get();
+    auto engine = vm->engine_;
     engine->registerEnum(kPluginLoadOrder);
     engine->registerClass(kPluginLoader);
     engine->registerClass(kPluginCommand);

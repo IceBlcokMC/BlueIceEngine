@@ -10,6 +10,7 @@ struct VMData {
     v8kit::Global<v8kit::Object> pluginInst{};
 
     explicit VMData(VMID id) : id(id) {}
+    ~VMData() { pluginInst.reset(); }
 };
 
 

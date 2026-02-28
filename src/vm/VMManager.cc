@@ -7,6 +7,7 @@
 
 #include <atomic>
 #include <filesystem>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -57,7 +58,7 @@ bool VMManager::initNodeJs() {
     );
     impl->exec_args = result->exec_args();
 
-    if (result->exit_code() != 0) {
+    if (result->early_return() != 0) {
         Entry::getInstance()->getLogger().critical("Failed to initialize Node.js");
         for (auto& err : result->errors()) {
             Entry::getInstance()->getLogger().critical(err);
@@ -83,6 +84,7 @@ bool VMManager::shutdownNodeJs() {
     v8::V8::Dispose();
     v8::V8::DisposePlatform();
     node::TearDownOncePerProcess();
+    // impl->platform.reset();
     impl->isInited = false;
     return true;
 }
@@ -100,7 +102,7 @@ void VMManager::initUvLoopThread() {
                     if (vm->engine_->isDestroying()) {
                         continue;
                     }
-                    v8kit::EngineScope lock{vm->engine_.get()};
+                    v8kit::EngineScope lock{vm->engine_};
                     try {
                         uv_run(vm->nodeEnv_->event_loop(), UV_RUN_NOWAIT);
                     } catch (v8kit::Exception const& exc) {
@@ -150,7 +152,8 @@ VM* VMManager::createVM() {
         impl->argv,
         impl->exec_args,
         node::EnvironmentFlags::Flags(
-            node::EnvironmentFlags::kNoCreateInspector // 禁用 inspector
+            // node::EnvironmentFlags::kNoCreateInspector // 禁用 inspector
+            node::EnvironmentFlags::kOwnsProcessState
         )
     );
     if (!env) {
@@ -170,12 +173,23 @@ VM* VMManager::createVM() {
         v8::Isolate::Scope isolate_scope(isolate);
         v8::HandleScope    handle_scope(isolate);
         v8::Context::Scope context_scope(env->context());
-        engine = std::make_unique<v8kit::Engine>(isolate, env->context());
+        engine = new v8kit::Engine(isolate, env->context());
+
+        node::AddEnvironmentCleanupHook(
+            isolate,
+            [](void* arg) {
+                Entry::getInstance()->getLogger().debug("EnvironmentCleanupHook called, destroying engine [{}]", arg);
+                auto engine = static_cast<v8kit::Engine*>(arg);
+                delete engine;
+            },
+            engine
+        );
     }
 
     engine->setData(std::make_shared<VMData>(id));
 
-    auto vm = std::make_unique<VM>(id, std::move(engine), std::move(env));
+
+    auto vm = std::make_unique<VM>(id, engine, std::move(env));
     impl->vms.emplace(id, std::move(vm));
     return impl->vms[id].get();
 }
@@ -196,12 +210,12 @@ void VMManager::destroyVM(VMID id) {
 void VMManager::_performDestroy(VM* vm) {
     if (!vm) return;
 
-    // destroy engine
-    vm->engine_.reset();
     // send stop signal
-    node::Stop(vm->nodeEnv_->env(), node::StopFlags::kDoNotTerminateIsolate);
+    node::Stop(vm->nodeEnv_->env());
+    // destroy engine
+    // vm->engine_.reset();
     // destroy node env
-    vm->nodeEnv_.reset();
+    // vm->nodeEnv_.reset();
 }
 
 } // namespace bie

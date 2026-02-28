@@ -6,11 +6,14 @@
 #include "vm/VMManager.h"
 
 #include <fstream>
+#include <iostream>
 
 namespace bie {
 namespace fs = std::filesystem;
 
+
 JSPluginLoader::JSPluginLoader(endstone::Server& server) : PluginLoader(server) {}
+JSPluginLoader::~JSPluginLoader() { Entry::getInstance()->getLogger().debug("JSPluginLoader::~JSPluginLoader()"); }
 
 inline std::string ReplaceStr(const std::string& str, std::string const& from, std::string const& to) {
     std::string result    = str;
@@ -45,19 +48,18 @@ endstone::Plugin* JSPluginLoader::loadPlugin(std::string file) {
 
         // TODO: setup binding api
         {
-            v8kit::EngineScope lock{vm->engine_.get()};
+            v8kit::EngineScope lock{vm->engine_};
             init_plugin(vm);
         }
 
         // try load plugin
         {
-            v8kit::EngineScope lock{vm->engine_.get()};
+            v8kit::EngineScope lock{vm->engine_};
 
             auto env     = vm->nodeEnv_->env();
             auto isolate = vm->nodeEnv_->isolate();
 
             node::SetProcessExitHandler(env, [id, isolate](node::Environment*, int exitCode) {
-                isolate->Exit();
                 Entry::getInstance()->getLogger().debug("Node.js process exit with code: {}, id: {}", exitCode, id);
                 Entry::getInstance()->getVMManager().destroyVM(id);
             });
@@ -142,7 +144,9 @@ endstone::Plugin* JSPluginLoader::loadPlugin(std::string file) {
             data->pluginInst.reset(pluginThis); // 持久化 JS This 避免析构
 
             logger.debug("Loaded plugin {} with id {}", file, id);
-            return payload->unwrap<endstone::Plugin>(); // 返回底层指针给 Endstone
+            auto plugin = payload->unwrap<endstone::Plugin>();
+
+            return plugin;
         }
     } catch (std::exception const& exception) {
         logger.error("Failed to load plugin {} with error: {}", file, exception.what());
@@ -154,10 +158,6 @@ endstone::Plugin* JSPluginLoader::loadPlugin(std::string file) {
 }
 
 std::vector<std::string> JSPluginLoader::getPluginFileFilters() const { return {".js"}; }
-
-std::vector<endstone::Plugin*> JSPluginLoader::loadPlugins(std::string directory) {
-    return PluginLoader::loadPlugins(directory);
-}
 
 std::vector<std::string> JSPluginLoader::searchPlugins(std::filesystem::path const& directory) {
     std::vector<std::string> plugins;
